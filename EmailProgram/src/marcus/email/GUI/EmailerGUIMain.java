@@ -56,6 +56,7 @@ public class EmailerGUIMain extends JFrame implements ActionListener {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setSize(WIDTH, HEIGHT);
 		this.setTitle(PRG_NAME);
+		this.setLayout(new BorderLayout());
 		setupMainLoginPanel();
 		setupMiddlePanel();
 		setHomePageButtons();
@@ -72,8 +73,7 @@ public class EmailerGUIMain extends JFrame implements ActionListener {
 		pnlMain = new JPanel();
 		pnlMain.setVisible(true);
 		pnlMain.setLayout(new BorderLayout());
-		pnlMain.setVisible(true);
-		this.add(pnlMain);
+		this.add(pnlMain, BorderLayout.SOUTH);
 	}
 	
 	/**
@@ -81,7 +81,7 @@ public class EmailerGUIMain extends JFrame implements ActionListener {
 	 */
 	public void setupMiddlePanel() {
 		pnlMiddle = new JPanel(new FlowLayout());
-		pnlMain.add(pnlMiddle, BorderLayout.CENTER);
+		pnlMain.add(pnlMiddle);
 	}
 	/**
 	 * This method instantiates the button objects
@@ -89,8 +89,7 @@ public class EmailerGUIMain extends JFrame implements ActionListener {
 	 */
 	public void setHomePageButtons() {
 		btnLogin = new JButton(LOGIN);
-		btnExit = new JButton(EXIT);
-		
+		btnExit = new JButton(EXIT);	
 	}
 	
 	/**

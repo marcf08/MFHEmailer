@@ -39,7 +39,7 @@ public class GUILogic {
 	/**
 	 * The string is for the name of the prop file.
 	 */
-	private static final String CONFIG_FILE = "C:/Users/Marcus/workspace/EmailProgram/src/config/config.properties";
+	private static final String CONFIG_FILE = "/EmailProgram/resources/config.properties";
 	/**
 	 * This string is for a simple heading in the properties file.
 	 * In addition, there are some other parts of the key-value pair.
