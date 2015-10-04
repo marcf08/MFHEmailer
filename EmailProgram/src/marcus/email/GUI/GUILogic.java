@@ -46,7 +46,7 @@ public class GUILogic {
 	 */
 	private static final String SETUP = "Setup";
 	private static final String EMAIL = "email";
-	private static final String FIRST_OPEN = "first run=";
+	private static final String FIRST_OPEN = "firstrun";
 	private static final String FIRST_OPEN_FALSE = "1";
 	/**
 	 * The constructor instantiates the properties object.
@@ -87,9 +87,12 @@ public class GUILogic {
 	/**
 	 * This method sets whether or not the application has been opened for
 	 * the first time.
+	 * @throws IOException for now, until we can handle this later
+	 * @throws FileNotFoundException for now, until we can handle this later
 	 */
-	public void storeFirstOpen() {
+	public void storeFirstOpen() throws FileNotFoundException, IOException {
 		prop.setProperty(FIRST_OPEN, FIRST_OPEN_FALSE);
+		prop.store(new FileOutputStream(CONFIG_FILE), SETUP);
 	}
 }
 	

@@ -303,7 +303,21 @@ public class SetupGUI extends JFrame implements ActionListener {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			//If everything has gone will, we write to the properties file
+			//to show that the program has been set up with an admin password
+			//From this point on, the application will open with the default
+			//login face.
+			try {
+				logic.storeFirstOpen();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
+		
 		
 	}
 	
@@ -324,6 +338,7 @@ public class SetupGUI extends JFrame implements ActionListener {
 		if (msg.equals(PW_NOT_LONG)) {
 			txtPasswordInitial.requestFocus();
 		}
+		
 	}
 	
 	

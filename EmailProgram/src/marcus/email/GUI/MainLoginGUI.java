@@ -2,9 +2,11 @@ package marcus.email.GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -40,17 +42,6 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 	//The middle panel is for the login buttons
 	private JPanel pnlMiddle;
 	
-	//This top panel is for the image
-	private JPanel pnlTop;
-	
-	//This JText area is for the welcome greeting
-	//The constants specify the rows and columns
-	//to format the text.
-	private JTextArea txtWelcome;
-	public static final int TXT_ROWS = 3;
-	public static final int TXT_COLUMNS = 50;
-	private static final String WELCOME_MSG = "Welcome to the MFH Emailer Application!";
-	
 	/**
 	 * Defaults for length and width.
 	 */
@@ -67,6 +58,7 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 	private JTextField txtUserName;
 	private static final String USER = "Username: ";
 	private static final String PW = "Password: ";
+	private static final int PW_LENGTH = 25;
 	
 	/**
 	 * The home page buttons include login and exit.
@@ -88,17 +80,16 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 	public MainLoginGUI() {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setSize(WIDTH, HEIGHT);
-		this.setTitle(PRG_NAME);
 		this.setLayout(new BorderLayout());
+		this.setTitle(PRG_NAME);
 
 		setupLoginPanel();
-		setupMiddlePanel();		
 		setHomePageButtons();
 		setButtonPanel();
 
 		registerListeners();
 		setupUserInfo();
+		
 	}
 	
 	
@@ -107,33 +98,33 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 	 * home page.
 	 */
 	public void setupLoginPanel() {
-		pnlMain = new JPanel(new BorderLayout());
-		pnlMain.setVisible(true);
-		this.add(pnlMain);
+		this.setLayout(new BorderLayout());
 	}
 	
 	/**
-	 * This method sets up the middle panel for the login buttons.
-	 */
-	public void setupMiddlePanel() {
-		pnlMiddle = new JPanel(new BorderLayout());
-		pnlMain.add(pnlMiddle, BorderLayout.CENTER);
-		validate();
-	}
-	
-	/**
-	 * This method sets up the password field in the middle.
+	 * This method sets up the password/email fields in the middle.
 	 */
 	public void setupUserInfo() {
 		pnlUserInfo = new JPanel(new FlowLayout());
-	
+		pnlUserPw = new JPanel(new FlowLayout());
+		
 		lblUser = new JLabel(USER);
 		lblPassword = new JLabel(PW);
+
+		txtUserName = new JTextField(PW_LENGTH);
+		txtPassword = new JPasswordField(PW_LENGTH);
+
 		pnlUserInfo.add(lblUser);
-		txtUserName = new JTextField();
 		pnlUserInfo.add(txtUserName);
 		
-		pnlMiddle.add(pnlUserInfo, BorderLayout.CENTER);
+		pnlUserPw.add(lblPassword);
+		pnlUserPw.add(txtPassword);
+		
+		pnlUserInfo.add(pnlUserPw);
+		
+		this.add(pnlUserInfo, BorderLayout.CENTER);
+
+		pack();
 		validate();
 		
 	}
@@ -153,8 +144,7 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 		pnlButtons = new JPanel(new FlowLayout());
 		pnlButtons.add(btnExit);
 		pnlButtons.add(btnNext);
-		
-		pnlMiddle.add(pnlButtons, BorderLayout.SOUTH);
+		this.add(pnlButtons, BorderLayout.SOUTH);
 		validate();
 		
 	}
