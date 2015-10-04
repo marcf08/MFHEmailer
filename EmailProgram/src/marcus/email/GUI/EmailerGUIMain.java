@@ -3,11 +3,17 @@ package marcus.email.GUI;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 
@@ -30,6 +36,18 @@ public class EmailerGUIMain extends JFrame implements ActionListener {
 	
 	//The middle panel is for the login buttons
 	private JPanel pnlMiddle;
+	
+	//This top panel is for the image
+	private JPanel pnlTop;
+	
+	//This JText area is for the welcome greeting
+	//The constants specify the rows and columns
+	//to format the text.
+	private JTextArea txtWelcome;
+	public static final int TXT_ROWS = 3;
+	public static final int TXT_COLUMNS = 50;
+	private static final String WELCOME_MSG = "Welcome to the MFH Emailer Application!";
+	
 	/**
 	 * Defaults for length and width.
 	 */
@@ -62,8 +80,28 @@ public class EmailerGUIMain extends JFrame implements ActionListener {
 		setHomePageButtons();
 		addButtonsToHomePage();
 		registerListeners();
+		setupTopPanel();
+		setIntroMessage();
 	
 	}
+	
+	/**
+	 * This method sets up the introductory message/greeting.
+	 */
+	public void setIntroMessage() {
+		
+		//Configure text
+		txtWelcome = new JTextArea(TXT_ROWS, TXT_COLUMNS);
+		txtWelcome.setWrapStyleWord(true);
+		txtWelcome.setText(WELCOME_MSG);
+		txtWelcome.setEditable(false);
+		txtWelcome.setBackground(this.getBackground());
+		
+		//Add text to panel
+		this.add(txtWelcome, BorderLayout.AFTER_LINE_ENDS);
+		validate();
+	}
+	
 	
 	/**
 	 * This method sets up the main JPanel and adds it to the
@@ -83,6 +121,27 @@ public class EmailerGUIMain extends JFrame implements ActionListener {
 		pnlMiddle = new JPanel(new FlowLayout());
 		pnlMain.add(pnlMiddle);
 	}
+	
+	/**
+	 * This method sets up the top panel with the illustration.
+	 */
+	public void setupTopPanel() {
+		pnlTop = new JPanel();
+		BufferedImage logo = null;
+		try {
+			logo = ImageIO.read(new File("C:/Users/Marcus/Desktop/mfhLogo.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		JLabel picLabel = new JLabel(new ImageIcon(logo));
+		pnlTop.add(picLabel);
+		this.add(pnlTop, BorderLayout.NORTH);
+		validate();
+		
+		
+	}
+	
 	/**
 	 * This method instantiates the button objects
 	 * for the home page.
@@ -133,8 +192,8 @@ public class EmailerGUIMain extends JFrame implements ActionListener {
 	 * main page.
 	 */
 	public void addButtonsToHomePage() {
-		pnlMiddle.add(btnLogin);
 		pnlMiddle.add(btnExit);
+		pnlMiddle.add(btnLogin);
 		validate();
 	}
 	

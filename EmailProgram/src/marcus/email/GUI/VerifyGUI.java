@@ -2,8 +2,10 @@ package marcus.email.GUI;
 
 import java.util.Arrays;
 
+import marcus.email.exceptions.EmailContentException;
 import marcus.email.exceptions.EmailException;
 import marcus.email.exceptions.PasswordException;
+import marcus.email.exceptions.PasswordLengthException;
 
 /**
  * The GUI verify method checks the password and the email to ensure
@@ -15,7 +17,15 @@ import marcus.email.exceptions.PasswordException;
 public class VerifyGUI {
 	
 	//Constant for the minimum password size
-	public static final int PW_MIN = 6;
+	public static final int PW_MIN = 5;
+	
+	//Constant for email minimum size
+	public static final int EM_MIN = 0;
+	
+	//Email validation constants
+	//All emails should contain both of these
+	public static final String PERIOD = ".";
+	public static final String AT_SYMBOL = "@";
 	
 	/**
 	 * The constructor is null.
@@ -47,9 +57,31 @@ public class VerifyGUI {
 	
 	/**
 	 * This method ensures the password is of the proper length.
-	 * @return true if the passwords match and false otherwise
+	 * @throws PasswordLengthException if the password is too short
 	 */
-	public boolean isProperLength(String password) {
-		return (password.length() >= PW_MIN);
+	public void isProperLength(char[] pw) throws PasswordLengthException {
+		if ((pw.length <= PW_MIN)) {
+			throw new PasswordLengthException();
+		}
+	}
+	
+	/**
+	 * This method runs a few checks on the email to do the best we can
+	 * to get a valid email address. This check is not very comprehensive,
+	 * but it should prevent the situation in which the user accidentally enters
+	 * a blank address, or one with no period or at symbol.
+	 * @param email an email address to verify
+	 * @throws EmailContentException if the email seems invalid
+	 */
+	public void isValidEmail(String email) throws EmailContentException {
+		if (email.length() <= EM_MIN) {
+			throw new EmailContentException();
+		}
+		if (!email.contains(PERIOD)) {
+			throw new EmailContentException();
+		}
+		if (!email.contains(AT_SYMBOL)) {
+			throw new EmailContentException();
+		}
 	}
 }

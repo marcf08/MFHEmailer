@@ -12,8 +12,10 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import marcus.email.exceptions.EmailContentException;
 import marcus.email.exceptions.EmailException;
 import marcus.email.exceptions.PasswordException;
+import marcus.email.exceptions.PasswordLengthException;
 
 import java.awt.event.*;
 import java.io.FileNotFoundException;
@@ -76,9 +78,11 @@ public class SetupGUI extends JFrame implements ActionListener {
 	private JTextField txtEmailInitial;
 	private JTextField txtEmailConfirm;
 	
-	//These strings prompt the user for unmatched passwords/emails
+	//These strings prompt the user for unmatched passwords/emails and lengths
 	private static final String N_PW_MATCH = "Passwords do not match. Try again.";
 	private static final String N_EM_MATCH = "Email fields do not match. Try again.";
+	private static final String PW_NOT_LONG = "Password must be longer than 5 characters. Try again.";
+	private static final String EM_INVALID = "Invalid email address. Try again.";
 	
 	
 		
@@ -268,11 +272,20 @@ public class SetupGUI extends JFrame implements ActionListener {
 			} catch (PasswordException pw) {
 				showDialog(N_PW_MATCH);
 			}
-			
 			try {
 				verify.emailMatch(txtEmailInitial.getText(), txtEmailConfirm.getText());
 			} catch (EmailException em) {
 				showDialog(N_EM_MATCH);
+			}
+			try {
+				verify.isProperLength(txtPasswordInitial.getPassword());
+			} catch (PasswordLengthException pwl) {
+				showDialog(PW_NOT_LONG);
+			}
+			try {
+				verify.isValidEmail(txtEmailConfirm.getText());
+			} catch (EmailContentException ece) {
+				showDialog(EM_INVALID);
 			}
 			try {
 				logic.storePasswordHash(txtPasswordConfirm.getPassword());
@@ -303,10 +316,13 @@ public class SetupGUI extends JFrame implements ActionListener {
 	private void showDialog(String msg) {
 		JOptionPane.showMessageDialog(new JFrame(), msg);
 		if (msg.equals(N_PW_MATCH)) {
-			txtPasswordConfirm.requestFocus();
+			txtPasswordInitial.requestFocus();
 		}
 		if (msg.equals(N_EM_MATCH)) {
-			txtEmailConfirm.requestFocus();
+			txtEmailInitial.requestFocus();
+		}
+		if (msg.equals(PW_NOT_LONG)) {
+			txtPasswordInitial.requestFocus();
 		}
 	}
 	

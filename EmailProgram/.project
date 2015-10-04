@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>resources/mfhLogo.png</name>
+			<type>1</type>
+			<location>C:/Users/Marcus/Desktop/mfhLogo.png</location>
+		</link>
+	</linkedResources>
 </projectDescription>
