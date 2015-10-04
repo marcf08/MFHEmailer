@@ -27,7 +27,6 @@ public class CreateMessage {
 	/**
 	 * Static settings for email message
 	 */
-	
 	public static Properties mailServerProperties;
 	public static Session getMailSession;
 	public static MimeMessage generateMailMessage;
