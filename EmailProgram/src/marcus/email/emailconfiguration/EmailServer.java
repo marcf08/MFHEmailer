@@ -1,4 +1,6 @@
-package marcus.email;
+package marcus.email.emailconfiguration;
+
+
 
 import java.util.Properties;
 import javax.mail.Message;
@@ -15,7 +17,7 @@ import javax.mail.internet.MimeMessage;
  *
  */
  
-public class CreateMessage {
+public class EmailServer {
 	/**
 	 * Dynamic settings for email message, contains the to, from,
 	 * contents, etc.
@@ -31,9 +33,6 @@ public class CreateMessage {
 	public static Session getMailSession;
 	public static MimeMessage generateMailMessage;
 	
-	
-
-
 	public static void generateAndSendEmail() throws AddressException, MessagingException {
  
 		// Step1

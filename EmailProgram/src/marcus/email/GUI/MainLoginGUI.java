@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -41,6 +42,9 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 	
 	//The middle panel is for the login buttons
 	private JPanel pnlMiddle;
+	
+	//This dimension is for centering the screen
+	Dimension dimCenter;
 	
 	/**
 	 * Defaults for length and width.
@@ -82,13 +86,19 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 		this.setTitle(PRG_NAME);
-
+		this.setLocationRelativeTo(null);
+		
 		setupLoginPanel();
 		setHomePageButtons();
 		setButtonPanel();
 
 		registerListeners();
 		setupUserInfo();
+
+		pack();
+		
+		//Center the login face		
+		setLocationRelativeTo(null);
 		
 	}
 	
@@ -105,6 +115,7 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 	 * This method sets up the password/email fields in the middle.
 	 */
 	public void setupUserInfo() {
+		pnlMiddle = new JPanel(new BorderLayout());
 		pnlUserInfo = new JPanel(new FlowLayout());
 		pnlUserPw = new JPanel(new FlowLayout());
 		
@@ -120,11 +131,13 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 		pnlUserPw.add(lblPassword);
 		pnlUserPw.add(txtPassword);
 		
-		pnlUserInfo.add(pnlUserPw);
-		
-		this.add(pnlUserInfo, BorderLayout.CENTER);
+		pnlMiddle.add(pnlUserInfo, BorderLayout.NORTH);
+		pnlMiddle.add(pnlUserPw, BorderLayout.CENTER);
 
-		pack();
+	
+		this.add(pnlMiddle, BorderLayout.CENTER);
+
+
 		validate();
 		
 	}
@@ -178,7 +191,6 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 		}
 	}
 	
-
 	/**
 	 * Run the program, for testing.
 	 * @param args

@@ -1,6 +1,7 @@
 package marcus.email.GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
 
 import javax.imageio.ImageIO;
@@ -10,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -43,7 +45,7 @@ public class EmailerGUIMain extends JFrame implements ActionListener {
 	//This JText area is for the welcome greeting
 	//The constants specify the rows and columns
 	//to format the text.
-	private JTextArea txtWelcome;
+	private JLabel lblWelcome;
 	public static final int TXT_ROWS = 3;
 	public static final int TXT_COLUMNS = 50;
 	private static final String WELCOME_MSG = "Welcome to the MFH Emailer Application!";
@@ -72,7 +74,6 @@ public class EmailerGUIMain extends JFrame implements ActionListener {
 	public EmailerGUIMain() {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setSize(WIDTH, HEIGHT);
 		this.setTitle(PRG_NAME);
 		this.setLayout(new BorderLayout());
 		setupMainLoginPanel();
@@ -82,6 +83,10 @@ public class EmailerGUIMain extends JFrame implements ActionListener {
 		registerListeners();
 		setupTopPanel();
 		setIntroMessage();
+		
+		pack();
+		
+		setLocationRelativeTo(null);
 	
 	}
 	
@@ -91,14 +96,14 @@ public class EmailerGUIMain extends JFrame implements ActionListener {
 	public void setIntroMessage() {
 		
 		//Configure text
-		txtWelcome = new JTextArea(TXT_ROWS, TXT_COLUMNS);
-		txtWelcome.setWrapStyleWord(true);
-		txtWelcome.setText(WELCOME_MSG);
-		txtWelcome.setEditable(false);
-		txtWelcome.setBackground(this.getBackground());
+		lblWelcome = new JLabel();
+		lblWelcome.setText(WELCOME_MSG);
+		lblWelcome.setBackground(this.getBackground());
+		lblWelcome.setHorizontalAlignment(JLabel.CENTER);
 		
-		//Add text to panel
-		this.add(txtWelcome, BorderLayout.AFTER_LINE_ENDS);
+		//Add text to main panel
+		this.add(lblWelcome);
+		
 		validate();
 	}
 	

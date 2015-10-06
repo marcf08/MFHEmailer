@@ -9,7 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import marcus.email.exceptions.EmailContentException;
@@ -45,10 +44,6 @@ public class SetupGUI extends JFrame implements ActionListener {
 	//This is the main window for components
 	private JPanel pnlMain;
 	
-	//Length and width constants
-	private static final int WIDTH = 600;
-	private static final int HEIGHT = 400;
-	
 	//The middle panel is for the password and email information
 	private JPanel pnlMiddle;
 
@@ -83,8 +78,6 @@ public class SetupGUI extends JFrame implements ActionListener {
 	private static final String N_EM_MATCH = "Email fields do not match. Try again.";
 	private static final String PW_NOT_LONG = "Password must be longer than 5 characters. Try again.";
 	private static final String EM_INVALID = "Invalid email address. Try again.";
-	
-	
 		
 	//Next and exit buttons for doing through setup
 	//Also, contains string constants for their labels
@@ -97,11 +90,10 @@ public class SetupGUI extends JFrame implements ActionListener {
 	private JPanel pnlButtonStrip;
 	
 	//Introductory message/prompt and config settings
-	private JTextArea txtIntroMessage;
-	public static final int TXT_ROWS = 3;
-	public static final int TXT_COLUMNS = 50;
-	private static final String MSG_PART1 = "It looks like this is the first time launching the Emailer application.";
-	private static final String MSG_PART2 = "Please set an administrative password and email.";
+	private JLabel lblWelcome;
+	
+	private static final String MSG = "It looks like this is the first time launching the Emailer Application."
+			+ " Please set an administrative password and email.";
 
 	/**
 	 * The constructor opens the admin settings window. It throws exceptions
@@ -118,8 +110,7 @@ public class SetupGUI extends JFrame implements ActionListener {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.add(pnlMain);
 		this.setVisible(true);
-		this.setSize(WIDTH, HEIGHT);
-				
+
 		setIntroMessage();
 		setupMiddlePanel();
 		setupPasswordPanel();
@@ -127,6 +118,10 @@ public class SetupGUI extends JFrame implements ActionListener {
 		
 		setupLowerPanel();
 		registerListeners();
+		
+		pack();
+		
+		setLocationRelativeTo(null);
 	}
 	
 	/**
@@ -137,15 +132,12 @@ public class SetupGUI extends JFrame implements ActionListener {
 		pnlTextArea = new JPanel();
 		
 		//Configure text
-		txtIntroMessage = new JTextArea(TXT_ROWS, TXT_COLUMNS);
-		txtIntroMessage.setWrapStyleWord(true);
-		txtIntroMessage.setText(MSG_PART1 + "\n");
-		txtIntroMessage.append(MSG_PART2);
-		txtIntroMessage.setEditable(false);
-		txtIntroMessage.setBackground(pnlTextArea.getBackground());
+		lblWelcome = new JLabel();
+		lblWelcome.setText(MSG);
+		
 		
 		//Add text to panel
-		pnlTextArea.add(txtIntroMessage);
+		pnlTextArea.add(lblWelcome);
 		pnlMain.add(pnlTextArea, BorderLayout.NORTH);
 		validate();
 	}
