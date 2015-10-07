@@ -1,17 +1,11 @@
 package marcus.email.GUI;
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
 import java.util.Properties;
-import java.util.Scanner;
 
 import marcus.email.admin.AdminAccount;
 
@@ -20,42 +14,32 @@ import marcus.email.admin.AdminAccount;
  * to the properties file.
  * 
  * @author Marcus
- *
  */
 
 public class GUILogic {
-	/**
-	 * The admin account is used for accessing/setting the password.
-	 */
+	
+	//This is the admin account
 	private AdminAccount admin;
-	/**
-	 * The prop data member is the properties object we will modify.
-	 */
+
+	//Data member for the properties file
 	private Properties prop;
-	/**
-	 * The file name is the name of the properties file.
-	 */
-	private File propFile;
-	/**
-	 * The string is for the name of the prop file.
-	 */
+
+	//This is the current address of the config file.
+	//It should be modified to use a relative path later on.
 	private static final String CONFIG_FILE = "C:/Users/Marcus/git/EmailProgram/EmailProgram/resources/config.properties";
-	/**
-	 * This string is for a simple heading in the properties file.
-	 * In addition, there are some other parts of the key-value pair.
-	 */
+	
+	//These strings relate to initialization settings in the properties file
 	private static final String SETUP = "Setup";
 	private static final String EMAIL = "email";
 	private static final String FIRST_OPEN = "firstrun";
 	private static final String FIRST_OPEN_FALSE = "1";
 	
 	//These strings related to the key value pairs in the properties file
-	private static final String smtp = "smtp";
-	private static final String portNumber = "portNumber";
-	private static final String smtpEnable = "smtpEnable";
-	private static final String setTrue = "setTrue";
-	private static final String smtpSetFalse = "smtpSetFalse";
-	private static final String testEmail = "testEmail";
+	private String smtp = "smtp";
+	private String portNumber = "portNumber";
+	private String smtpEnable = "smtpEnable";
+	private String setTrue = "setTrue";
+	private String testEmail = "testEmail";
 	
 	
 	/**
@@ -65,7 +49,6 @@ public class GUILogic {
 	public GUILogic() throws IOException {
 		admin = new AdminAccount();
 		prop = new Properties();
-		propFile = new File(CONFIG_FILE);
 		prop.load(new FileInputStream(CONFIG_FILE));
 	}
 
@@ -107,15 +90,21 @@ public class GUILogic {
 	
 	/**
 	 * This method stores information related to the server settings.
+	 * @param smtp the smtp server
+	 * @param portNumber the port number
+	 * @param smtpEnable the enable field
+	 * @param setTrue the set true field
+	 * @param testEmail the test email address
+	 * @throws IOException for now, until we can handle later
+	 * @throws FileNotFoundException for now, until we can handle later
 	 */
-	public void storeServerSettings(String smtp, String portNumber, String smtpEnable, String setTrue, String testEmail) {
+	public void storeServerSettings(String smtp, String portNumber, String smtpEnable, String setTrue, String testEmail) throws FileNotFoundException, IOException {
 		prop.setProperty(this.smtp, smtp);
 		prop.setProperty(this.portNumber, portNumber);
 		prop.setProperty(this.smtpEnable, smtpEnable);
 		prop.setProperty(this.setTrue, setTrue);
 		prop.setProperty(this.testEmail, testEmail);
-		
-		
+		prop.store(new FileOutputStream(CONFIG_FILE), SETUP);
 	}
 }
 	

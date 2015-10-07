@@ -1,8 +1,12 @@
 package marcus.email.GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -13,6 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 
 import marcus.email.exceptions.EmailContentException;
 import marcus.email.exceptions.EmailException;
@@ -33,224 +40,122 @@ import java.security.spec.InvalidKeySpecException;
  */
 public class SettingsGUI extends JFrame implements ActionListener {
 	
-	//Constant for size of fields
-	private static final int FLD_LEN = 25;
-	
-	//Constant for rows and columns
-	private static final int ROWS = 6;
-	private static final int COLS = 2;
-	
-	//Labels for instructions
-	private JLabel lblInstructionsOne;
-	private JLabel lblInstructionsTwo;
-	private JLabel lblInstructionsThree;
-	private JLabel lblInstructionsFour;
-	private JLabel lblInstructionsFive;
-	private JLabel lblInstructionsSix;
-	private JLabel lblInstructionsSeven;
-	
-	//Instructions
-	private static final String INSTR_ONE = "Please enter the server settings. ";
-	private static final String INSTR_TWO = "A test email will be mailed to the email address. ";
-	private static final String INSTR_THREE = "You can leave the test email blank. ";
-	private static final String INSTR_FOUR = "However, it is strongly recommended to send a test email ";
-	private static final String INSTR_FIVE = "in order to verify proper server settings.";
-	private static final String INSTR_SIX = "These settings can be modified at any time ";
-	private static final String INSTR_SEVEN = "from the settings menu.";
-	
-	//Labels for the settings
-	private JLabel lblSmtp;
-	private JLabel lblPortNumber;
-	private JLabel lblSmtpEnable;
-	private JLabel lblSetTrue;
-	private JLabel lblSetFalse;
-	private JLabel lblTestEmail;
-	
-	//Fields for the settings
-	private JTextField txtSmtp;
-	private JTextField txtPortNumber;
-	private JTextField txtSmtpEnable;
-	private JTextField txtSetTrue;
-	private JTextField txtSetFalse;
-	private JTextField txtTestEmail;
-	
-	//Panels for the settings
-	private JPanel pnlSmtp;
-	private JPanel pnlPortNumber;
-	private JPanel pnlSmtpEnable;
-	private JPanel pnlSetTrue;
-	private JPanel pnlSetFalse;
-	private JPanel pnlTestEmail;
-	
-	//This is the main panel for the fields
-	private JPanel pnlMainFields;
-	
-	//Text for the settings
-	private static final String SMTP = "SMTP Server: ";
-	private static final String PORT_NO = "SMTP Port Number: ";
-	private static final String SMTP_ENABLE = "SMTP Enable: ";
-	private static final String SET_TRUE = "SMTP Set True: ";
-	private static final String SET_FALSE = "SMTP Set False: ";
-	private static final String TEST_EMAIL_ADDRESS = "Test Email Address: ";
-	
+
 	//Next button and exit buttons, along with their labels
-	private JButton btnNext;
+	private JButton btnSave;
 	private JButton btnTest;
 	private JButton btnExit;
-	private static final String NEXT = "Next";
+	private static final String SAVE = "Save";
 	private static final String TEST = "Send Test Email";
 	private static final String EXIT = "Exit";
 
-
 	//This JPanel is for the button strip at the bottom.
 	private JPanel pnlButtons;
-
+	
+	//The string consists of all labels used.
+	private String [] settingsLabels = {"SMTP Server: ", "SMTP Port Number: ", "SMTP Enable: ", "SMTP Set True: ", "SMTP Set False: ", "Test Email Address: "}; 
+	
 	/**
 	 * The constructor sets up the SettingsGUI
 	 */
 	public SettingsGUI() {
-		this.setVisible(true);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setTitle(EmailerGUIMain.PRG_NAME);
-		setLayout(new BorderLayout());	
-			
+		setVisible(true);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setTitle(EmailerGUIMain.PRG_NAME);
+		setLayout(new BorderLayout());
 		
-		setupButtonStrip();
-		registerListeners();
-		setupFields();
-		setupFieldPanels();
-		addFieldsToPanels();
-		setMainFieldPanel();
-
-		
-	    setVisible(true);
+		//Setup the grid and pack it
+		setupGrid();
+		setupButtons();
 		pack();
+		
+		
 		setLocationRelativeTo(null);
 		
 	}
 	
 	
-	
 	/**
-	 * This method sets up the main fields with their labels.
+	 * This method sets up the grid, the borders, and populates them with the
+	 * add label method below it.
 	 */
-	public void setupFields() {
-		txtSmtp = new JTextField(FLD_LEN);
-		txtSmtpEnable = new JTextField(FLD_LEN);
-		txtPortNumber = new JTextField(FLD_LEN);
-		txtSetFalse = new JTextField(FLD_LEN);
-		txtSetTrue = new JTextField(FLD_LEN);
-		txtTestEmail = new JTextField(FLD_LEN);
+	public void setupGrid() {
 		
-		lblSmtp = new JLabel(SMTP);
-		lblSmtpEnable = new JLabel(SMTP_ENABLE);
-		lblPortNumber = new JLabel(PORT_NO);
-		lblSetFalse = new JLabel(SET_FALSE);
-		lblSetTrue = new JLabel(SET_TRUE);
-		lblTestEmail = new JLabel(TEST_EMAIL_ADDRESS);
-		
-	}
-	
-	public void test() {
+		JPanel settingsPanel = new JPanel();
+	    Border border = settingsPanel.getBorder();
+	    Border margin = new EmptyBorder(10, 10, 10, 10);
+	    settingsPanel.setBorder(new CompoundBorder(border, margin));
 
+	    GridBagLayout panelGridBagLayout = new GridBagLayout();
+	    panelGridBagLayout.columnWidths = new int[] { 86, 86, 0 };
+	    panelGridBagLayout.rowHeights = new int[] { 20, 20, 20, 20, 20, 0 };
+	    panelGridBagLayout.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
+	    panelGridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+	    settingsPanel.setLayout(panelGridBagLayout);
+
+	    addLabel(settingsLabels[0], 0, settingsPanel);
+	    addLabel(settingsLabels[1], 1, settingsPanel);
+	    addLabel(settingsLabels[2], 2, settingsPanel);
+	    addLabel(settingsLabels[3], 3, settingsPanel);
+	    addLabel(settingsLabels[4], 4, settingsPanel);
+	
+	    add(settingsPanel, BorderLayout.CENTER);
+	    validate();
 	}
 	
+	
 	/**
-	 * This method sets up the main fields in their panels.
+	 * This method adds the labels to the grid. It also sets the grid constraints
+	 * for the settings used to configure the email server. 
+	 * @param labelText
+	 * @param yPos
+	 * @param settingsPanel
 	 */
-	public void setupFieldPanels() {
-		pnlSmtp = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		pnlPortNumber = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		pnlSmtpEnable = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		pnlSetTrue = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		pnlSetFalse = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		pnlTestEmail = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		
+	public void addLabel(String labelText, int yPos, Container settingsPanel) {
+		JLabel faxLabel = new JLabel(labelText);
+	    GridBagConstraints gridBagConstraintForLabel = new GridBagConstraints();
+	    gridBagConstraintForLabel.fill = GridBagConstraints.BOTH;
+	    gridBagConstraintForLabel.insets = new Insets(0, 0, 5, 5);
+	    gridBagConstraintForLabel.gridx = 0;
+	    gridBagConstraintForLabel.gridy = yPos;
+	    settingsPanel.add(faxLabel, gridBagConstraintForLabel);
+
+	    JTextField textField = new JTextField();
+	    GridBagConstraints gridBagConstraintForTextField = new GridBagConstraints();
+	    gridBagConstraintForTextField.fill = GridBagConstraints.BOTH;
+	    gridBagConstraintForTextField.insets = new Insets(0, 0, 5, 0);
+	    gridBagConstraintForTextField.gridx = 1;
+	    gridBagConstraintForTextField.gridy = yPos;
+	    settingsPanel.add(textField, gridBagConstraintForTextField);
+	    textField.setColumns(10);
+	
 	}
 	
 	/**
-	 * This method adds the main fields to their respective panels.
-	 */
-	public void addFieldsToPanels() {
-		pnlSmtp.add(lblSmtp);
-		pnlSmtp.add(txtSmtp);
-		
-		pnlPortNumber.add(lblPortNumber);
-		pnlPortNumber.add(txtPortNumber);
-		
-		pnlSmtpEnable.add(lblSmtpEnable);
-		pnlSmtpEnable.add(txtSmtpEnable);
-		
-		pnlSetTrue.add(lblSetTrue);
-		pnlSetTrue.add(txtSetTrue);
-		
-		pnlSetFalse.add(lblSetFalse);
-		pnlSetFalse.add(txtSetFalse);
-		
-		pnlTestEmail.add(lblTestEmail);
-		pnlTestEmail.add(txtTestEmail);
-	}
-	
-	
-	/**
-	 * This method consolidates all the panels into one main panel
-	 * and adds it to the GUI.
-	 */
-	public void setMainFieldPanel() {
-		pnlMainFields = new JPanel();
-		
-		pnlMainFields.setLayout(new BoxLayout(pnlMainFields, BoxLayout.Y_AXIS));
-		
-		pnlMainFields.add(pnlSmtp);
-		pnlMainFields.add(pnlPortNumber);
-		pnlMainFields.add(pnlSmtpEnable);
-		pnlMainFields.add(pnlSetTrue);
-		pnlMainFields.add(pnlSetFalse);
-		pnlMainFields.add(pnlTestEmail);
-		
-		add(pnlMainFields, BorderLayout.CENTER);
-		
-		pack();
-		validate();
-	}
-	
-	
-	
-	
-	/**
-	 * This method sets up the buttons and adds them to a lower
+	 * This method instantiates the button and adds them to the
+	 * button strip panel. This panel is then added to the main
 	 * panel.
 	 */
-		
-	public void setupButtonStrip() {
-		pnlButtons = new JPanel(new FlowLayout());
-				
-		btnNext = new JButton(NEXT);
+	
+	public void setupButtons() {
 		btnExit = new JButton(EXIT);
+		btnSave = new JButton(SAVE);
 		btnTest = new JButton(TEST);
+		
+		pnlButtons = new JPanel(new FlowLayout());
 		
 		pnlButtons.add(btnExit);
 		pnlButtons.add(btnTest);
-		pnlButtons.add(btnNext);
+		pnlButtons.add(btnSave);
+		
 		
 		add(pnlButtons, BorderLayout.SOUTH);
-		
 		validate();
-		
-		
 	}
-	
 	
 	/**
-	 * This method registers the action listeners for the buttons.
+	 * This method sets up the actions for the buttons.
 	 */
-	public void registerListeners() {
-		btnNext.addActionListener(this);
-		btnExit.addActionListener(this);
-		btnTest.addActionListener(this);
-	}
-	
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnExit) {
@@ -259,11 +164,9 @@ public class SettingsGUI extends JFrame implements ActionListener {
 		if (e.getSource() == btnTest) {
 			
 		}
-		if (e.getSource() == btnNext) {
+		if (e.getSource() == btnSave) {
 			
 		}
-		
-		
 	}
 	
 
