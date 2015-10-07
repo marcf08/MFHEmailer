@@ -62,7 +62,10 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 	private JTextField txtUserName;
 	private static final String USER = "Username: ";
 	private static final String PW = "Password: ";
-	private static final int PW_LENGTH = 25;
+	private static final int PW_LENGTH = 15;
+	
+	//This panel is for the illustration
+	private JPanel pnlTop;
 	
 	/**
 	 * The home page buttons include login and exit.
@@ -85,7 +88,7 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
-		this.setTitle(PRG_NAME);
+		this.setTitle(EmailerGUIMain.PRG_NAME);
 		this.setLocationRelativeTo(null);
 		
 		setupLoginPanel();
@@ -94,6 +97,7 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 
 		registerListeners();
 		setupUserInfo();
+		setupTopPanel();
 
 		pack();
 		
@@ -176,6 +180,27 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 	public void closeAndDispose() {
 		this.setVisible(false);
 		this.dispose();
+	}
+	
+	
+	/**
+	 * This method sets up the top panel with the illustration.
+	 */
+	public void setupTopPanel() {
+		pnlTop = new JPanel();
+		BufferedImage logo = null;
+		try {
+			logo = ImageIO.read(new File("C:/Users/Marcus/Desktop/mfhLogoTwo.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		JLabel picLabel = new JLabel(new ImageIcon(logo));
+		pnlTop.add(picLabel);
+		this.add(pnlTop, BorderLayout.NORTH);
+		validate();
+		
+		
 	}
 	
 	/**

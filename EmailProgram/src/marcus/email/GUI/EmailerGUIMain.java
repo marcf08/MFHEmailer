@@ -31,7 +31,7 @@ public class EmailerGUIMain extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	
 	//String for name of the program
-	public static final String PRG_NAME = "MFH Emailer Application";
+	public static final String PRG_NAME = "MFH Emailer";
 
 	//Main panel for components
 	private JPanel pnlMain;

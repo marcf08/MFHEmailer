@@ -48,6 +48,16 @@ public class GUILogic {
 	private static final String EMAIL = "email";
 	private static final String FIRST_OPEN = "firstrun";
 	private static final String FIRST_OPEN_FALSE = "1";
+	
+	//These strings related to the key value pairs in the properties file
+	private static final String smtp = "smtp";
+	private static final String portNumber = "portNumber";
+	private static final String smtpEnable = "smtpEnable";
+	private static final String setTrue = "setTrue";
+	private static final String smtpSetFalse = "smtpSetFalse";
+	private static final String testEmail = "testEmail";
+	
+	
 	/**
 	 * The constructor instantiates the properties object.
 	 * @throws IOException 
@@ -93,6 +103,19 @@ public class GUILogic {
 	public void storeFirstOpen() throws FileNotFoundException, IOException {
 		prop.setProperty(FIRST_OPEN, FIRST_OPEN_FALSE);
 		prop.store(new FileOutputStream(CONFIG_FILE), SETUP);
+	}
+	
+	/**
+	 * This method stores information related to the server settings.
+	 */
+	public void storeServerSettings(String smtp, String portNumber, String smtpEnable, String setTrue, String testEmail) {
+		prop.setProperty(this.smtp, smtp);
+		prop.setProperty(this.portNumber, portNumber);
+		prop.setProperty(this.smtpEnable, smtpEnable);
+		prop.setProperty(this.setTrue, setTrue);
+		prop.setProperty(this.testEmail, testEmail);
+		
+		
 	}
 }
 	

@@ -48,7 +48,7 @@ public class EmailServer {
 		System.out.println("Setup Mail Session..");
 		getMailSession = Session.getDefaultInstance(mailServerProperties, null);
 		generateMailMessage = new MimeMessage(getMailSession);
-		generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress("alliejflores@gmail.com"));
+		generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress("marcus.flores09@gmail.com"));
 		generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("marcus.flores09@gmail.com"));
 		
 		generateMailMessage.setSubject("Test");
@@ -64,5 +64,16 @@ public class EmailServer {
 		transport.connect("smtp.gmail.com", "marcus.flores09@gmail.com", "fam892311*");
 		transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
 		transport.close();
+	}
+	
+	/**
+	 * Runs the program -- strictly for testing
+	 * @param args
+	 * @throws AddressException
+	 * @throws MessagingException
+	 */
+	
+	public static void main(String [] args) throws AddressException, MessagingException {
+		generateAndSendEmail();
 	}
 }

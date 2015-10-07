@@ -33,8 +33,6 @@ import java.security.spec.InvalidKeySpecException;
  */
 public class SettingsGUI extends JFrame implements ActionListener {
 	
-	
-
 	//Constant for size of fields
 	private static final int FLD_LEN = 25;
 	
@@ -114,7 +112,8 @@ public class SettingsGUI extends JFrame implements ActionListener {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setTitle(EmailerGUIMain.PRG_NAME);
-		this.setLayout(new BorderLayout());
+		setLayout(new BorderLayout());	
+			
 		
 		setupButtonStrip();
 		registerListeners();
@@ -122,12 +121,10 @@ public class SettingsGUI extends JFrame implements ActionListener {
 		setupFieldPanels();
 		addFieldsToPanels();
 		setMainFieldPanel();
-		
-		
-		pack();
 
 		
-		
+	    setVisible(true);
+		pack();
 		setLocationRelativeTo(null);
 		
 	}
@@ -154,16 +151,20 @@ public class SettingsGUI extends JFrame implements ActionListener {
 		
 	}
 	
+	public void test() {
+
+	}
+	
 	/**
 	 * This method sets up the main fields in their panels.
 	 */
 	public void setupFieldPanels() {
-		pnlSmtp = new JPanel(new FlowLayout());
-		pnlPortNumber = new JPanel(new FlowLayout());
-		pnlSmtpEnable = new JPanel(new FlowLayout());
-		pnlSetTrue = new JPanel(new FlowLayout());
-		pnlSetFalse = new JPanel(new FlowLayout());
-		pnlTestEmail = new JPanel(new FlowLayout());
+		pnlSmtp = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pnlPortNumber = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pnlSmtpEnable = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pnlSetTrue = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pnlSetFalse = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		pnlTestEmail = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		
 	}
 	
@@ -196,7 +197,9 @@ public class SettingsGUI extends JFrame implements ActionListener {
 	 * and adds it to the GUI.
 	 */
 	public void setMainFieldPanel() {
-		pnlMainFields = new JPanel(new GridLayout(ROWS, COLS));
+		pnlMainFields = new JPanel();
+		
+		pnlMainFields.setLayout(new BoxLayout(pnlMainFields, BoxLayout.Y_AXIS));
 		
 		pnlMainFields.add(pnlSmtp);
 		pnlMainFields.add(pnlPortNumber);
@@ -207,6 +210,7 @@ public class SettingsGUI extends JFrame implements ActionListener {
 		
 		add(pnlMainFields, BorderLayout.CENTER);
 		
+		pack();
 		validate();
 	}
 	
@@ -248,8 +252,17 @@ public class SettingsGUI extends JFrame implements ActionListener {
 	
 	
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnExit) {
+			System.exit(0);
+		}
+		if (e.getSource() == btnTest) {
+			
+		}
+		if (e.getSource() == btnNext) {
+			
+		}
+		
 		
 	}
 	
