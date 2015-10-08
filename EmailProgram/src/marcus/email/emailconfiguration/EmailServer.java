@@ -48,8 +48,8 @@ public class EmailServer {
 		System.out.println("Setup Mail Session..");
 		getMailSession = Session.getDefaultInstance(mailServerProperties, null);
 		generateMailMessage = new MimeMessage(getMailSession);
-		generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress("marcus.flores09@gmail.com"));
-		generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("marcus.flores09@gmail.com"));
+		generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress("anyone@email.com"));
+		generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("anyone@email.com"));
 		
 		generateMailMessage.setSubject("Test");
 		String emailBody = "TEST";
@@ -61,7 +61,7 @@ public class EmailServer {
 		Transport transport = getMailSession.getTransport("smtp");
  
 		// Password
-		transport.connect("smtp.gmail.com", "marcus.flores09@gmail.com", "fam892311*");
+		transport.connect("smtp.gmail.com", "test@email.com", "testPassword");
 		transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
 		transport.close();
 	}
