@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Marcus
  *
  */
-public class Patron {
+public class Patron implements Comparable <Patron> {
 	// String for first name
 	private String firstName;
 
@@ -23,14 +23,14 @@ public class Patron {
 
 	// Ints for invalid date--to be used in the event of a
 	// parse error. This section also provides minimum years.
-	private int defYear = 0000;
-	private int defMonth = 00;
-	private int defDay = 00;
-	private int minYear = 1900;
-	private int minDay = 0;
-	private int maxDay = 31;
-	private int minMonth = 0;
-	private int maxMonth = 12;
+	private final int defYear = 0000;
+	private final int defMonth = 00;
+	private final int defDay = 00;
+	private final int minYear = 1900;
+	private final int minDay = 0;
+	private final int maxDay = 31;
+	private final int minMonth = 0;
+	private final int maxMonth = 12;
 
 	// Patron's date of birth
 	private Date patronDOB;
@@ -38,6 +38,15 @@ public class Patron {
 	// Date the patron was added to the system
 	private Date patronSince;
 
+	/**
+	 * This class requires a null construcotr in order to use the
+	 * check and set date method.
+	 */
+	public Patron() {
+		
+	}
+	
+	
 	/**
 	 * The non-null constructor sets up a patron with all attributes. It also
 	 * calls the method set the date the patron was added.
@@ -67,8 +76,9 @@ public class Patron {
 	 *            a date of birth formatted as a String--the method checks this
 	 *            and, if valid, sets the date
 	 */
-	private void checkAndSetDate(String dob) {
+	public void checkAndSetDate(String dob) {
 		try {
+
 			String yearToConvert = dob.substring(0, 3);
 			String monthToConvert = dob.substring(5, 6);
 			String dayToConvert = dob.substring(7, 8);
@@ -82,7 +92,6 @@ public class Patron {
 				setDOB(defYear, defMonth, defDay);
 			}
 			
-			//If there are no errors, set the valid date
 			setDOB(year, month, day);
 	
 		} catch (IndexOutOfBoundsException e) {
@@ -96,13 +105,14 @@ public class Patron {
 	/**
 	 * This helper method converts a date supplied to register the date of
 	 * birth.
+	 * @param year the year of birth
+	 * @param month the month of birth
+	 * @param day the day of birth
 	 */
 	private void setDOB(int year, int month, int day) {
-		// We create a calendar object and set it to the birth day
 		Calendar cal = Calendar.getInstance();
 		cal.set(year, month, day);
-
-		// Then set the date of birth to the calendar's time
+		
 		patronDOB = cal.getTime();
 	}
 
@@ -132,10 +142,18 @@ public class Patron {
 			return false;
 		}
 
-		// At this point, the date should be correct
 		return true;
 	}
 
+	/**
+	 * The comparable method allows us to compare two patrons
+	 * by their last name for sorting purposes.
+	 * @param patronOther the patron to compare this patron to
+	 */
+	public int compareTo(Patron patronOther) {
+		return this.compareTo(patronOther);
+	}
+	
 	
 	/**
 	 * Getter for the first name.
@@ -165,7 +183,6 @@ public class Patron {
 	 * Setter for the last name
 	 * @param lastName the patron's last name
 	 */
-	
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
@@ -193,5 +210,7 @@ public class Patron {
 	public Date getPatronSince() {
 		return patronSince;
 	}
+
+	
 
 }

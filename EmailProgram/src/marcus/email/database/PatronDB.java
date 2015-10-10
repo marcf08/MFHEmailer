@@ -1,7 +1,11 @@
 package marcus.email.database;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Scanner;
 
 /**
  * The patron database is the list of patrons. It's primary data member
@@ -125,9 +129,62 @@ public class PatronDB {
 	 * but rather, it returns a sorted list.
 	 */
 	public ArrayList<Patron> getSortedByLast() {
-		ArrayList<Patron> copyOfMaster = new ArrayList<Patron>(database);
-		return copyOfMaster.sort(c.);;
+		ArrayList<Patron> sortedCopyOfMaster = new ArrayList<Patron>(database);
 		
+		Collections.sort(sortedCopyOfMaster);
+		
+		return sortedCopyOfMaster;
 	}
 	
+	
+	/**
+	 * The import method imports a simple text file. It assumes the file is
+	 * tab delimited. It uses separate helper methods to acquire the last name,
+	 * the first name, and the date.
+	 * @param userFile a user supplied text file
+	 */
+	public void importFromFile(File userFile) {
+		Patron toAdd = null;
+		
+		Scanner fileScanner = null;
+		Scanner lineScanner = null;
+		String lineOfInput = null;
+	
+		try {
+			fileScanner = new Scanner(userFile);
+			fileScanner.useDelimiter("\t");
+			while (fileScanner.hasNextLine()) {
+				lineOfInput = fileScanner.nextLine();
+				lineScanner = new Scanner(lineOfInput);
+				String tempLast = lineScanner.next();
+				String tempFirst = lineScanner.next();
+				String dob = lineScanner.next();
+
+				//Configure the new patron, add it to the list
+				toAdd = new Patron();
+				toAdd.setLastName(tempLast);
+				toAdd.setFirstName(tempFirst);
+				toAdd.checkAndSetDate(dob);
+				
+				database.add(toAdd);
+			}
+		} catch (FileNotFoundException e) {
+			//Handle outside of this method
+		}
+	}
+
+	
+	/**
+	 * This method simply prints the list--for testing.
+	 * @return a string representation of the database
+	 */
+	public String toString() {
+		String toReturn = null;
+		
+		for (int i = 0; i < database.size(); i++) {
+			toReturn = database.get(i).getLastName() + "\t" + database.get(i).getFirstName() + "\t" + database.get(i).getPatronDOB();
+		}
+		
+		return toReturn;
+	}
 }
