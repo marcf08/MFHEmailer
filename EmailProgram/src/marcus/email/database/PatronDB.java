@@ -10,13 +10,11 @@ import java.util.Scanner;
 /**
  * The patron database is the list of patrons. It's primary data member
  * is an array list. The patron data base can also generate a basic list
- * of it's members.
+ * of it's members given a last or first name.
  * @author Marcus
  *
  */
-
-public class PatronDB {
-
+ public class PatronDB {
 	//This is the main data member
 	private ArrayList<Patron> database;
 	
@@ -26,7 +24,7 @@ public class PatronDB {
 	public PatronDB() {
 		database = new ArrayList<>();
 	}
-	
+
 	/**
 	 * This method returns an array list of the patrons by a certain name.
 	 * For example, if we search for "Smith", this method pulls all the 
@@ -38,8 +36,6 @@ public class PatronDB {
 	public ArrayList<Patron> getPatronListByLastName(String lastName) {
 		ArrayList<Patron> listByLastName = new ArrayList<>();
 		for (int i = 0; i < database.size(); i++) {
-			//Ignoring case, if a last name matches the target last name,
-			//then the method will add it to the array list to return.
 			if (database.get(i).getLastName().equalsIgnoreCase(lastName)) {
 				listByLastName.add(database.get(i));
 			}
@@ -57,6 +53,7 @@ public class PatronDB {
 	 */
 	public ArrayList<Patron> getPatronListByFirstName(String firstName) {
 		ArrayList<Patron> listByFirstName = new ArrayList<>();
+		
 		for (int i = 0; i < database.size(); i++) {
 			//Ignoring case, if a last name matches the target last name,
 			//then the method will add it to the array list to return.
@@ -73,13 +70,12 @@ public class PatronDB {
 	 * all the users from the database for display. It uses a for-loop to search
 	 * for matches in the main list and add them to the list it will
 	 * return.
+	 * @param dob the date of birth to search for
 	 */
 	@SuppressWarnings("deprecation")
 	public ArrayList<Patron> getPatronListByDOB(Date dob) {
 		ArrayList<Patron> listByDOB = new ArrayList<>();
-		
-		//The date method is very precise. For that reason, we'll just
-		//try to match the day and month.
+	
 		int monthToMatch = dob.getMonth();
 		int dayToMatch = dob.getDay();
 
@@ -144,8 +140,6 @@ public class PatronDB {
 	 * @param userFile a user supplied text file
 	 */
 	public void importFromFile(File userFile) {
-		Patron toAdd = null;
-		
 		Scanner fileScanner = null;
 		Scanner lineScanner = null;
 		String lineOfInput = null;
@@ -154,6 +148,7 @@ public class PatronDB {
 			fileScanner = new Scanner(userFile);
 			fileScanner.useDelimiter("\t");
 			while (fileScanner.hasNextLine()) {
+
 				lineOfInput = fileScanner.nextLine();
 				lineScanner = new Scanner(lineOfInput);
 				String tempLast = lineScanner.next();
@@ -161,30 +156,38 @@ public class PatronDB {
 				String dob = lineScanner.next();
 
 				//Configure the new patron, add it to the list
-				toAdd = new Patron();
+				Patron toAdd = new Patron();
 				toAdd.setLastName(tempLast);
 				toAdd.setFirstName(tempFirst);
 				toAdd.checkAndSetDate(dob);
-				
 				database.add(toAdd);
+				
 			}
 		} catch (FileNotFoundException e) {
 			//Handle outside of this method
 		}
 	}
-
 	
 	/**
-	 * This method simply prints the list--for testing.
+	 * This method simply prints the list for testing.
 	 * @return a string representation of the database
 	 */
 	public String toString() {
-		String toReturn = null;
-		
+		StringBuffer toReturn = new StringBuffer();
+
 		for (int i = 0; i < database.size(); i++) {
-			toReturn = database.get(i).getLastName() + "\t" + database.get(i).getFirstName() + "\t" + database.get(i).getPatronDOB();
+			toReturn.append(database.get(i).toString());
+			toReturn.append("\n");
 		}
 		
-		return toReturn;
+		return toReturn.toString();
+	}
+	
+	/**
+	 * This method returns the size of the list.
+	 * @return the size of the list
+	 */
+	public int getSize() {
+		return database.size();
 	}
 }

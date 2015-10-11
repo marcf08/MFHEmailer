@@ -1,15 +1,11 @@
 package marcus.email.database;
-
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 /**
  * The patron class consists of several simple data members that relates to a
  * patron. It includes the first, last name, email, and date of birth.
- * 
  * @author Marcus
- *
  */
 public class Patron implements Comparable <Patron> {
 	// String for first name
@@ -18,9 +14,6 @@ public class Patron implements Comparable <Patron> {
 	// String for last name
 	private String lastName;
 
-	// String pattern for date
-	private static final String DATE_FORMAT = "MM/DD/YY";
-
 	// Ints for invalid date--to be used in the event of a
 	// parse error. This section also provides minimum years.
 	private final int defYear = 0000;
@@ -28,7 +21,6 @@ public class Patron implements Comparable <Patron> {
 	private final int defDay = 00;
 	private final int minYear = 1900;
 	private final int minDay = 0;
-	private final int maxDay = 31;
 	private final int minMonth = 0;
 	private final int maxMonth = 12;
 
@@ -39,13 +31,11 @@ public class Patron implements Comparable <Patron> {
 	private Date patronSince;
 
 	/**
-	 * This class requires a null construcotr in order to use the
+	 * This class requires a null constructor in order to use the
 	 * check and set date method.
 	 */
 	public Patron() {
-		
 	}
-	
 	
 	/**
 	 * The non-null constructor sets up a patron with all attributes. It also
@@ -151,7 +141,7 @@ public class Patron implements Comparable <Patron> {
 	 * @param patronOther the patron to compare this patron to
 	 */
 	public int compareTo(Patron patronOther) {
-		return this.compareTo(patronOther);
+		return this.lastName.compareTo(patronOther.getLastName());
 	}
 	
 	
@@ -211,6 +201,11 @@ public class Patron implements Comparable <Patron> {
 		return patronSince;
 	}
 
-	
-
+	/**
+	 * This method converts the patron to a string. It is used for testing.
+	 * @return the patron details
+	 */
+	public String toString() {
+		return getLastName() + "\t" + getFirstName() + "\t" + getPatronDOB().toString() + "\t";
+	}
 }
