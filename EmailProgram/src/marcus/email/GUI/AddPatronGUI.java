@@ -34,6 +34,9 @@ import javax.swing.Box;
 
 
 
+
+
+import marcus.email.util.PatronLogic;
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.BalloonTip.AttachLocation;
 import net.java.balloontip.BalloonTip.Orientation;
@@ -51,6 +54,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.nio.channels.ShutdownChannelGroupException;
 
 public class AddPatronGUI {
 
@@ -59,7 +63,7 @@ public class AddPatronGUI {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField txtyyyymmdd;
-
+	
 	/**
 	 * Launch the application.
 	 */
@@ -119,8 +123,7 @@ public class AddPatronGUI {
 		});
 
 		
-		JButton btnNewButton = new JButton("Save");
-		panel_3.add(btnNewButton);
+		
 		
 		JPanel panel_5 = new JPanel();
 		panel_2.add(panel_5, BorderLayout.WEST);
@@ -238,7 +241,26 @@ public class AddPatronGUI {
 		gbc_txtyyyymmdd.gridy = 5;
 		panel_4.add(txtyyyymmdd, gbc_txtyyyymmdd);
 		txtyyyymmdd.setColumns(10);
+	
+	
+		JButton btnNewButton = new JButton("Save");
+		panel_3.add(btnNewButton);
+		btnNewButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				PatronLogic p = new PatronLogic(textField.getText(), textField_1.getText(),
+						textField_2.getText(), txtyyyymmdd.getText());
+				p.getPatronFromGUI();
+			}
+
+		});
+		
+	
 	}
+	
+	
+	
+	
 
 
 }

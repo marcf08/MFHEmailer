@@ -13,6 +13,9 @@ public class Patron implements Comparable <Patron> {
 
 	// String for last name
 	private String lastName;
+	
+	// String for email
+	private String email;
 
 	// Ints for invalid date--to be used in the event of a
 	// parse error. This section also provides minimum years.
@@ -41,9 +44,10 @@ public class Patron implements Comparable <Patron> {
 	 * The non-null constructor sets up a patron with all attributes. It also
 	 * calls the method set the date the patron was added.
 	 */
-	public Patron(String firstName, String lastName, String dob) {
+	public Patron(String firstName, String lastName, String dob, String email) {
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.email = email;
 
 		// Set the date of registration
 		patronAddedDate();
@@ -68,7 +72,7 @@ public class Patron implements Comparable <Patron> {
 	 */
 	public void checkAndSetDate(String dob) {
 		try {
-
+			
 			String yearToConvert = dob.substring(0, 3);
 			String monthToConvert = dob.substring(5, 6);
 			String dayToConvert = dob.substring(7, 8);
