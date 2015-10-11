@@ -1,5 +1,3 @@
-package marcus.email.GUI;
-
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -7,6 +5,7 @@ import javax.swing.JTabbedPane;
 
 import java.awt.BorderLayout;
 
+import javax.swing.JToolBar;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
@@ -16,27 +15,37 @@ import java.awt.Label;
 import javax.swing.JPanel;
 import javax.swing.JList;
 
+import java.awt.Panel;
 
 import javax.swing.JTextField;
 
+import java.awt.List;
+
+import javax.swing.BoxLayout;
+
+import java.awt.Color;
 
 import javax.swing.SwingConstants;
+import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.border.EtchedBorder;
 
+import java.awt.TextArea;
 import java.awt.FlowLayout;
+
+import javax.swing.JSplitPane;
+
 import java.awt.TextField;
 import java.awt.Button;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.SoftBevelBorder;
 
 
-public class EmailerClientGUI implements ActionListener {
+public class ClientGUI {
 
 	private JFrame frmMfhEmailer;
 	private JTextField txtSearch;
@@ -65,7 +74,7 @@ public class EmailerClientGUI implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					EmailerClientGUI window = new EmailerClientGUI();
+					ClientGUI window = new ClientGUI();
 					window.frmMfhEmailer.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -77,7 +86,7 @@ public class EmailerClientGUI implements ActionListener {
 	/**
 	 * Create the application.
 	 */
-	public EmailerClientGUI() {
+	public ClientGUI() {
 		initialize();
 	}
 
@@ -123,6 +132,9 @@ public class EmailerClientGUI implements ActionListener {
 		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Export");
 		mnNewMenu_2.add(mntmNewMenuItem_5);
 		
+		JMenuItem mntmNewMenuItem_8 = new JMenuItem("Import");
+		mnNewMenu_2.add(mntmNewMenuItem_8);
+		
 		JMenu mnNewMenu_3 = new JMenu("Help");
 		menuBar.add(mnNewMenu_3);
 		
@@ -150,15 +162,6 @@ public class EmailerClientGUI implements ActionListener {
 		
 		txtSearch = new JTextField();
 		txtSearch.setText("Search Patrons");
-		txtSearch.addFocusListener(new FocusListener() {
-			public void focusLost(FocusEvent e) {
-				txtSearch.setText("Search Patrons");
-			}
-			public void focusGained(FocusEvent e) {
-				txtSearch.setText("");
-			}
-		});
-		
 		txtSearch.setHorizontalAlignment(SwingConstants.LEFT);
 		panel_2.add(txtSearch, BorderLayout.NORTH);
 		txtSearch.setColumns(10);
@@ -193,9 +196,6 @@ public class EmailerClientGUI implements ActionListener {
 		
 		Button button = new Button("Export Log");
 		panel_10.add(button, BorderLayout.SOUTH);
-		
-		JMenuItem mntmNewMenuItem_8 = new JMenuItem("Import");
-		mnNewMenu_2.add(mntmNewMenuItem_8);
 		
 		JPanel panel_5 = new JPanel();
 		panel_5.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -233,17 +233,4 @@ public class EmailerClientGUI implements ActionListener {
 		panel_11.add(btnNewButton_3);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	
-	/**
-	 * This method controls the text fields, search fields, action listeners, etc.
-	 */
-	
-	
 }

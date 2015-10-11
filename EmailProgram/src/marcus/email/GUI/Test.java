@@ -1,46 +1,38 @@
 package marcus.email.GUI;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JTabbedPane;
-
 import java.awt.BorderLayout;
+import java.awt.Button;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.Label;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JMenu;
-
-import java.awt.Label;
-
 import javax.swing.JPanel;
-import javax.swing.JList;
-
-
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
-
-
 import javax.swing.SwingConstants;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EtchedBorder;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 
-import java.awt.FlowLayout;
-import java.awt.TextField;
-import java.awt.Button;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-
-
-public class EmailerClientGUI implements ActionListener {
+public class Test implements ActionListener {
 
 	private JFrame frmMfhEmailer;
 	private JTextField txtSearch;
 	private JTextField textField_1;
+	private final Action action = new SwingAction();
+	private final Action action_1 = new SwingAction_1();
 
 	/**
 	 * Launch the application.
@@ -65,7 +57,7 @@ public class EmailerClientGUI implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					EmailerClientGUI window = new EmailerClientGUI();
+					Test window = new Test();
 					window.frmMfhEmailer.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -77,7 +69,7 @@ public class EmailerClientGUI implements ActionListener {
 	/**
 	 * Create the application.
 	 */
-	public EmailerClientGUI() {
+	public Test() {
 		initialize();
 	}
 
@@ -150,14 +142,6 @@ public class EmailerClientGUI implements ActionListener {
 		
 		txtSearch = new JTextField();
 		txtSearch.setText("Search Patrons");
-		txtSearch.addFocusListener(new FocusListener() {
-			public void focusLost(FocusEvent e) {
-				txtSearch.setText("Search Patrons");
-			}
-			public void focusGained(FocusEvent e) {
-				txtSearch.setText("");
-			}
-		});
 		
 		txtSearch.setHorizontalAlignment(SwingConstants.LEFT);
 		panel_2.add(txtSearch, BorderLayout.NORTH);
@@ -171,9 +155,11 @@ public class EmailerClientGUI implements ActionListener {
 		panel_2.add(panel_3, BorderLayout.SOUTH);
 		
 		JButton btnNewButton = new JButton("New Patron");
+		btnNewButton.setAction(action);
 		panel_3.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Edit Selected");
+		btnNewButton_1.setAction(action_1);
 		panel_3.add(btnNewButton_1);
 		
 		JPanel panel_4 = new JPanel();
@@ -234,16 +220,25 @@ public class EmailerClientGUI implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
 
-
-	
-	/**
-	 * This method controls the text fields, search fields, action listeners, etc.
-	 */
-	
-	
+	private class SwingAction extends AbstractAction {
+		public SwingAction() {
+			putValue(NAME, "SwingAction");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+		}
+	}
+	private class SwingAction_1 extends AbstractAction {
+		public SwingAction_1() {
+			putValue(NAME, "SwingAction_1");
+			putValue(SHORT_DESCRIPTION, "Some short description");
+		}
+		public void actionPerformed(ActionEvent e) {
+		}
+	}
 }

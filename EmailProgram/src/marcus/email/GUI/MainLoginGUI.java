@@ -16,6 +16,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -60,7 +62,7 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 	private JLabel lblUser;
 	private JPasswordField txtPassword;
 	private JTextField txtUserName;
-	private static final String USER = "Username: ";
+	private static final String USER = "Username:";
 	private static final String PW = "Password: ";
 	private static final int PW_LENGTH = 15;
 	
@@ -221,7 +223,24 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-			new MainLoginGUI();
+		try {
+		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+		    	if ("Nimbus".equals(info.getName())) {
+		            UIManager.setLookAndFeel(info.getClassName());
+		            break;
+		        }
+		    }
+		} catch (Exception e) {
+		    // If Nimbus is not available, fall back to cross-platform
+		    try {
+		        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		    } catch (Exception ex) {
+		        // not worth my time
+		    }
+		}
+
+		new MainLoginGUI();
+			
 	}
 	
 }
