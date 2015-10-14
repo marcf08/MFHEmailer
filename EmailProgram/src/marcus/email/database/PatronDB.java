@@ -153,12 +153,14 @@ import java.util.Scanner;
 				lineScanner = new Scanner(lineOfInput);
 				String tempLast = lineScanner.next();
 				String tempFirst = lineScanner.next();
+				String email = lineScanner.next();
 				String dob = lineScanner.next();
-
+			
 				//Configure the new patron, add it to the list
 				Patron toAdd = new Patron();
 				toAdd.setLastName(tempLast);
 				toAdd.setFirstName(tempFirst);
+				toAdd.setEmail(email);
 				toAdd.checkAndSetDate(dob);
 				database.add(toAdd);
 				
@@ -183,6 +185,74 @@ import java.util.Scanner;
 		return toReturn.toString();
 	}
 	
+	/**
+	 * This method gets the list of first names
+	 * @return the list of first names
+	 */
+	public String[] getListOfFirstNames() {
+		String [] firstNames = new String[database.size()];
+		for (int i = 0; i < database.size(); i++) {
+			firstNames[i] = database.get(i).getFirst();
+		}
+		return firstNames;
+	}
+	
+	/**
+	 * This method gets the list of last names
+	 * @return the last of last names
+	 */
+	public String[] getListOfLastNames() {
+		String [] lastNames = new String[database.size()];
+		for (int i = 0; i < database.size(); i++) {
+			lastNames[i] = database.get(i).getLast();
+		}
+		return lastNames;
+	}
+	
+	/**
+	 * This method returns the list of emails
+	 * @return the list of emails
+	 */
+	public String[] getListOfEmails() {
+		String [] emails = new String[database.size()];
+		for (int i = 0; i < database.size(); i++) {
+			emails[i] = database.get(i).getPatronEmail();
+		}
+		return emails;
+	}
+	
+	/**
+	 * This method returns the list of date of births
+	 * @return the date of birth list
+	 */
+	public String[] getListOfBirthdays() {
+		String [] birthdays = new String[database.size()];
+		for (int i = 0; i < database.size(); i++) {
+			birthdays[i] = database.get(i).getDOB();
+		}
+		return birthdays;
+	}
+	
+	/**
+	 * This method returns the list of dates of patron since
+	 * @return the patron since date
+	 */
+	public String[] getListOfPatronSince() {
+		String [] since = new String[database.size()];
+		for (int i = 0; i < database.size(); i++) {
+			since[i] = database.get(i).getPatronSinceString();
+		}
+		return since;
+	}
+	
+
+	/**
+	 * Simple getter via the indexes.
+	 * @param i the index of the patron
+	 */
+	public Patron get(int i) {
+		return database.get(i);
+	}
 	/**
 	 * This method returns the size of the list.
 	 * @return the size of the list

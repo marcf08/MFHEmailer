@@ -4,36 +4,17 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JToolTip;
-
 import java.awt.BorderLayout;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
-import javax.swing.plaf.basic.BasicLabelUI;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 
 import java.awt.Component;
 
 import javax.swing.Box;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 import marcus.email.util.PatronLogic;
@@ -56,7 +37,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.nio.channels.ShutdownChannelGroupException;
 
-public class AddPatronGUI {
+public class AddPatronGUI extends JFrame {
 
 	private JFrame frmAddPatron;
 	private JTextField textField;
@@ -85,6 +66,7 @@ public class AddPatronGUI {
 	 */
 	public AddPatronGUI() {
 		initialize();
+		
 	}
 
 	/**
@@ -94,8 +76,10 @@ public class AddPatronGUI {
 		frmAddPatron = new JFrame();
 		frmAddPatron.setTitle("Add Patron");
 		frmAddPatron.setBounds(100, 100, 450, 300);
-		frmAddPatron.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmAddPatron.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmAddPatron.getContentPane().setLayout(new BorderLayout(0, 0));
+		frmAddPatron.setVisible(true);
+		frmAddPatron.setLocationRelativeTo(null);
 		
 		JPanel panel = new JPanel();
 		frmAddPatron.getContentPane().add(panel, BorderLayout.CENTER);
@@ -119,12 +103,11 @@ public class AddPatronGUI {
 		btnDiscardAndExit.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			frmAddPatron.dispose();
+			EmailerClientGUI.enableMainGUI();
+			
 			}
 		});
-
-		
-		
-		
+	
 		JPanel panel_5 = new JPanel();
 		panel_2.add(panel_5, BorderLayout.WEST);
 		

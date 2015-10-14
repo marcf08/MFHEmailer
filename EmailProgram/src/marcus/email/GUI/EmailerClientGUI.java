@@ -17,9 +17,11 @@ import javax.swing.JPanel;
 import javax.swing.JList;
 
 
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -27,20 +29,34 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EtchedBorder;
 
+import marcus.email.util.PatronDBLogic;
+
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Frame;
 import java.awt.TextField;
 import java.awt.Button;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
+import javax.swing.JTable;
 
-public class EmailerClientGUI implements ActionListener {
+import java.awt.List;
+import javax.swing.JScrollBar;
 
-	private JFrame frmMfhEmailer;
+
+public class EmailerClientGUI {
+
+	private static JFrame frmMfhEmailer;
 	private JTextField txtSearch;
 	private JTextField textField_1;
+	private JList<String> list;
+	private static JTable table;
+	
+	private PatronDBLogic dblogic = new PatronDBLogic();
 
 	/**
 	 * Launch the application.
@@ -79,6 +95,29 @@ public class EmailerClientGUI implements ActionListener {
 	 */
 	public EmailerClientGUI() {
 		initialize();
+	}
+	
+	/**
+	 * This method is an enable feature for use
+	 * when opening other JFrames.
+	 */
+	public static void enableMainGUI() {
+		frmMfhEmailer.setEnabled(true);
+	}
+	
+	/**
+	 * This method is an enable feature for use
+	 * when opening other JFrames.
+	 */
+	public static void disableMainGUI() {
+		frmMfhEmailer.setEnabled(false);
+	}
+	
+	/**
+	 * This method validates the static frame.
+	 */
+	public static void validate() {
+		frmMfhEmailer.validate();
 	}
 
 	/**
@@ -162,19 +201,33 @@ public class EmailerClientGUI implements ActionListener {
 		txtSearch.setHorizontalAlignment(SwingConstants.LEFT);
 		panel_2.add(txtSearch, BorderLayout.NORTH);
 		txtSearch.setColumns(10);
-		
-		JList list = new JList();
-		panel_2.add(list, BorderLayout.CENTER);
-		
+
 		JPanel panel_3 = new JPanel();
 		panel_3.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_2.add(panel_3, BorderLayout.SOUTH);
 		
 		JButton btnNewButton = new JButton("New Patron");
 		panel_3.add(btnNewButton);
-		
+		btnNewButton.addActionListener(new ActionListener() {
+		//Opens the add patron section	
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btnNewButton) {
+					AddPatronDialog d = new AddPatronDialog();
+					d.setVisible(true);
+				}
+			}
+		});
+
 		JButton btnNewButton_1 = new JButton("Edit Selected");
 		panel_3.add(btnNewButton_1);
+
+		table = new JTable(dblogic.getSize(), 5);
+		buildTable();
+		panel_2.add(table, BorderLayout.CENTER);
+		
+		JScrollPane scrollPane = new JScrollPane(table);
+		panel_2.add(scrollPane, BorderLayout.CENTER);
+		
 		
 		JPanel panel_4 = new JPanel();
 		tabbedPane.addTab("Status", null, panel_4, null);
@@ -232,18 +285,40 @@ public class EmailerClientGUI implements ActionListener {
 		JButton btnNewButton_3 = new JButton("New Promotion Email");
 		panel_11.add(btnNewButton_3);
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+	
+	public void buildTable() {
+		table.setRowSelectionAllowed(true);
+		table.setTableHeader(null);
 		
+		for (int i = 0; i < dblogic.getSize(); i++) {
+			table.setValueAt(dblogic.getPatronFromDB(i).getLast(), i, 0);
+		}
+		
+		for (int i = 0; i < dblogic.getSize(); i++) {
+			table.setValueAt(dblogic.getPatronFromDB(i).getFirst(), i, 1);
+		}
+		
+		for (int i = 0; i < dblogic.getSize(); i++) {
+			table.setValueAt(dblogic.getPatronFromDB(i).getPatronEmail(), i, 2);
+		}
+		
+		
+		for (int i = 0; i < dblogic.getSize(); i++) {
+			table.setValueAt(dblogic.getPatronFromDB(i).getDOB(), i, 3);
+		}
+		
+		for (int i = 0; i < dblogic.getSize(); i++) {
+			table.setValueAt(dblogic.getPatronFromDB(i).getPatronSinceString(), i, 4);
+		}
+		
+	
+		
+		
+		//for (int i = 0; i < dblogic.getSize(); i++) {
+		//	table.setValueAt(dblogic.getPatronFromDB(i).getPatronSince(), i, 4);
+		//}
 	}
+	
+		
 
-
-	
-	/**
-	 * This method controls the text fields, search fields, action listeners, etc.
-	 */
-	
-	
 }
