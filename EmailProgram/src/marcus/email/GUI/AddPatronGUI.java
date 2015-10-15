@@ -2,8 +2,11 @@ package marcus.email.GUI;
 
 import java.awt.EventQueue;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
 import java.awt.BorderLayout;
 
 import javax.swing.JLabel;
@@ -17,7 +20,12 @@ import java.awt.Component;
 import javax.swing.Box;
 
 
-import marcus.email.util.PatronLogic;
+
+
+
+
+
+import org.joda.time.IllegalFieldValueException;
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.BalloonTip.AttachLocation;
 import net.java.balloontip.BalloonTip.Orientation;
@@ -26,6 +34,8 @@ import net.java.balloontip.styles.BalloonTipStyle;
 import net.java.balloontip.styles.EdgedBalloonStyle;
 
 import java.awt.Color;
+import java.awt.Dialog;
+import java.awt.Dialog.ModalityType;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -37,9 +47,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.nio.channels.ShutdownChannelGroupException;
 
-public class AddPatronGUI extends JFrame {
+public class AddPatronGUI {
 
-	private JFrame frmAddPatron;
+	private JDialog frmAddPatron;
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
@@ -52,8 +62,7 @@ public class AddPatronGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AddPatronGUI window = new AddPatronGUI();
-					window.frmAddPatron.setVisible(true);
+					new AddPatronGUI();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -66,23 +75,21 @@ public class AddPatronGUI extends JFrame {
 	 */
 	public AddPatronGUI() {
 		initialize();
-		
+		frmAddPatron.setVisible(true);
+
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frmAddPatron = new JFrame();
-		frmAddPatron.setTitle("Add Patron");
-		frmAddPatron.setBounds(100, 100, 450, 300);
-		frmAddPatron.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frmAddPatron.getContentPane().setLayout(new BorderLayout(0, 0));
-		frmAddPatron.setVisible(true);
+		frmAddPatron = new JDialog(EmailerClientGUI.frmMfhEmailer, "Add Patron", true);
+		frmAddPatron.setBounds(100, 100, 400, 300);
+		frmAddPatron.setLayout(new BorderLayout(0, 0));
 		frmAddPatron.setLocationRelativeTo(null);
 		
 		JPanel panel = new JPanel();
-		frmAddPatron.getContentPane().add(panel, BorderLayout.CENTER);
+		frmAddPatron.add(panel, BorderLayout.CENTER);
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_1 = new JPanel();
@@ -103,8 +110,6 @@ public class AddPatronGUI extends JFrame {
 		btnDiscardAndExit.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			frmAddPatron.dispose();
-			EmailerClientGUI.enableMainGUI();
-			
 			}
 		});
 	
@@ -214,7 +219,7 @@ public class AddPatronGUI extends JFrame {
 	
 		//Set up the balloon tip
 		BalloonTipStyle edgedLook = new EdgedBalloonStyle(Color.WHITE, Color.BLUE);
-			BalloonTip myBalloonTip = new BalloonTip(txtyyyymmdd, new JLabel("Important. Use YYYY/MM/DD as a format with slashes."),
+			BalloonTip myBalloonTip = new BalloonTip(txtyyyymmdd, new JLabel("Use YYYY/MM/DD as a format with slashes."),
 			edgedLook, Orientation.RIGHT_BELOW, AttachLocation.ALIGNED, 10, 10, true);
 		
 		GridBagConstraints gbc_txtyyyymmdd = new GridBagConstraints();
@@ -231,9 +236,12 @@ public class AddPatronGUI extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				PatronLogic p = new PatronLogic(textField.getText(), textField_1.getText(),
-						textField_2.getText(), txtyyyymmdd.getText());
-				p.getPatronFromGUI();
+				try {
+					EmailerClientGUI.dblogic.addPatronToDB(textField.getText(), textField_1.getText(), textField_2.getText(), txtyyyymmdd.getText());
+					frmAddPatron.dispose();
+				} catch (IllegalFieldValueException i) {
+					JOptionPane.showMessageDialog(new JFrame(), "The date of birth is incorrect. Try again.");
+				}
 			}
 
 		});

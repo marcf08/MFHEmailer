@@ -4,8 +4,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
+
+import javax.lang.model.element.Parameterizable;
 
 /**
  * The patron database is the list of patrons. It's primary data member
@@ -82,8 +87,8 @@ import java.util.Scanner;
 		for (int i = 0; i < database.size(); i++) {
 			//Break up the if statements--if the month matches, check the day.
 			//This ensures both match before adding the patron to the database.
-			if (database.get(i).getPatronDOB().getMonth() == monthToMatch) {
-				if (database.get(i).getPatronDOB().getDay() == dayToMatch) {
+			if (database.get(i).getPatronDOB().getMonthOfYear() == monthToMatch) {
+				if (database.get(i).getPatronDOB().getDayOfYear() == dayToMatch) {
 					listByDOB.add(database.get(i));
 				}
 			}
@@ -110,13 +115,38 @@ import java.util.Scanner;
 		for (int i = 0; i < database.size(); i++) {
 			//Break up the if statements--if the month matches, check the day.
 			//This ensures both match before adding the patron to the database.
-			if (database.get(i).getPatronSince().getMonth() == monthToMatch) {
-				if (database.get(i).getPatronSince().getDay() == dayToMatch) {
+			if (database.get(i).getPatronSince().getMonthOfYear() == monthToMatch) {
+				if (database.get(i).getPatronSince().getDayOfYear() == dayToMatch) {
 					listBySince.add(database.get(i));
 				}
 			}
 		}
 		return listBySince;
+	}
+	
+	
+	/**
+	 * This method sorts the list by emails. It does not alter the main data member.
+	 * @param partialEmail a partial email string
+	 */
+	public ArrayList<Patron> getSortedByEmails(String partialEmail) {
+		ArrayList<Patron> sortedByEmails = new ArrayList<Patron>();
+		
+		for (int i = 0; i < database.size(); i++) {
+			if (database.get(i).getPatronEmail().contains(partialEmail)) {
+				sortedByEmails.add(database.get(i));
+			}
+		}
+		
+		//Define a simple email comparator
+		Comparator<Patron> emailOrder =  new Comparator<Patron>() {
+	        public int compare(Patron patron, Patron otherPatron) {
+	            return patron.getPatronEmail().compareTo(otherPatron.getPatronEmail());
+	        }
+	    };
+	    
+	    Collections.sort(sortedByEmails, emailOrder);
+	    return sortedByEmails;
 	}
 	
 	
@@ -148,7 +178,7 @@ import java.util.Scanner;
 			fileScanner = new Scanner(userFile);
 			fileScanner.useDelimiter("\t");
 			while (fileScanner.hasNextLine()) {
-
+				
 				lineOfInput = fileScanner.nextLine();
 				lineScanner = new Scanner(lineOfInput);
 				String tempLast = lineScanner.next();
@@ -157,10 +187,9 @@ import java.util.Scanner;
 				String dob = lineScanner.next();
 			
 				//Configure the new patron, add it to the list
-				Patron toAdd = new Patron();
+				Patron toAdd = new Patron(email);
 				toAdd.setLastName(tempLast);
 				toAdd.setFirstName(tempFirst);
-				toAdd.setEmail(email);
 				toAdd.checkAndSetDate(dob);
 				database.add(toAdd);
 				
@@ -245,7 +274,42 @@ import java.util.Scanner;
 		return since;
 	}
 	
-
+	/**
+	 * This method returns an array of patrons whose
+	 * last name matches the partial last name provided.
+	 */
+	public ArrayList<Patron> getMatching(String partialLast) {
+		ArrayList<Patron> partialLastNamePatronList = new ArrayList<Patron>();
+		for (int i = 0; i < database.size(); i++) {
+			if (database.get(i).getLast().contains(partialLast)) {
+				partialLastNamePatronList.add(database.get(i));
+			}
+		}
+		return partialLastNamePatronList;
+	}
+	
+	/**
+	 * This method allows the method to search for the unique patron.
+	 * @param email the patron's email
+	 */
+	public void edit(String email, String newFirstName, String newLastName,
+					String dob) {
+		for (int i = 0; i < database.size(); i++) {
+			if (database.get(i).getPatronEmail().equals(email)) {
+				if (newFirstName != null || newFirstName != "") {
+					database.get(i).setFirstName(newFirstName);
+				}
+				if (newLastName != null || newLastName != "") {
+					database.get(i).setLastName(newLastName);
+				}
+				if (dob != null || dob != "") {
+					database.get(i).checkAndSetDate(dob);
+				}
+			}
+		}
+		
+	}
+	
 	/**
 	 * Simple getter via the indexes.
 	 * @param i the index of the patron
@@ -260,4 +324,15 @@ import java.util.Scanner;
 	public int getSize() {
 		return database.size();
 	}
+	
+	
+	
+	/**
+	 * This method adds a patron to the database.
+	 * @fromGUI a patron from the GUI
+	 */
+	public void add(Patron fromGUI) {
+		database.add(fromGUI);
+	}
+	
 }

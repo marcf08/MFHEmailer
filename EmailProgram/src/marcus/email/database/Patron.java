@@ -2,6 +2,8 @@ package marcus.email.database;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.joda.time.LocalDate;
+
 /**
  * The patron class consists of several simple data members that relates to a
  * patron. It includes the first, last name, email, and date of birth.
@@ -12,23 +14,22 @@ public class Patron implements Comparable <Patron> {
 	private String firstName;
 	private String lastName;
 	private String email;
-	private Date patronDOB;
-	private Date patronSince;
+	private LocalDate patronDOB;
+	private LocalDate patronSince;
+
 
 	// Ints for invalid date.
 	private final int defYear = 0000;
 	private final int defMonth = 00;
 	private final int defDay = 00;
-	private final int minYear = 1900;
-	private final int minDay = 0;
-	private final int minMonth = 0;
-	private final int maxMonth = 12;
+
 
 	/**
 	 * This class requires a null constructor in order to use the
 	 * check and set date method.
 	 */
-	public Patron() {
+	public Patron(String email) {
+		this.email = email;
 		patronAddedDate();
 	}
 	
@@ -49,7 +50,7 @@ public class Patron implements Comparable <Patron> {
 	 * This helper method simply registers the date the patron was added.
 	 */
 	private void patronAddedDate() {
-		patronSince = new Date();
+		patronSince = new LocalDate();
 	}
 
 	/**
@@ -64,19 +65,14 @@ public class Patron implements Comparable <Patron> {
 	public void checkAndSetDate(String dob) {
 		try {
 			
-			String yearToConvert = dob.substring(0, 3);
-			String monthToConvert = dob.substring(5, 6);
+			String yearToConvert = dob.substring(0, 4);
+			String monthToConvert = dob.substring(5, 7);
 			String dayToConvert = dob.substring(8,10);
 			
 			int year = Integer.parseInt(yearToConvert);
 			int month = Integer.parseInt(monthToConvert);
 			int day = Integer.parseInt(dayToConvert);
 
-			// Ensure the day is valid, if not, set as default
-			if (!isValidDate(year, month, day)) {
-				setDOB(defYear, defMonth, defDay);
-				
-			}
 			
 			setDOB(year, month, day);
 			
@@ -97,49 +93,10 @@ public class Patron implements Comparable <Patron> {
 	 * @param day the day of birth
 	 */
 	private void setDOB(int year, int month, int day) {
-		Calendar cal = Calendar.getInstance();
-		cal.set(year, month, day);
-		
-		patronDOB = cal.getTime();
+		//Must shift index due to months starting with 0
+		patronDOB = new LocalDate(year, month, day);
 	}
 	
-	/**
-	 * This helper method sets the email.
-	 * @param email the patron's email
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	/**
-	 * This method simply checks the date to ensure it's valid.
-	 * 
-	 * @return true if the date is valid and false otherwise
-	 */
-	private boolean isValidDate(int year, int month, int day) {
-		if (year < minYear) {
-			return false;
-		}
-
-		if (month < minMonth) {
-			return false;
-		}
-
-		if (month > maxMonth) {
-			return false;
-		}
-
-		if (day < minDay) {
-			return false;
-		}
-
-		if (day > minDay) {
-			return false;
-		}
-
-		return true;
-	}
-
 	/**
 	 * The comparable method allows us to compare two patrons
 	 * by their last name for sorting purposes.
@@ -186,7 +143,7 @@ public class Patron implements Comparable <Patron> {
 	 * Getter for the date of birth
 	 * @return patronDOB the patron's date of birth
 	 */
-	public Date getPatronDOB() {
+	public LocalDate getPatronDOB() {
 		return patronDOB;
 	}
 
@@ -194,7 +151,7 @@ public class Patron implements Comparable <Patron> {
 	 * Setter for the date of birth.
 	 * @param patronDOB the patron's date of birth
 	 */
-	public void setPatronDOB(Date patronDOB) {
+	public void setPatronDOB(LocalDate patronDOB) {
 		this.patronDOB = patronDOB;
 	}
 	
@@ -202,7 +159,7 @@ public class Patron implements Comparable <Patron> {
 	 * Getter for the patron's first start date
 	 * @return patronSince the patron's registration date
 	 */
-	public Date getPatronSince() {
+	public LocalDate getPatronSince() {
 		return patronSince;
 	}
 	
@@ -235,20 +192,15 @@ public class Patron implements Comparable <Patron> {
 	 * @return the date of birth
 	 */
 	public String getDOB() {
-		StringBuffer toReturn = new StringBuffer(patronDOB.toString());
-		toReturn.delete(0, 3);
-		toReturn.delete(10,23);
-		return toReturn.toString();
+		return patronDOB.toString();
 	}
 	
 	/**
 	 * Gets the patron since date
 	 */
 	public String getPatronSinceString() {
-		StringBuffer toReturn = new StringBuffer(patronSince.toString());
-		toReturn.delete(0, 3);
-		toReturn.delete(10,23);
-		toReturn.insert(0, "Since: ");
-		return toReturn.toString();
+		return patronSince.toString();
 	}
+	
+	
 }
