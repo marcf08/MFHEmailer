@@ -17,9 +17,12 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JCheckBox;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.JTextField;
@@ -27,38 +30,34 @@ import javax.swing.JTextField;
 public class EditPatronGUI {
 
 	private JDialog contentPane;
-	private JTextField textField;
+	private JTextField txtEmail;
 	private JTextField txtBirthday;
 	private JTextField txtLast;
 	private JTextField txtFirst;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new EditPatronGUI();
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JButton btnRemove;
+	private JButton btnCancel;
+	private JButton btnSave;
 
 	/**
 	 * Create the frame.
 	 */
-	public EditPatronGUI() {
+	public EditPatronGUI(String last, String first, String email, String birthday) {
+		init(last, first, email, birthday);
+		configureButtons();
+		contentPane.setVisible(true);
+	}
+	
+	/**
+	 * This method builds the panels and adds the buttons. 
+	 */	
+	public void init(String last, String first, String email, String dob) {
 		contentPane = new JDialog(EmailerClientGUI.frmMfhEmailer, "Edit Patron", true);
 		contentPane.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		contentPane.setBounds(100, 100, 450, 300);
-		contentPane.setLayout(new BorderLayout(0, 0));		
+		contentPane.getContentPane().setLayout(new BorderLayout(0, 0));		
 		
 		JPanel panel = new JPanel();
-		contentPane.add(panel, BorderLayout.NORTH);
+		contentPane.getContentPane().add(panel, BorderLayout.NORTH);
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		JLabel lblModifyPatronAttributes = new JLabel("Edit the patron's attributes and click Save");
@@ -67,19 +66,19 @@ public class EditPatronGUI {
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		contentPane.add(panel_1, BorderLayout.SOUTH);
+		contentPane.getContentPane().add(panel_1, BorderLayout.SOUTH);
 		
-		JButton btnNewButton_2 = new JButton("Remove from Database");
-		panel_1.add(btnNewButton_2);
+		btnRemove = new JButton("Remove from Database");
+		panel_1.add(btnRemove);
 		
-		JButton btnNewButton_1 = new JButton("Cancel");
-		panel_1.add(btnNewButton_1);
+		btnCancel = new JButton("Cancel");
+		panel_1.add(btnCancel);
 		
-		JButton btnNewButton = new JButton("Save");
-		panel_1.add(btnNewButton);
+		btnSave = new JButton("Save");
+		panel_1.add(btnSave);
 		
 		JPanel panel_2 = new JPanel();
-		contentPane.add(panel_2, BorderLayout.CENTER);
+		contentPane.getContentPane().add(panel_2, BorderLayout.CENTER);
 		GridBagLayout gbl_panel_2 = new GridBagLayout();
 		gbl_panel_2.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0};
 		gbl_panel_2.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
@@ -114,11 +113,10 @@ public class EditPatronGUI {
 		txtFirst = new JTextField();
 		GridBagConstraints gbc_txtFirst = new GridBagConstraints();
 		gbc_txtFirst.insets = new Insets(0, 0, 5, 0);
-		gbc_txtFirst.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtFirst.gridx = 5;
 		gbc_txtFirst.gridy = 1;
 		panel_2.add(txtFirst, gbc_txtFirst);
-		txtFirst.setColumns(10);
+		txtFirst.setColumns(25);
 		
 		JLabel lblLast = new JLabel("Last:");
 		GridBagConstraints gbc_lblLast = new GridBagConstraints();
@@ -131,11 +129,10 @@ public class EditPatronGUI {
 		txtLast = new JTextField();
 		GridBagConstraints gbc_txtLast = new GridBagConstraints();
 		gbc_txtLast.insets = new Insets(0, 0, 5, 0);
-		gbc_txtLast.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtLast.gridx = 5;
 		gbc_txtLast.gridy = 2;
 		panel_2.add(txtLast, gbc_txtLast);
-		txtLast.setColumns(10);
+		txtLast.setColumns(25);
 		
 		JLabel lblDOB = new JLabel("Birthday:");
 		GridBagConstraints gbc_lblDOB = new GridBagConstraints();
@@ -148,11 +145,10 @@ public class EditPatronGUI {
 		txtBirthday = new JTextField();
 		GridBagConstraints gbc_txtBirthday = new GridBagConstraints();
 		gbc_txtBirthday.insets = new Insets(0, 0, 5, 0);
-		gbc_txtBirthday.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtBirthday.gridx = 5;
 		gbc_txtBirthday.gridy = 3;
 		panel_2.add(txtBirthday, gbc_txtBirthday);
-		txtBirthday.setColumns(10);
+		txtBirthday.setColumns(25);
 		
 		JLabel lblNewLabel = new JLabel("Email (Permanent): ");
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
@@ -162,18 +158,61 @@ public class EditPatronGUI {
 		gbc_lblNewLabel.gridy = 4;
 		panel_2.add(lblNewLabel, gbc_lblNewLabel);
 		
-		textField = new JTextField();
-		textField.setEditable(false);
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 5;
-		gbc_textField.gridy = 4;
-		panel_2.add(textField, gbc_textField);
-		textField.setColumns(10);
+		txtEmail = new JTextField();
+		txtEmail.setEditable(false);
+		GridBagConstraints gbc_txtEmail = new GridBagConstraints();
+		gbc_txtEmail.gridx = 5;
+		gbc_txtEmail.gridy = 4;
+		panel_2.add(txtEmail, gbc_txtEmail);
+		txtEmail.setColumns(25);
+		
+		txtEmail.setText(email);
+		txtLast.setText(last);
+		txtFirst.setText(first);
+		txtBirthday.setText(dob);
+		txtEmail.setBackground(Color.LIGHT_GRAY);
 	
-		contentPane.setVisible(true);
+	}
+	
+	/**
+	 * This method configures the buttons.
+	 */
+	public void configureButtons() {
+		btnCancel.addActionListener(new ActionListener() {
+			//Close the frame if the cancel button is clicked.
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btnCancel) {
+					contentPane.dispose();;
+				}
+			}
+		});
+		
+		btnSave.addActionListener(new ActionListener() {
+			//This will make the changes.
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btnSave) {
+					
+				}
+			}
+		});
+		
+		btnRemove.addActionListener(new ActionListener() {
+			//This will remove the selected patron.
+			public void actionPerformed(ActionEvent e) {
+				EmailerClientGUI.dblogic.remove(txtEmail.getText());
+				EmailerClientGUI.buildTable();
+				contentPane.dispose();
+			}
+		});
+	}
 
-
+	
+	/**
+	 * This method saves the changes.
+	 * @param email the patron's email
+	 */
+	private void saveChanges(String first, String last, String dob, String email) {
+		
 	}
 
 }

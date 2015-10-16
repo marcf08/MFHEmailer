@@ -2,6 +2,7 @@ package marcus.email.database;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,15 +20,20 @@ import javax.lang.model.element.Parameterizable;
  * @author Marcus
  *
  */
- public class PatronDB {
+ public class PatronDB implements Serializable {
+	//Serial id for changes
+	private static final long serialVersionUID = 1262692812915379833L;
 	//This is the main data member
 	private ArrayList<Patron> database;
+	//This is for deleted patrons
+	private ArrayList<Patron> deleted;
 	
 	/**
 	 * The constructor creates the array list referred to as database.
 	 */
 	public PatronDB() {
 		database = new ArrayList<>();
+		deleted = new ArrayList<>();
 	}
 
 	/**
@@ -296,18 +302,11 @@ import javax.lang.model.element.Parameterizable;
 					String dob) {
 		for (int i = 0; i < database.size(); i++) {
 			if (database.get(i).getPatronEmail().equals(email)) {
-				if (newFirstName != null || newFirstName != "") {
 					database.get(i).setFirstName(newFirstName);
-				}
-				if (newLastName != null || newLastName != "") {
 					database.get(i).setLastName(newLastName);
-				}
-				if (dob != null || dob != "") {
 					database.get(i).checkAndSetDate(dob);
 				}
 			}
-		}
-		
 	}
 	
 	/**
@@ -324,15 +323,26 @@ import javax.lang.model.element.Parameterizable;
 	public int getSize() {
 		return database.size();
 	}
-	
-	
-	
+		
 	/**
 	 * This method adds a patron to the database.
 	 * @fromGUI a patron from the GUI
 	 */
 	public void add(Patron fromGUI) {
 		database.add(fromGUI);
+	}
+	
+	/**
+	 * This method removes a patron from the database. It also
+	 * adds the patron to the deleted database.
+	 * @return the removed patron
+	 */
+	public void remove(String emailToRemove) {
+		for (int i = 0; i < database.size(); i++) {
+			if (database.get(i).getPatronEmail().equals(emailToRemove)) {
+				deleted.add(database.remove(i));
+			}
+		}
 	}
 	
 }

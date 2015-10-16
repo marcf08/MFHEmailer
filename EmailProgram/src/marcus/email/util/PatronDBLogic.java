@@ -1,6 +1,7 @@
 package marcus.email.util;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import marcus.email.database.Patron;
@@ -11,7 +12,11 @@ import marcus.email.database.PatronDB;
  * @author Marcus
  *
  */
-public class PatronDBLogic {
+public class PatronDBLogic implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1945973919965220808L;
 	/**
 	 * This is the main data member of the class.
 	 */
@@ -150,4 +155,24 @@ public class PatronDBLogic {
 		ArrayList<Patron> sortedByEmail = db.getSortedByEmails(partialEmail);
 		return sortedByEmail;
 	}
+	
+	/**
+	 * This method removes the patron given the email.
+	 * @param email
+	 */
+	public void remove(String email) {
+		db.remove(email);
+	}
+	
+	/**
+	 * This method edits the selected patron.
+	 * @param first the new first name
+	 * @param last the new last name
+	 * @param dob the new birthday
+	 * @param email the email to find
+	 */
+	public void edit(String first, String last, String dob, String email) {
+		db.edit(email, first, last, dob);
+	}
+
 }

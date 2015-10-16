@@ -1,5 +1,6 @@
 package marcus.email.admin;
 
+import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
@@ -9,19 +10,14 @@ import java.security.spec.InvalidKeySpecException;
  * @author Marcus
  *
  */
-public class AdminAccount {
-	/**
-	 * The username is stored as a String. 
-	 */
+public class AdminAccount implements Serializable {
+	//Serial for saving
+	private static final long serialVersionUID = 8185048776262791527L;
+	//Username
 	private static String USER = "mfh_admin";
-	/**
-	 * The password hash contains the salted hash created
-	 * by the password hash class.
-	 */
+	//PW hash
 	private String hashedPw;
-	/**
-	 * The minimum password size is five (5) characters.
-	 */
+	//Min password
 	private static final int MIN_PW_SIZE = 5;
 	/**
 	 * The admin account constuctor is null.

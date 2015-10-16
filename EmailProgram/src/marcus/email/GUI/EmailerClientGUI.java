@@ -52,11 +52,18 @@ import javax.swing.JTable;
 import java.awt.List;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import javax.swing.JScrollBar;
 import javax.swing.JRadioButton;
+
 import java.awt.Component;
+
 import javax.swing.Box;
 
 
@@ -69,6 +76,7 @@ public class EmailerClientGUI {
 	public static final int COL_COUNT = 5;
 	private static DefaultTableModel tableModel;
 	protected static PatronDBLogic dblogic = new PatronDBLogic();
+	protected static Properties prop;
 
 	//This controls how the user can search
 	private boolean searchEmails = false;
@@ -76,6 +84,7 @@ public class EmailerClientGUI {
 	private static final String srchEmails = "Search: Emails";
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;
+	private JButton btnEditSelected;
 
 	/**
 	 * Launch the application.
@@ -138,7 +147,26 @@ public class EmailerClientGUI {
 	public static void validate() {
 		frmMfhEmailer.validate();
 	}
-
+	
+	/**
+	 * This method starts the properties file.
+	 */
+	public void setupProp() {
+		prop = new Properties();
+		InputStream in = getClass().getResourceAsStream("C:/Users/Marcus/git/EmailProgram/EmailProgram/resources/config.properties");
+		try {
+			prop.load(in);
+			FileInputStream fin = new FileInputStream("C:/Users/Marcus/git/EmailProgram/EmailProgram/resources/config.properties");
+		    ObjectInputStream ois = new ObjectInputStream(fin);
+		    dblogic = (PatronDBLogic) ois.readObject();
+		    ois.close();
+			
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -292,8 +320,20 @@ public class EmailerClientGUI {
 				}
 		}});
 
-		JButton btnNewButton_1 = new JButton("Edit Selected");
-		panel_3.add(btnNewButton_1);
+		btnEditSelected = new JButton("Edit Selected");
+		panel_3.add(btnEditSelected);
+		btnEditSelected.addActionListener(new ActionListener() {
+		//Opens the edit patron section
+			public void actionPerformed(ActionEvent e) {
+				int rowEmail = table.getSelectedRow();
+				if (rowEmail > -1) {
+					new EditPatronGUI((String) table.getValueAt(rowEmail, 0),
+							(String)table.getValueAt(rowEmail, 1),
+							(String)table.getValueAt(rowEmail, 2), 
+							(String)table.getValueAt(rowEmail, 3).toString());
+				}
+			}
+		});
 
 		table = new JTable(dblogic.getSize(), 5);
 		buildTable();
@@ -378,29 +418,11 @@ public class EmailerClientGUI {
 		panel_12.add(lblNewLabel_2);
 	}
 	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 //*****TABLE LOGIC FOLLOWS BELOW*****//	
 	/**
 	 * This method sets up the table.
 	 */
-	public void buildTable() {
+	public static void buildTable() {
 		//This method keeps the user from editing the table
 		tableModel = new DefaultTableModel() {
 			private static final long serialVersionUID = 1L;
@@ -530,7 +552,7 @@ public class EmailerClientGUI {
 	/**
 	 * This method resets the table.
 	 */
-	public void resetTable() {
+	public static void resetTable() {
 		tableModel.setRowCount(0); //Clear the table
 		tableModel.setNumRows(dblogic.getSize());
 		tableModel.setColumnCount(COL_COUNT);
@@ -551,6 +573,7 @@ public class EmailerClientGUI {
 			lblNewLabel_1.setText(srchEmails);
 		}
 	}
-		
+	
+
 
 }
