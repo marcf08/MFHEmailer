@@ -1,13 +1,10 @@
 package marcus.email.GUI;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Toolkit;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -194,7 +191,7 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 		try {
 			logo = ImageIO.read(new File("C:/Users/Marcus/Desktop/mfhLogoTwo.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			// TODO Fix so that it runs with a blank/no logo
 			e.printStackTrace();
 		}
 		JLabel picLabel = new JLabel(new ImageIcon(logo));

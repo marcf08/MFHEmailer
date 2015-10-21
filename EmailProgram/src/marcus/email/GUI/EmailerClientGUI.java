@@ -46,6 +46,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
+import java.awt.event.WindowListener;
 
 import javax.swing.JTable;
 
@@ -68,7 +71,8 @@ import javax.swing.Box;
 
 
 public class EmailerClientGUI {
-
+	//Set up the frame
+	
 	public static JFrame frmMfhEmailer;
 	private JTextField txtSearch;
 	private JTextField textField_1;
@@ -85,6 +89,8 @@ public class EmailerClientGUI {
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;
 	private JButton btnEditSelected;
+	private JMenuItem mnuCredentials;
+	private JMenuItem mnuServerSettings;
 
 	/**
 	 * Launch the application.
@@ -122,7 +128,10 @@ public class EmailerClientGUI {
 	 * Create the application.
 	 */
 	public EmailerClientGUI() {
+		dblogic.load();
 		initialize();
+		setupFrameSaveFeature();
+		setupServerSettings();
 	}
 	
 	/**
@@ -183,23 +192,17 @@ public class EmailerClientGUI {
 		JMenu mnNewMenu = new JMenu("File");
 		menuBar.add(mnNewMenu);
 		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Suspend");
-		mnNewMenu.add(mntmNewMenuItem_1);
-		
 		JMenuItem mntmNewMenuItem = new JMenuItem("Exit");
 		mnNewMenu.add(mntmNewMenuItem);
 		
 		JMenu mnNewMenu_1 = new JMenu("Settings");
 		menuBar.add(mnNewMenu_1);
 		
-		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Application Settings");
-		mnNewMenu_1.add(mntmNewMenuItem_3);
+		mnuCredentials = new JMenuItem("Credentials");
+		mnNewMenu_1.add(mnuCredentials);
 		
-		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Credentials");
-		mnNewMenu_1.add(mntmNewMenuItem_2);
-		
-		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Server Settings");
-		mnNewMenu_1.add(mntmNewMenuItem_4);
+		mnuServerSettings = new JMenuItem("Server Settings");
+		mnNewMenu_1.add(mnuServerSettings);
 		
 		JMenu mnNewMenu_2 = new JMenu("Database");
 		menuBar.add(mnNewMenu_2);
@@ -417,6 +420,62 @@ public class EmailerClientGUI {
 		lblNewLabel_2 = new JLabel("New label");
 		panel_12.add(lblNewLabel_2);
 	}
+	
+	
+	
+	/**
+	 * This method configures the settings button. The button
+	 * launches the settings page.
+	 */
+	public void setupServerSettings() {
+		mnuServerSettings.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new EmailSettingsGUI();
+			}
+		});
+	}
+	
+	/**
+	 * This method adds a window close event to the frame for saving.
+	 */
+	public void setupFrameSaveFeature() {
+		frmMfhEmailer.addWindowListener(new WindowListener() {
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			public void windowClosing(WindowEvent e) {
+				System.out.println("here line 449");
+				dblogic.save();
+				
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});;
+	}
+	
 	
 //*****TABLE LOGIC FOLLOWS BELOW*****//	
 	/**

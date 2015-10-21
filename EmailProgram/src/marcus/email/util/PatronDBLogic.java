@@ -1,8 +1,16 @@
 package marcus.email.util;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import marcus.email.database.Patron;
 import marcus.email.database.PatronDB;
@@ -13,21 +21,25 @@ import marcus.email.database.PatronDB;
  *
  */
 public class PatronDBLogic implements Serializable {
-	/**
-	 * 
-	 */
+	//Serial for saving
 	private static final long serialVersionUID = -1945973919965220808L;
-	/**
-	 * This is the main data member of the class.
-	 */
+	//Properties file
+	private Properties prop;
+	
+	//Main datamember
 	private PatronDB db;
-	/**
-	 * This instantiates the patron db and adds the file.
-	 */
+
 	public PatronDBLogic() {
-		db = new PatronDB();
+		
+		db = load();
 		//For testing
-		db.importFromFile(new File("C:/Users/Marcus/Desktop/patronTest.txt"));
+		
+		if (db == null) {
+			db = new PatronDB();
+			db.importFromFile(new File("C:/Users/Marcus/Desktop/patronTest.txt"));
+		}
+	
+		prop = new Properties();
 	}
 
 	/**
@@ -173,6 +185,46 @@ public class PatronDBLogic implements Serializable {
 	 */
 	public void edit(String first, String last, String dob, String email) {
 		db.edit(email, first, last, dob);
+	}
+	
+	/**
+	 * This method saves the state of the db logic.
+	 */
+	public void save() {
+		FileOutputStream out = null;
+		ObjectOutputStream ob = null;
+		try {
+			out = new FileOutputStream("C:/Users/Marcus/git/EmailProgram/EmailProgram/resources/databaseobject.txt");
+			ob = new ObjectOutputStream(out);
+			ob.writeObject(db);
+			ob.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	/**
+	 * This method loads the state of the db logic.
+	 */
+	public PatronDB load() {
+		PatronDB toLoad = null;
+		FileInputStream in = null;
+		ObjectInputStream ob = null;
+		try {
+			in = new FileInputStream("C:/Users/Marcus/git/EmailProgram/EmailProgram/resources/databaseobject.txt");
+			ob = new ObjectInputStream(in);
+			toLoad = (PatronDB) ob.readObject();
+			ob.close();
+			return toLoad;
+		} catch (IOException | ClassNotFoundException e) {
+			return null;
+		}
+
 	}
 
 }

@@ -1,4 +1,5 @@
 package marcus.email.database;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -9,7 +10,9 @@ import org.joda.time.LocalDate;
  * patron. It includes the first, last name, email, and date of birth.
  * @author Marcus
  */
-public class Patron implements Comparable <Patron> {
+public class Patron implements Comparable <Patron>, Serializable {
+	//The class is serializable for storage
+	private static final long serialVersionUID = 3903729962060817467L;
 	//Basic data members for a patron
 	private String firstName;
 	private String lastName;
