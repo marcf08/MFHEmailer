@@ -47,12 +47,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.ShutdownChannelGroupException;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Properties;
 
 import javax.swing.Box;
 import javax.swing.JCheckBox;
 import javax.swing.JToggleButton;
+
+import org.joda.time.LocalDate;
 
 public class EmailSettingsGUI {
 
@@ -261,6 +264,7 @@ public class EmailSettingsGUI {
 	 */
 	public void save() {
 		logic.setKey(pwAPI.getText());
+		logic.setEmailKey(txtFrom.getText());
 	}
 		
 	/**
@@ -268,6 +272,7 @@ public class EmailSettingsGUI {
 	 */
 	public void load() {
 		pwAPI.setText(logic.getKey());
+		txtFrom.setText(logic.getEmailKey());
 	}
 	
 	/**
@@ -320,8 +325,8 @@ public class EmailSettingsGUI {
 					SendGrid send = new SendGrid(pwAPI.getText());
 					Email email = new Email();
 					email.addTo(txtToAddress.getText());
-					email.setText("Test Email");
-					email.setSubject("Test from Program");
+					email.setText("Test From Development " + LocalTime.now().toString() + "\n Success.");
+					email.setSubject("Test from MFHEmailer " + LocalDate.now().toString());
 					email.setFrom(txtFrom.getText());
 					try {
 						SendGrid.Response response = send.send(email);

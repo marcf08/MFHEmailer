@@ -89,8 +89,8 @@ public class EmailerClientGUI {
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;
 	private JButton btnEditSelected;
-	private JMenuItem mnuCredentials;
 	private JMenuItem mnuServerSettings;
+	private JMenuItem mnuCredentials;
 
 	/**
 	 * Launch the application.
@@ -132,6 +132,7 @@ public class EmailerClientGUI {
 		initialize();
 		setupFrameSaveFeature();
 		setupServerSettings();
+		setupCredentials();
 	}
 	
 	/**
@@ -431,6 +432,19 @@ public class EmailerClientGUI {
 		mnuServerSettings.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new EmailSettingsGUI();
+			}
+		});
+	}
+	
+	/**
+	 * This method configures the credentials button. The button
+	 * launches the credentials page.
+	 */
+	public void setupCredentials() {
+		mnuCredentials.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new CredentialsGUI();
+				validate();
 			}
 		});
 	}

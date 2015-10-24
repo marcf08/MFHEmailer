@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -225,6 +227,34 @@ public class PatronDBLogic implements Serializable {
 			return null;
 		}
 
+	}
+	
+	/**
+	 * This method creates a tab-delimited backup copy of the database
+	 * as a file.
+	 * @param fileName the name of the file for the backup
+	 */
+	public File createBackUp(String fileName) {
+		String fileNameAndExtension = fileName + ".txt";
+		File file = new File(fileNameAndExtension);
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(file, "UTF-8");
+			
+			String line;
+			
+			for (int i = 0; i < db.getSize(); i++) {
+				line = db.get(i).getLast();
+				//TODO: Finish text parsing.
+			}
+			writer.close();
+			return file;
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 
 }
