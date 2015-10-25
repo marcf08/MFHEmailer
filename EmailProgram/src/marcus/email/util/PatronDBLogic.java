@@ -240,13 +240,8 @@ public class PatronDBLogic implements Serializable {
 		PrintWriter writer;
 		try {
 			writer = new PrintWriter(file, "UTF-8");
-			
-			String line;
-			
-			for (int i = 0; i < db.getSize(); i++) {
-				line = db.get(i).getLast();
-				//TODO: Finish text parsing.
-			}
+			String toSave = createBackUpString();
+			writer.println(toSave);
 			writer.close();
 			return file;
 		} catch (FileNotFoundException | UnsupportedEncodingException e) {
@@ -255,6 +250,27 @@ public class PatronDBLogic implements Serializable {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * This method creates a backup string to be written to a file.
+	 * @return backup the list of names written as a backup
+	 */
+	public String createBackUpString() {
+		StringBuffer backup = new StringBuffer();
+		for (int i = 0; i < db.getSize(); i++) {
+			backup.append(db.get(i).getLast());
+			backup.append("\t");
+			backup.append(db.get(i).getFirst());
+			backup.append("\t");
+			backup.append(db.get(i).getPatronEmail());
+			backup.append("\t");
+			backup.append(db.get(i).getDOB().toString());
+			backup.append("\t");
+			backup.append(db.get(i).getPatronSince().toString());
+			backup.append(System.getProperty("line.separator"));
+		}
+		return backup.toString();
 	}
 
 }

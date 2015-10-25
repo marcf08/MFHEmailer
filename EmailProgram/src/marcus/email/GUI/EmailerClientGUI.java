@@ -91,6 +91,7 @@ public class EmailerClientGUI {
 	private JButton btnEditSelected;
 	private JMenuItem mnuServerSettings;
 	private JMenuItem mnuCredentials;
+	private JMenuItem mnuBackup;
 
 	/**
 	 * Launch the application.
@@ -133,6 +134,7 @@ public class EmailerClientGUI {
 		setupFrameSaveFeature();
 		setupServerSettings();
 		setupCredentials();
+		setupBackup();
 	}
 	
 	/**
@@ -208,11 +210,8 @@ public class EmailerClientGUI {
 		JMenu mnNewMenu_2 = new JMenu("Database");
 		menuBar.add(mnNewMenu_2);
 		
-		JMenuItem mntmNewMenuItem_6 = new JMenuItem("Backup");
-		mnNewMenu_2.add(mntmNewMenuItem_6);
-		
-		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Export");
-		mnNewMenu_2.add(mntmNewMenuItem_5);
+		mnuBackup = new JMenuItem("Backup");
+		mnNewMenu_2.add(mnuBackup);
 		
 		JMenu mnNewMenu_3 = new JMenu("Help");
 		menuBar.add(mnNewMenu_3);
@@ -444,7 +443,18 @@ public class EmailerClientGUI {
 		mnuCredentials.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new CredentialsGUI();
-				validate();
+			}
+		});
+	}
+	
+	/**
+	 * This method sets up the database backup button. The button
+	 * launches the backup page.
+	 */
+	public void setupBackup() {
+		mnuBackup.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new BackupGUI();
 			}
 		});
 	}

@@ -1,13 +1,22 @@
 package marcus.email.GUI;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
 import java.awt.BorderLayout;
+
 import javax.swing.JLabel;
 import javax.swing.border.EtchedBorder;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.nio.channels.ShutdownChannelGroupException;
+
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
@@ -19,7 +28,6 @@ public class BackupGUI {
 	private JLabel lblInstructions;
 	private JPanel panel_2;
 	private JPanel panel_3;
-	private JTextField textField;
 	private JLabel lblEmail;
 	private JButton btnSendBackup;
 	private JPanel panel_4;
@@ -29,13 +37,18 @@ public class BackupGUI {
 	private JPanel panel_6;
 	private JButton btnCancel;
 
+	private static BackupLogic logic;
+	private JTextField txtEmail;
+	
 	/**
 	 * Create the application.
 	 */
 	public BackupGUI() {
+		logic = new BackupLogic();
 		initialize();
 		setupCancel();
 		setupBrowse();
+		setupSendBackup();
 		frmDatabaseBackup.setVisible(true);
 	}
 
@@ -70,9 +83,9 @@ public class BackupGUI {
 		lblEmail = new JLabel("Email Address:");
 		panel_3.add(lblEmail);
 		
-		textField = new JTextField();
-		panel_3.add(textField);
-		textField.setColumns(25);
+		txtEmail = new JTextField();
+		panel_3.add(txtEmail);
+		txtEmail.setColumns(25);
 		
 		btnSendBackup = new JButton("Create & Send Backup");
 		panel_3.add(btnSendBackup);
@@ -117,16 +130,38 @@ public class BackupGUI {
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fc = new JFileChooser();
 				if (e.getSource() == btnBrowse) {
-			        int returnVal = fc.showOpenDialog(null);
+			        int returnVal = fc.showSaveDialog(null);
 			        if (returnVal == JFileChooser.APPROVE_OPTION) {
-			            File file = fc.getSelectedFile();
-			            //This is where a real application would open the file.
-			            //TODO: create the method that accepts this file as a parameter
+			           	File dir = fc.getSelectedFile();
+			           	logic.saveBackUpFile(dir);
 			        }
 				}
 	
 			}
 		
+		});
+	}
+	
+	/**
+	 * This method sets up the send backup button. It copies the backup
+	 * file and sends it to the email specified.
+	 */
+	public void setupSendBackup() {
+		btnSendBackup.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btnSendBackup) {
+					Boolean b = logic.sendBackup(txtEmail.getText());
+					if (b) {
+						JOptionPane.showMessageDialog(new JFrame(), "Backup sent successfully.");
+					} else {
+						JOptionPane.showMessageDialog(new JFrame(), "Error sending message. Check the "
+								+ "settings and try again.");
+					}
+					
+				}
+			
+		
+			}
 		});
 	}
 
