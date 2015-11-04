@@ -37,12 +37,13 @@ public class EditPatronGUI {
 	private JButton btnRemove;
 	private JButton btnCancel;
 	private JButton btnSave;
+	private JTextField txtAnniv;
 
 	/**
 	 * Create the frame.
 	 */
-	public EditPatronGUI(String last, String first, String email, String birthday) {
-		init(last, first, email, birthday);
+	public EditPatronGUI(String last, String first, String email, String birthday, String anniv) {
+		init(last, first, email, birthday, anniv);
 		configureButtons();
 		contentPane.setVisible(true);
 	}
@@ -50,7 +51,7 @@ public class EditPatronGUI {
 	/**
 	 * This method builds the panels and adds the buttons. 
 	 */	
-	public void init(String last, String first, String email, String dob) {
+	public void init(String last, String first, String email, String dob, String anniv) {
 		contentPane = new JDialog(EmailerClientGUI.frmMfhEmailer, "Edit Patron", true);
 		contentPane.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		contentPane.setBounds(100, 100, 450, 300);
@@ -81,9 +82,9 @@ public class EditPatronGUI {
 		contentPane.getContentPane().add(panel_2, BorderLayout.CENTER);
 		GridBagLayout gbl_panel_2 = new GridBagLayout();
 		gbl_panel_2.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0};
-		gbl_panel_2.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_panel_2.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
 		gbl_panel_2.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
-		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_2.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_2.setLayout(gbl_panel_2);
 		
 		Component verticalStrut = Box.createVerticalStrut(20);
@@ -97,7 +98,7 @@ public class EditPatronGUI {
 		GridBagConstraints gbc_horizontalStrut = new GridBagConstraints();
 		gbc_horizontalStrut.gridwidth = 3;
 		gbc_horizontalStrut.gridheight = 4;
-		gbc_horizontalStrut.insets = new Insets(0, 0, 0, 5);
+		gbc_horizontalStrut.insets = new Insets(0, 0, 5, 5);
 		gbc_horizontalStrut.gridx = 0;
 		gbc_horizontalStrut.gridy = 1;
 		panel_2.add(horizontalStrut, gbc_horizontalStrut);
@@ -152,7 +153,7 @@ public class EditPatronGUI {
 		
 		JLabel lblNewLabel = new JLabel("Email (Permanent): ");
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
+		gbc_lblNewLabel.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
 		gbc_lblNewLabel.gridx = 3;
 		gbc_lblNewLabel.gridy = 4;
@@ -161,16 +162,43 @@ public class EditPatronGUI {
 		txtEmail = new JTextField();
 		txtEmail.setEditable(false);
 		GridBagConstraints gbc_txtEmail = new GridBagConstraints();
+		gbc_txtEmail.insets = new Insets(0, 0, 5, 0);
 		gbc_txtEmail.gridx = 5;
 		gbc_txtEmail.gridy = 4;
 		panel_2.add(txtEmail, gbc_txtEmail);
 		txtEmail.setColumns(25);
 		
+		txtAnniv = new JTextField();
+		
+		
+		
 		txtEmail.setText(email);
 		txtLast.setText(last);
 		txtFirst.setText(first);
 		txtBirthday.setText(dob);
+		txtAnniv.setText(anniv);
+		
+		
+		
+		
+		
+		
 		txtEmail.setBackground(Color.LIGHT_GRAY);
+		
+		JLabel lblAnniv = new JLabel("Anniversary:");
+		GridBagConstraints gbc_lblAnniv = new GridBagConstraints();
+		gbc_lblAnniv.anchor = GridBagConstraints.WEST;
+		gbc_lblAnniv.insets = new Insets(0, 0, 0, 5);
+		gbc_lblAnniv.gridx = 3;
+		gbc_lblAnniv.gridy = 5;
+		panel_2.add(lblAnniv, gbc_lblAnniv);
+		
+		GridBagConstraints gbc_txtAnniv = new GridBagConstraints();
+		gbc_txtAnniv.anchor = GridBagConstraints.NORTH;
+		gbc_txtAnniv.gridx = 5;
+		gbc_txtAnniv.gridy = 5;
+		panel_2.add(txtAnniv, gbc_txtAnniv);
+		txtAnniv.setColumns(25);
 	
 	}
 	
@@ -212,6 +240,7 @@ public class EditPatronGUI {
 	 * @param email the patron's email
 	 */
 	private void saveChanges(String first, String last, String dob, String email) {
+		
 		
 	}
 

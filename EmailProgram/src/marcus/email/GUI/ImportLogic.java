@@ -83,8 +83,9 @@ public class ImportLogic {
 			String firstName = lineScanner.next();
 			String email = lineScanner.next();
 			String dob = lineScanner.next();
+			String anniv = lineScanner.next();
 			
-			Patron toAdd = new Patron(firstName, lastName, dob, email);
+			Patron toAdd = new Patron(firstName, lastName, dob, email, anniv);
 			list[i] = toAdd;
 			i++;
 		}

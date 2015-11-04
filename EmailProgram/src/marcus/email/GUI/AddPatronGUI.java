@@ -54,6 +54,7 @@ public class AddPatronGUI {
 	private JTextField textField_1;
 	private JTextField textField_2;
 	private JTextField txtyyyymmdd;
+	private JTextField txtAnniv;
 	
 	/**
 	 * Launch the application.
@@ -85,11 +86,11 @@ public class AddPatronGUI {
 	private void initialize() {
 		frmAddPatron = new JDialog(EmailerClientGUI.frmMfhEmailer, "Add Patron", true);
 		frmAddPatron.setBounds(100, 100, 400, 300);
-		frmAddPatron.setLayout(new BorderLayout(0, 0));
+		frmAddPatron.getContentPane().setLayout(new BorderLayout(0, 0));
 		frmAddPatron.setLocationRelativeTo(null);
 		
 		JPanel panel = new JPanel();
-		frmAddPatron.add(panel, BorderLayout.CENTER);
+		frmAddPatron.getContentPane().add(panel, BorderLayout.CENTER);
 		panel.setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_1 = new JPanel();
@@ -142,7 +143,7 @@ public class AddPatronGUI {
 		Component verticalStrut = Box.createVerticalStrut(20);
 		GridBagConstraints gbc_verticalStrut = new GridBagConstraints();
 		gbc_verticalStrut.gridwidth = 8;
-		gbc_verticalStrut.insets = new Insets(0, 0, 5, 5);
+		gbc_verticalStrut.insets = new Insets(0, 0, 5, 0);
 		gbc_verticalStrut.gridx = 0;
 		gbc_verticalStrut.gridy = 1;
 		panel_4.add(verticalStrut, gbc_verticalStrut);
@@ -229,6 +230,23 @@ public class AddPatronGUI {
 		gbc_txtyyyymmdd.gridy = 5;
 		panel_4.add(txtyyyymmdd, gbc_txtyyyymmdd);
 		txtyyyymmdd.setColumns(10);
+		
+		JLabel lblAnniv = new JLabel("Anniversary:");
+		GridBagConstraints gbc_lblAnniv = new GridBagConstraints();
+		gbc_lblAnniv.insets = new Insets(0, 0, 5, 5);
+		gbc_lblAnniv.gridx = 3;
+		gbc_lblAnniv.gridy = 6;
+		panel_4.add(lblAnniv, gbc_lblAnniv);
+		
+		txtAnniv = new JTextField();
+		txtAnniv.setText("");
+		GridBagConstraints gbc_txtAnniv = new GridBagConstraints();
+		gbc_txtAnniv.insets = new Insets(0, 0, 5, 5);
+		gbc_txtAnniv.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtAnniv.gridx = 5;
+		gbc_txtAnniv.gridy = 6;
+		panel_4.add(txtAnniv, gbc_txtAnniv);
+		txtAnniv.setColumns(10);
 	
 	
 		JButton btnNewButton = new JButton("Save");
@@ -237,7 +255,8 @@ public class AddPatronGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					EmailerClientGUI.dblogic.addPatronToDB(textField.getText(), textField_1.getText(), textField_2.getText(), txtyyyymmdd.getText());
+					EmailerClientGUI.dblogic.addPatronToDB(textField.getText(), textField_1.getText(),
+							textField_2.getText(), txtyyyymmdd.getText(), txtAnniv.getText());
 					frmAddPatron.dispose();
 				} catch (IllegalFieldValueException i) {
 					JOptionPane.showMessageDialog(new JFrame(), "The date of birth is incorrect. Try again.");

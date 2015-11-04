@@ -2,6 +2,7 @@ package marcus.email.GUI;
 
 import java.awt.EventQueue;
 
+import javax.mail.Header;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
@@ -29,6 +30,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import marcus.email.database.Patron;
 import marcus.email.util.PatronDBLogic;
@@ -61,6 +63,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.Vector;
 
 import javax.swing.JScrollBar;
 import javax.swing.JRadioButton;
@@ -77,7 +80,7 @@ public class EmailerClientGUI {
 	private JTextField txtSearch;
 	private JTextField textField_1;
 	private static JTable table;
-	public static final int COL_COUNT = 5;
+	public static final int COL_COUNT = 6;
 	private static DefaultTableModel tableModel;
 	protected static PatronDBLogic dblogic = new PatronDBLogic();
 	protected static Properties prop;
@@ -92,6 +95,9 @@ public class EmailerClientGUI {
 	private JMenuItem mnuServerSettings;
 	private JMenuItem mnuCredentials;
 	private JMenuItem mnuBackup;
+	private static Vector<String> header;
+	
+	private static String[] columnNames = {"Last Name", "First Name", "Email", "Birthday", "Date Added", "Anniversary"};
 
 	/**
 	 * Launch the application.
@@ -129,7 +135,7 @@ public class EmailerClientGUI {
 	 * Create the application.
 	 */
 	public EmailerClientGUI() {
-		dblogic.load();
+		//dblogic.load();
 		initialize();
 		setupFrameSaveFeature();
 		setupServerSettings();
@@ -333,12 +339,14 @@ public class EmailerClientGUI {
 					new EditPatronGUI((String) table.getValueAt(rowEmail, 0),
 							(String)table.getValueAt(rowEmail, 1),
 							(String)table.getValueAt(rowEmail, 2), 
-							(String)table.getValueAt(rowEmail, 3).toString());
+							(String)table.getValueAt(rowEmail, 3).toString(),
+							(String)table.getValueAt(rowEmail, 5).toString());
 				}
 			}
 		});
 
 		table = new JTable(dblogic.getSize(), 5);
+		
 		buildTable();
 		panel_2.add(table, BorderLayout.CENTER);
 		
@@ -423,6 +431,8 @@ public class EmailerClientGUI {
 	
 	
 	
+	
+	
 	/**
 	 * This method configures the settings button. The button
 	 * launches the settings page.
@@ -481,8 +491,7 @@ public class EmailerClientGUI {
 				
 			}
 			public void windowClosing(WindowEvent e) {
-				System.out.println("here line 449");
-				dblogic.save();
+				//dblogic.save();
 				
 			}
 			
@@ -517,9 +526,11 @@ public class EmailerClientGUI {
 		};
 		tableModel.setNumRows(dblogic.getSize());
 		tableModel.setColumnCount(COL_COUNT);
+		tableModel.setColumnIdentifiers(columnNames);
 
 		table.setRowSelectionAllowed(true);
-		table.setTableHeader(null);
+		
+		
 		table.setModel(tableModel);
 		
 		for (int i = 0; i < dblogic.getSize(); i++) {
@@ -541,6 +552,10 @@ public class EmailerClientGUI {
 		
 		for (int i = 0; i < dblogic.getSize(); i++) {
 			table.setValueAt(dblogic.getPatronFromDB(i).getPatronSinceString(), i, 4);
+		}
+		
+		for (int i = 0; i < dblogic.getSize(); i++) {
+			table.setValueAt(dblogic.getPatronFromDB(i).getAnniv().toString(), i, 5);
 		}
 		
 	}
@@ -572,6 +587,12 @@ public class EmailerClientGUI {
 			table.setValueAt(partialEmail.get(i).getPatronSince(), i, 4);
 		}
 		
+		for (int i = 0; i < partialEmail.size(); i++) {
+			table.setValueAt(partialEmail.get(i).getAnniv().toString(), i, 5);
+		}
+		
+	
+		
 	}
 	
 	/**
@@ -602,6 +623,10 @@ public class EmailerClientGUI {
 			table.setValueAt(partialLastList.get(i).getPatronSince(), i, 4);
 		}
 		
+		for (int i = 0; i < partialLastList.size(); i++) {
+			table.setValueAt(partialLastList.get(i).getAnniv().toString(), i, 5);
+		}
+		
 	}
 	
 	/**
@@ -630,6 +655,10 @@ public class EmailerClientGUI {
 			table.setValueAt(alphabetic.get(i).getPatronSince(), i, 4);
 		}
 		
+		for (int i = 0; i < alphabetic.size(); i++) {
+			table.setValueAt(alphabetic.get(i).getAnniv().toString(), i, 5);
+		}
+		
 	}
 	
 	/**
@@ -640,7 +669,6 @@ public class EmailerClientGUI {
 		tableModel.setNumRows(dblogic.getSize());
 		tableModel.setColumnCount(COL_COUNT);
 		table.setRowSelectionAllowed(true);
-		table.setTableHeader(null);
 		table.setModel(tableModel);
 	}
 	

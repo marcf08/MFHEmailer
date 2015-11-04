@@ -191,12 +191,14 @@ import javax.lang.model.element.Parameterizable;
 				String tempFirst = lineScanner.next();
 				String email = lineScanner.next();
 				String dob = lineScanner.next();
+				String anniv = lineScanner.next();
 			
 				//Configure the new patron, add it to the list
 				Patron toAdd = new Patron(email);
 				toAdd.setLastName(tempLast);
 				toAdd.setFirstName(tempFirst);
 				toAdd.checkAndSetDate(dob);
+				toAdd.checkAndSetAnniv(anniv);
 				database.add(toAdd);
 				
 			}
@@ -270,7 +272,7 @@ import javax.lang.model.element.Parameterizable;
 	
 	/**
 	 * This method returns the list of dates of patron since
-	 * @return the patron since date
+	 * @return the patron since list
 	 */
 	public String[] getListOfPatronSince() {
 		String [] since = new String[database.size()];
@@ -278,6 +280,18 @@ import javax.lang.model.element.Parameterizable;
 			since[i] = database.get(i).getPatronSinceString();
 		}
 		return since;
+	}
+	
+	/**
+	 * This method returns the list of dates of patron anniversaries.
+	 * @return the list of anniversary dates
+	 */
+	public String[] getListOfPatronAnniv() {
+		String [] anniv = new String[database.size()];
+		for (int i = 0; i < database.size(); i++) {
+			anniv[i] = database.get(i).getAnniv().toString();
+		}
+		return anniv;
 	}
 	
 	/**
@@ -326,10 +340,33 @@ import javax.lang.model.element.Parameterizable;
 		
 	/**
 	 * This method adds a patron to the database.
-	 * @fromGUI a patron from the GUI
+	 * @param fromGUI a patron from the GUI
+	 * @throws illegal argument exception if the patron already exists
 	 */
 	public void add(Patron fromGUI) {
-		database.add(fromGUI);
+		if (isValidPatron(fromGUI)) {
+			database.add(fromGUI);
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
+	}
+		
+	
+	
+	/**
+	 * This method ensures the patron does not exist in the database. 
+	 * The database does not permit multiple instances of the same
+	 * email address.
+	 * @param patron the patron to check
+	 */
+	public boolean isValidPatron(Patron patron) {
+		for (int i = 0; i < getSize(); i++) {
+			if (database.get(i).getPatronEmail().equals(patron.getPatronEmail())) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**

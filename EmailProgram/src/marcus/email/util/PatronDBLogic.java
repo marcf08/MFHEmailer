@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -33,7 +32,7 @@ public class PatronDBLogic implements Serializable {
 
 	public PatronDBLogic() {
 		
-		db = load();
+		//db = load();
 		//For testing
 		
 		if (db == null) {
@@ -149,8 +148,8 @@ public class PatronDBLogic implements Serializable {
 	/**
 	 * This method allows the user to add a patron to the database.
 	 */
-	public void addPatronToDB(String first, String last, String email, String dob) {
-		Patron toAdd = new Patron(first, last, dob, email);
+	public void addPatronToDB(String first, String last, String email, String dob, String anniv) {
+		Patron toAdd = new Patron(first, last, dob, email, anniv);
 		db.add(toAdd);
 
 	}
@@ -268,6 +267,8 @@ public class PatronDBLogic implements Serializable {
 			backup.append(db.get(i).getDOB().toString());
 			backup.append("\t");
 			backup.append(db.get(i).getPatronSince().toString());
+			backup.append("\t");
+			backup.append(db.get(i).getAnniv().toString());
 			backup.append(System.getProperty("line.separator"));
 		}
 		return backup.toString();

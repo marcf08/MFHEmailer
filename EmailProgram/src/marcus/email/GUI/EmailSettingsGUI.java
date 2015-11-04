@@ -328,6 +328,7 @@ public class EmailSettingsGUI {
 					email.setText("Test From Development " + LocalTime.now().toString() + "\n Success.");
 					email.setSubject("Test from MFHEmailer " + LocalDate.now().toString());
 					email.setFrom(txtFrom.getText());
+					email.setHtml("<html><head>HELLO TEST</head><body><strong>TEST BODY</strong></body></html>");
 					try {
 						SendGrid.Response response = send.send(email);
 						JOptionPane.showMessageDialog(new JFrame(), "Server replied: " + response.getMessage());	

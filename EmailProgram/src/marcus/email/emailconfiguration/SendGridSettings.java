@@ -9,6 +9,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Properties;
 
+import javax.swing.text.html.HTML;
+
 import com.sendgrid.SendGrid;
 
 import marcus.email.admin.PasswordHash;
@@ -28,8 +30,7 @@ public class SendGridSettings implements Serializable {
 	//This is the settings file
 	private String propertiesFileName;
 	
-	
-	
+		
 	/**
 	 * The null constructor sets up the class--the user will edit the
 	 * rest from the GUI.

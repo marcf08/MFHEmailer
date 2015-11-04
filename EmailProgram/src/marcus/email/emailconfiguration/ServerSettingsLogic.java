@@ -25,6 +25,7 @@ public class ServerSettingsLogic {
 	private String smtpEnable;
 	private String setTrue;
 	private String testEmail;
+	
 	/**
 	 * The constructor starts null.
 	 * @throws IOException until we fix it with try/catch

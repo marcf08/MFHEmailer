@@ -17,6 +17,8 @@ public class Patron implements Comparable <Patron>, Serializable {
 	private String firstName;
 	private String lastName;
 	private String email;
+
+	private LocalDate patronAnniv;
 	private LocalDate patronDOB;
 	private LocalDate patronSince;
 
@@ -40,7 +42,7 @@ public class Patron implements Comparable <Patron>, Serializable {
 	 * The non-null constructor sets up a patron with all attributes. It also
 	 * calls the method set the date the patron was added.
 	 */
-	public Patron(String firstName, String lastName, String dob, String email) {
+	public Patron(String firstName, String lastName, String dob, String email, String anniv) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -87,7 +89,48 @@ public class Patron implements Comparable <Patron>, Serializable {
 			setDOB(defYear, defMonth, defDay);
 		}
 	}
+	
+	
+	/**
+	 * This method checks the anniversary date and sets it appropriately. If the date is
+	 * not valid, or if there were any errors parsing the string, this method
+	 * automatically sets the date to the default, 0000/00/00.
+	 * 
+	 * @param dob
+	 *            a date of birth formatted as a String--the method checks this
+	 *            and, if valid, sets the date
+	 */
+	public void checkAndSetAnniv(String anniv) {
+		try {
+			
+			String yearToConvert = anniv.substring(0, 4);
+			String monthToConvert = anniv.substring(5, 7);
+			String dayToConvert = anniv.substring(8,10);
+			
+			int year = Integer.parseInt(yearToConvert);
+			int month = Integer.parseInt(monthToConvert);
+			int day = Integer.parseInt(dayToConvert);
 
+			setAnniv(year, month, day);
+	
+		} catch (IndexOutOfBoundsException e) {
+			setAnniv(defYear, defMonth, defDay);
+		} catch (NumberFormatException e) {
+			// If there's an error, simply set a default day
+			setAnniv(defYear, defMonth, defDay);
+		}
+	}
+	
+	/**
+	 * This helper method converts a date supplied to the anniversary.
+	 * @param year the year of anniv
+	 * @param month the month of the anniv
+	 * @param day the day of the anniv
+	 */
+	private void setAnniv(int year, int month, int day) {
+		patronAnniv = new LocalDate(year, month, day);
+	}
+	
 	/**
 	 * This helper method converts a date supplied to register the date of
 	 * birth.
@@ -96,7 +139,6 @@ public class Patron implements Comparable <Patron>, Serializable {
 	 * @param day the day of birth
 	 */
 	private void setDOB(int year, int month, int day) {
-		//Must shift index due to months starting with 0
 		patronDOB = new LocalDate(year, month, day);
 	}
 	
@@ -203,6 +245,14 @@ public class Patron implements Comparable <Patron>, Serializable {
 	 */
 	public String getPatronSinceString() {
 		return patronSince.toString();
+	}
+	
+	/**
+	 * This is a simple getter for the anniversary date.
+	 * @return the patron anniversary date
+	 */
+	public LocalDate getAnniv() {
+		return this.patronAnniv;
 	}
 	
 	
