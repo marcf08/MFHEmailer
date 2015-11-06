@@ -62,7 +62,7 @@ public class BackupLogic {
 	 */
 	public boolean sendBackup(String email) {
 		try {
-			FileInputStream fis = new FileInputStream(EmailSettingsLogic.LOC);
+			FileInputStream fis = new FileInputStream(FileConstants.CONFIG_LOC);
 			prop.load(fis);
 
 			SendGrid send = new SendGrid(prop.getProperty(API_KEY));

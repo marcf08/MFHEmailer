@@ -2,7 +2,7 @@ package marcus.email.GUI;
 
 import java.awt.EventQueue;
 
-import javax.mail.Header;
+//import javax.mail.Header;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 

@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import marcus.email.GUI.EmailSettingsLogic;
+import marcus.email.GUI.FileConstants;
 import marcus.email.database.Patron;
 
 import com.sendgrid.SendGrid;
@@ -52,7 +53,7 @@ public class EmailToSend {
 	 * This method loads the properties file in a read only manner.
 	 */
 	private void readProperties() {
-		File settings = new File (EmailSettingsLogic.LOC);
+		File settings = new File (FileConstants.CONFIG_LOC);
 		FileInputStream fis = null;
 		try {
 			 fis = new FileInputStream(settings);

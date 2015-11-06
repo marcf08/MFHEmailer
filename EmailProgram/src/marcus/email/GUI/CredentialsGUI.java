@@ -58,7 +58,7 @@ public class CredentialsGUI {
 	private void initialize() {
 		frmChangeCredentials = new JDialog(EmailerClientGUI.frmMfhEmailer, "Change Credntials", true);
 		frmChangeCredentials.setTitle("Change Credentials");
-		frmChangeCredentials.setBounds(100, 100, 450, 300);
+		frmChangeCredentials.setBounds(100, 100, 533, 347);
 		frmChangeCredentials.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
@@ -90,7 +90,7 @@ public class CredentialsGUI {
 		verticalStrut = Box.createVerticalStrut(20);
 		GridBagConstraints gbc_verticalStrut = new GridBagConstraints();
 		gbc_verticalStrut.gridwidth = 2;
-		gbc_verticalStrut.insets = new Insets(0, 0, 5, 5);
+		gbc_verticalStrut.insets = new Insets(0, 0, 5, 0);
 		gbc_verticalStrut.gridx = 4;
 		gbc_verticalStrut.gridy = 0;
 		panel_2.add(verticalStrut, gbc_verticalStrut);
@@ -99,16 +99,18 @@ public class CredentialsGUI {
 		GridBagConstraints gbc_lblOldPassword = new GridBagConstraints();
 		gbc_lblOldPassword.anchor = GridBagConstraints.WEST;
 		gbc_lblOldPassword.insets = new Insets(0, 0, 5, 5);
-		gbc_lblOldPassword.gridx = 4;
+		gbc_lblOldPassword.gridx = 1;
 		gbc_lblOldPassword.gridy = 1;
 		panel_2.add(lblOldPassword, gbc_lblOldPassword);
 		
 		pwOld = new JPasswordField();
 		pwOld.setColumns(25);
 		GridBagConstraints gbc_pwOld = new GridBagConstraints();
+		gbc_pwOld.gridwidth = 4;
+		gbc_pwOld.fill = GridBagConstraints.HORIZONTAL;
 		gbc_pwOld.anchor = GridBagConstraints.WEST;
-		gbc_pwOld.insets = new Insets(0, 0, 5, 0);
-		gbc_pwOld.gridx = 5;
+		gbc_pwOld.insets = new Insets(0, 0, 5, 5);
+		gbc_pwOld.gridx = 2;
 		gbc_pwOld.gridy = 1;
 		panel_2.add(pwOld, gbc_pwOld);
 		
@@ -116,17 +118,18 @@ public class CredentialsGUI {
 		GridBagConstraints gbc_lblNewPasswordInit = new GridBagConstraints();
 		gbc_lblNewPasswordInit.anchor = GridBagConstraints.WEST;
 		gbc_lblNewPasswordInit.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewPasswordInit.gridx = 4;
+		gbc_lblNewPasswordInit.gridx = 1;
 		gbc_lblNewPasswordInit.gridy = 2;
 		panel_2.add(lblNewPasswordInit, gbc_lblNewPasswordInit);
 		
 		pwNewInit = new JPasswordField();
-		pwNewInit.setHorizontalAlignment(SwingConstants.CENTER);
 		pwNewInit.setColumns(25);
 		GridBagConstraints gbc_pwNewInit = new GridBagConstraints();
+		gbc_pwNewInit.gridwidth = 4;
+		gbc_pwNewInit.fill = GridBagConstraints.HORIZONTAL;
 		gbc_pwNewInit.anchor = GridBagConstraints.WEST;
-		gbc_pwNewInit.insets = new Insets(0, 0, 5, 0);
-		gbc_pwNewInit.gridx = 5;
+		gbc_pwNewInit.insets = new Insets(0, 0, 5, 5);
+		gbc_pwNewInit.gridx = 2;
 		gbc_pwNewInit.gridy = 2;
 		panel_2.add(pwNewInit, gbc_pwNewInit);
 		
@@ -135,15 +138,18 @@ public class CredentialsGUI {
 		GridBagConstraints gbc_lblNewPasswordConfirm = new GridBagConstraints();
 		gbc_lblNewPasswordConfirm.insets = new Insets(0, 0, 0, 5);
 		gbc_lblNewPasswordConfirm.anchor = GridBagConstraints.EAST;
-		gbc_lblNewPasswordConfirm.gridx = 4;
+		gbc_lblNewPasswordConfirm.gridx = 1;
 		gbc_lblNewPasswordConfirm.gridy = 3;
 		panel_2.add(lblNewPasswordConfirm, gbc_lblNewPasswordConfirm);
 		
 		pwNewConfirm = new JPasswordField();
 		pwNewConfirm.setColumns(25);
 		GridBagConstraints gbc_pwNewConfirm = new GridBagConstraints();
+		gbc_pwNewConfirm.insets = new Insets(0, 0, 0, 5);
+		gbc_pwNewConfirm.gridwidth = 4;
+		gbc_pwNewConfirm.fill = GridBagConstraints.HORIZONTAL;
 		gbc_pwNewConfirm.anchor = GridBagConstraints.WEST;
-		gbc_pwNewConfirm.gridx = 5;
+		gbc_pwNewConfirm.gridx = 2;
 		gbc_pwNewConfirm.gridy = 3;
 		panel_2.add(pwNewConfirm, gbc_pwNewConfirm);
 	}
@@ -155,7 +161,7 @@ public class CredentialsGUI {
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btnSave) {
-					
+
 					char [] old = pwOld.getPassword();
 					String oldPw = new String(old);
 					
@@ -164,13 +170,14 @@ public class CredentialsGUI {
 					
 					char [] pwNewConfirmArray = pwNewConfirm.getPassword();
 					String pwNewConfirmString = new String(pwNewConfirmArray);
+					System.out.println(pwNewConfirmString);
 					
-					try {
-						logic.changePassword(PasswordHash.createHash(oldPw), pwNewString, pwNewConfirmString);
-					} catch (NoSuchAlgorithmException | InvalidKeySpecException e1) {
+					//try {
+						//logic.changePassword(PasswordHash.createHash(oldPw), pwNewString, pwNewConfirmString);
+					//} catch (NoSuchAlgorithmException | InvalidKeySpecException e1) {
 						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}			
+						//e1.printStackTrace();
+					//}			
 				}
 			}
 		});

@@ -15,9 +15,7 @@ public class EmailSettingsLogic {
 	
 
 	private Properties prop;
-	public static final String LOC = "C:/Users/Marcus/git/EmailProgram/EmailProgram/resources/config.properties";
-	private static final String PROP_KEY = "SendGridAPIKey";
-	private static final String PROP_KEY_FROM = "FromAddress";
+
 	
 	/**
 	 * This instantiates the logic class.
@@ -32,8 +30,8 @@ public class EmailSettingsLogic {
 	 */
 	public void setKey(String api) {
 		try {
-			FileOutputStream fos = new FileOutputStream(new File(LOC));
-			prop.setProperty(PROP_KEY, api);
+			FileOutputStream fos = new FileOutputStream(new File(FileConstants.CONFIG_LOC));
+			prop.setProperty(FileConstants.CONFIG_API, api);
 			prop.store(fos, null);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -43,12 +41,13 @@ public class EmailSettingsLogic {
 	
 	/**
 	 * This gets the key from the properties file.
+	 * @return the api key from the properties file
 	 */
 	public String getKey() {
 		try {
-			FileInputStream fis = new FileInputStream(new File(LOC));
+			FileInputStream fis = new FileInputStream(new File(FileConstants.CONFIG_LOC));
 			prop.load(fis);
-			return prop.getProperty(PROP_KEY);
+			return prop.getProperty(FileConstants.CONFIG_API);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,13 +56,13 @@ public class EmailSettingsLogic {
 	}
 	
 	/**
-	 * This sets the key in the properties file.
+	 * This sets the key in the properties file. Specifically, it sets the email key.
 	 * @param email the email
 	 */
 	public void setEmailKey(String email) {
 		try {
-			FileOutputStream fos = new FileOutputStream(new File(LOC));
-			prop.setProperty(PROP_KEY_FROM, email);
+			FileOutputStream fos = new FileOutputStream(FileConstants.CONFIG_LOC);
+			prop.setProperty(FileConstants.CONFIG_FROM, email);
 			prop.store(fos, null);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -76,9 +75,9 @@ public class EmailSettingsLogic {
 	 */
 	public String getEmailKey() {
 		try {
-			FileInputStream fis = new FileInputStream(new File(LOC));
+			FileInputStream fis = new FileInputStream(FileConstants.CONFIG_LOC);
 			prop.load(fis);
-			return prop.getProperty(PROP_KEY_FROM);
+			return prop.getProperty(FileConstants.CONFIG_FROM);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

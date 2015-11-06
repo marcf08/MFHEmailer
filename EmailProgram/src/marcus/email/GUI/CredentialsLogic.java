@@ -11,15 +11,16 @@ import java.util.Properties;
 import marcus.email.admin.PasswordHash;
 
 /**
- * This class stores the pw settings and modifies them.
+ * This class stores the password settings and modifies them if the user
+ * needs to change the password.
  * @author Marcus
  *
  */
 public class CredentialsLogic {
 	
+	//This is the properties file used to read and write the password hash
 	private Properties prop;
-	private final String HASH_KEY = "AdminOldHash";
-	
+
 	/**
 	 * This is the simple constructor.
 	 */
@@ -36,18 +37,17 @@ public class CredentialsLogic {
 	 */
 	public boolean changePassword(String oldPW, String passwordNewInit, String passwordConfirm) {
 		try {
-			
+
 			if (!passwordNewInit.equals(passwordConfirm)) {
 				return false; //Bail if the passwords don't match
 			}
-			
-			
+
 			if (!PasswordHash.validatePassword(oldPW, getOldHash())) {
 				return false; //Bail if the old hash doesn't match the input
 			}
 			
-			FileOutputStream fos = new FileOutputStream(new File(EmailSettingsLogic.LOC));
-			prop.setProperty(HASH_KEY, PasswordHash.createHash(passwordConfirm));
+			FileOutputStream fos = new FileOutputStream(new File(FileConstants.CONFIG_LOC));
+			prop.setProperty(FileConstants.CONFIG_HASH, PasswordHash.createHash(passwordConfirm));
 			prop.store(fos, null);
 			return true; //Return true so we know if it was a success
 			
@@ -65,9 +65,9 @@ public class CredentialsLogic {
 	 */
 	public String getOldHash() {
 		try {
-			FileInputStream fis = new FileInputStream(new File(EmailSettingsLogic.LOC));
+			FileInputStream fis = new FileInputStream(new File(FileConstants.CONFIG_LOC));
 			prop.load(fis);
-			return prop.getProperty(HASH_KEY);
+			return prop.getProperty(FileConstants.CONFIG_HASH);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
