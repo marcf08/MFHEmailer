@@ -189,7 +189,7 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 		pnlTop = new JPanel();
 		BufferedImage logo = null;
 		try {
-			logo = ImageIO.read(new File("C:/Users/Marcus/Desktop/mfhLogoTwo.png"));
+			logo = ImageIO.read(new File("/EmailProgram/resources/mfhLogo.png"));
 		} catch (IOException e) {
 			// TODO Fix so that it runs with a blank/no logo
 			e.printStackTrace();

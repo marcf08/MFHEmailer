@@ -177,8 +177,7 @@ public class EmailerClientGUI {
 	private void initialize() {
 		frmMfhEmailer = new JFrame();
 		frmMfhEmailer.setTitle("MFH Emailer");
-		//Was 100,100,450,300
-		frmMfhEmailer.setBounds(100, 100, 800, 400);
+		frmMfhEmailer.setBounds(100, 100, 1000, 800);
 		frmMfhEmailer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JMenuBar menuBar = new JMenuBar();
