@@ -1,47 +1,25 @@
 package marcus.email.GUI;
 
 import java.awt.EventQueue;
-
-//import javax.mail.Header;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
-
 import java.awt.BorderLayout;
-
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
-
-import java.awt.Label;
-
 import javax.swing.JPanel;
-import javax.swing.JList;
-
-
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-
-
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-
 import marcus.email.database.Patron;
 import marcus.email.util.PatronDBLogic;
-
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Frame;
 import java.awt.TextField;
 import java.awt.Button;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -49,33 +27,23 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
 import java.awt.event.WindowListener;
-
 import javax.swing.JTable;
-
-import java.awt.List;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Properties;
-import java.util.Vector;
-
-import javax.swing.JScrollBar;
-import javax.swing.JRadioButton;
-
 import java.awt.Component;
-
 import javax.swing.Box;
-
-
+/**
+ * This class is the main GUI for the program. It consists of a tabbed pane and the
+ * main panels that add the user information.
+ * @author Marcus
+ *
+ */
 public class EmailerClientGUI {
-	//Set up the frame
-	
 	public static JFrame frmMfhEmailer;
 	private JTextField txtSearch;
 	private JTextField textField_1;
@@ -92,23 +60,33 @@ public class EmailerClientGUI {
 	private JLabel lblNewLabel_1;
 	private JLabel lblNewLabel_2;
 	private JButton btnEditSelected;
+	
+	//Menu selections
 	private JMenuItem mnuServerSettings;
 	private JMenuItem mnuCredentials;
 	private JMenuItem mnuBackup;
-	private static Vector<String> header;
-	
-	public static String[] columnNames = {"Last Name", "First Name", "Email", "Birthday", "Date Added", "Anniversary"};
 	private JMenuItem mnuImport;
+	
+	//The string contains the column names/headers
+	public static String[] columnNames = {"Last Name", "First Name", "Email", "Birthday", "Date Added", "Anniversary"};
 
+	//These constants are for accessing the column headers
+	public static final int COL_LAST = 0;
+	public static final int COL_FIRST = 1;
+	public static final int COL_EMAIL = 2;
+	public static final int COL_BIRTH = 3;
+	public static final int COL_ADDED = 4;
+	public static final int COL_ANNIV = 5;
+	
 	/**
-	 * Launch the application.
+	 * This was auto-written by Window Builder. It sets up the method to run the application.
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					EmailerClientGUI window = new EmailerClientGUI();
-					window.frmMfhEmailer.setVisible(true);
+					new EmailerClientGUI();
+					EmailerClientGUI.frmMfhEmailer.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -224,8 +202,7 @@ public class EmailerClientGUI {
 		JPanel panel_2 = new JPanel();
 		panel_1.add(panel_2, BorderLayout.CENTER);
 		panel_2.setLayout(new BorderLayout(0, 0));
-		
-		
+				
 		txtSearch = new JTextField();
 		txtSearch.setText("Search Patrons");
 		txtSearch.addFocusListener(new FocusListener() {
@@ -247,7 +224,6 @@ public class EmailerClientGUI {
 					searchLogic(partialLast);
 					table.validate();
 				}
-					
 			}
 			//Search if the user deletes/backspaces
 			public void keyReleased(KeyEvent e) {
@@ -279,9 +255,6 @@ public class EmailerClientGUI {
 							table.validate();
 						}
 					}
-					
-				
-			
 			}
 			//Sort the list at the user's command
 			public void keyPressed(KeyEvent e) {
@@ -291,8 +264,7 @@ public class EmailerClientGUI {
 					table.validate();
 				}
 			}
-		});;
-
+		});
 
 		txtSearch.setHorizontalAlignment(SwingConstants.LEFT);
 		panel_2.add(txtSearch, BorderLayout.NORTH);
@@ -414,7 +386,6 @@ public class EmailerClientGUI {
 		panel_12.add(lblNewLabel_2);
 	}
 	
-	
 	/**
 	 * This method sets up the import menu item by launching the
 	 * import gui method.
@@ -426,8 +397,7 @@ public class EmailerClientGUI {
 			}
 		});
 	}
-	
-	
+
 	/**
 	 * This method configures the settings button. The button
 	 * launches the settings page.
@@ -469,39 +439,29 @@ public class EmailerClientGUI {
 	 */
 	public void setupFrameSaveFeature() {
 		frmMfhEmailer.addWindowListener(new WindowListener() {
-			public void windowOpened(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			public void windowIconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			public void windowDeiconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			public void windowDeactivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowOpened(WindowEvent e) {}
+			public void windowIconified(WindowEvent e) {}
+			public void windowDeiconified(WindowEvent e) {}
+			public void windowDeactivated(WindowEvent e) {	}
 			public void windowClosing(WindowEvent e) {
 				//dblogic.save();
-				
 			}
-			
-			@Override
-			public void windowClosed(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void windowActivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void windowClosed(WindowEvent e) {	}
+			public void windowActivated(WindowEvent e) {	}
 		});;
+	}
+
+	/**
+	 * This method controls whether to search emails or patrons.
+	 */
+	public void searchSwitch() {
+		if (searchEmails) {
+			searchEmails = false;
+			lblNewLabel_1.setText(srchPatrons);
+		} else {
+			searchEmails = true;
+			lblNewLabel_1.setText(srchEmails);
+		}
 	}
 	
 	
@@ -522,38 +482,20 @@ public class EmailerClientGUI {
 		tableModel.setNumRows(dblogic.getSize());
 		tableModel.setColumnCount(COL_COUNT);
 		tableModel.setColumnIdentifiers(columnNames);
-
 		table.setRowSelectionAllowed(true);
-		
-		
 		table.setModel(tableModel);
-		
+
+		//Build rows
 		for (int i = 0; i < dblogic.getSize(); i++) {
-			table.setValueAt(dblogic.getPatronFromDB(i).getLast(), i, 0);
+			table.setValueAt(dblogic.getPatronFromDB(i).getLast(), i, COL_LAST);
+			table.setValueAt(dblogic.getPatronFromDB(i).getFirst(), i, COL_FIRST);
+			table.setValueAt(dblogic.getPatronFromDB(i).getPatronEmail(), i, COL_EMAIL);
+			table.setValueAt(dblogic.getPatronFromDB(i).getDOB(), i, COL_BIRTH);
+			table.setValueAt(dblogic.getPatronFromDB(i).getPatronSinceString(), i, COL_ADDED);
+			table.setValueAt(dblogic.getPatronFromDB(i).getAnniv().toString(), i, COL_ANNIV);
 		}
-		
-		for (int i = 0; i < dblogic.getSize(); i++) {
-			table.setValueAt(dblogic.getPatronFromDB(i).getFirst(), i, 1);
-		}
-		
-		for (int i = 0; i < dblogic.getSize(); i++) {
-			table.setValueAt(dblogic.getPatronFromDB(i).getPatronEmail(), i, 2);
-		}
-		
-		
-		for (int i = 0; i < dblogic.getSize(); i++) {
-			table.setValueAt(dblogic.getPatronFromDB(i).getDOB(), i, 3);
-		}
-		
-		for (int i = 0; i < dblogic.getSize(); i++) {
-			table.setValueAt(dblogic.getPatronFromDB(i).getPatronSinceString(), i, 4);
-		}
-		
-		for (int i = 0; i < dblogic.getSize(); i++) {
-			table.setValueAt(dblogic.getPatronFromDB(i).getAnniv().toString(), i, 5);
-		}
-		
 	}
+
 	/**
 	 * The search logic is used for when the user types in the search field
 	 * @param partialLast the partial last name
@@ -562,31 +504,13 @@ public class EmailerClientGUI {
 		ArrayList<Patron> partialEmail = dblogic.getSortedByEmails(partialE);
 		resetTable();
 		for (int i = 0; i < partialEmail.size(); i++) {
-			table.setValueAt(partialEmail.get(i).getLastName(), i, 0);
+			table.setValueAt(partialEmail.get(i).getLastName(), i, COL_LAST);
+			table.setValueAt(partialEmail.get(i).getFirstName(), i, COL_FIRST);
+			table.setValueAt(partialEmail.get(i).getPatronEmail(), i, COL_EMAIL);
+			table.setValueAt(partialEmail.get(i).getPatronDOB(), i, COL_BIRTH);
+			table.setValueAt(partialEmail.get(i).getPatronSince(), i, COL_ADDED);
+			table.setValueAt(partialEmail.get(i).getAnniv().toString(), i, COL_ANNIV);
 		}
-		
-		for (int i = 0; i < partialEmail.size(); i++) {
-			table.setValueAt(partialEmail.get(i).getFirstName(), i, 1);
-		}
-		
-		for (int i = 0; i < partialEmail.size(); i++) {
-			table.setValueAt(partialEmail.get(i).getPatronEmail(), i, 2);
-		}
-		
-		for (int i = 0; i < partialEmail.size(); i++) {
-			table.setValueAt(partialEmail.get(i).getPatronDOB(), i, 3);
-		}
-		
-		for (int i = 0; i < partialEmail.size(); i++) {
-			table.setValueAt(partialEmail.get(i).getPatronSince(), i, 4);
-		}
-		
-		for (int i = 0; i < partialEmail.size(); i++) {
-			table.setValueAt(partialEmail.get(i).getAnniv().toString(), i, 5);
-		}
-		
-	
-		
 	}
 	
 	/**
@@ -597,30 +521,13 @@ public class EmailerClientGUI {
 		ArrayList<Patron> partialLastList = dblogic.getMatching(partialLast);
 		resetTable();
 		for (int i = 0; i < partialLastList.size(); i++) {
-			table.setValueAt(partialLastList.get(i).getLastName(), i, 0);
+			table.setValueAt(partialLastList.get(i).getLastName(), i, COL_LAST);
+			table.setValueAt(partialLastList.get(i).getFirstName(), i, COL_FIRST);
+			table.setValueAt(partialLastList.get(i).getPatronEmail(), i, COL_EMAIL);
+			table.setValueAt(partialLastList.get(i).getPatronDOB(), i, COL_BIRTH);
+			table.setValueAt(partialLastList.get(i).getPatronSince(), i, COL_ADDED);
+			table.setValueAt(partialLastList.get(i).getAnniv().toString(), i, COL_ANNIV);
 		}
-		
-		for (int i = 0; i < partialLastList.size(); i++) {
-			table.setValueAt(partialLastList.get(i).getFirstName(), i, 1);
-		}
-		
-		for (int i = 0; i < partialLastList.size(); i++) {
-			table.setValueAt(partialLastList.get(i).getPatronEmail(), i, 2);
-		}
-		
-		
-		for (int i = 0; i < partialLastList.size(); i++) {
-			table.setValueAt(partialLastList.get(i).getPatronDOB(), i, 3);
-		}
-		
-		for (int i = 0; i < partialLastList.size(); i++) {
-			table.setValueAt(partialLastList.get(i).getPatronSince(), i, 4);
-		}
-		
-		for (int i = 0; i < partialLastList.size(); i++) {
-			table.setValueAt(partialLastList.get(i).getAnniv().toString(), i, 5);
-		}
-		
 	}
 	
 	/**
@@ -630,28 +537,14 @@ public class EmailerClientGUI {
 		ArrayList<Patron> alphabetic = dblogic.getAlphabetic();
 		resetTable();
 		for (int i = 0; i < alphabetic.size(); i++) {
-			table.setValueAt(alphabetic.get(i).getLastName(), i, 0);
+			table.setValueAt(alphabetic.get(i).getLastName(), i, COL_LAST);
+			table.setValueAt(alphabetic.get(i).getFirstName(), i, COL_FIRST);
+			table.setValueAt(alphabetic.get(i).getPatronEmail(), i, COL_EMAIL);
+			table.setValueAt(alphabetic.get(i).getPatronDOB(), i, COL_BIRTH);
+			table.setValueAt(alphabetic.get(i).getPatronSince(), i, COL_ADDED);
+			table.setValueAt(alphabetic.get(i).getAnniv().toString(), i, COL_ANNIV);
 		}
 		
-		for (int i = 0; i < alphabetic.size(); i++) {
-			table.setValueAt(alphabetic.get(i).getFirstName(), i, 1);
-		}
-		
-		for (int i = 0; i < alphabetic.size(); i++) {
-			table.setValueAt(alphabetic.get(i).getPatronEmail(), i, 2);
-		}
-		
-		for (int i = 0; i < alphabetic.size(); i++) {
-			table.setValueAt(alphabetic.get(i).getPatronDOB(), i, 3);
-		}
-		
-		for (int i = 0; i < alphabetic.size(); i++) {
-			table.setValueAt(alphabetic.get(i).getPatronSince(), i, 4);
-		}
-		
-		for (int i = 0; i < alphabetic.size(); i++) {
-			table.setValueAt(alphabetic.get(i).getAnniv().toString(), i, 5);
-		}
 		
 	}
 	
@@ -666,19 +559,4 @@ public class EmailerClientGUI {
 		table.setModel(tableModel);
 	}
 	
-	/**
-	 * This method controls whether to search emails or patrons.
-	 */
-	public void searchSwitch() {
-		if (searchEmails) {
-			searchEmails = false;
-			lblNewLabel_1.setText(srchPatrons);
-		} else {
-			searchEmails = true;
-			lblNewLabel_1.setText(srchEmails);
-		}
-	}
-	
-
-
 }
