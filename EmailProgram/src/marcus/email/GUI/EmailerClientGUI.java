@@ -97,28 +97,13 @@ public class EmailerClientGUI {
 	private JMenuItem mnuBackup;
 	private static Vector<String> header;
 	
-	private static String[] columnNames = {"Last Name", "First Name", "Email", "Birthday", "Date Added", "Anniversary"};
+	public static String[] columnNames = {"Last Name", "First Name", "Email", "Birthday", "Date Added", "Anniversary"};
+	private JMenuItem mnuImport;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		try {
-		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-		        if ("Nimbus".equals(info.getName())) {
-		            UIManager.setLookAndFeel(info.getClassName());
-		            break;
-		        }
-		    }
-		} catch (Exception e) {
-		    // If Nimbus is not available, fall back to cross-platform
-		    try {
-		        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-		    } catch (Exception ex) {
-		        // not worth my time
-		    }
-		}
-
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -141,6 +126,7 @@ public class EmailerClientGUI {
 		setupServerSettings();
 		setupCredentials();
 		setupBackup();
+		setupImport();
 	}
 	
 	/**
@@ -372,8 +358,8 @@ public class EmailerClientGUI {
 		Button button = new Button("Export Log");
 		panel_10.add(button, BorderLayout.SOUTH);
 		
-		JMenuItem mntmNewMenuItem_8 = new JMenuItem("Import");
-		mnNewMenu_2.add(mntmNewMenuItem_8);
+		mnuImport = new JMenuItem("Import");
+		mnNewMenu_2.add(mnuImport);
 		
 		JPanel panel_5 = new JPanel();
 		panel_5.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -430,7 +416,17 @@ public class EmailerClientGUI {
 	}
 	
 	
-	
+	/**
+	 * This method sets up the import menu item by launching the
+	 * import gui method.
+	 */
+	public void setupImport() {
+		mnuImport.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ImportGUI();
+			}
+		});
+	}
 	
 	
 	/**
@@ -578,7 +574,6 @@ public class EmailerClientGUI {
 			table.setValueAt(partialEmail.get(i).getPatronEmail(), i, 2);
 		}
 		
-		
 		for (int i = 0; i < partialEmail.size(); i++) {
 			table.setValueAt(partialEmail.get(i).getPatronDOB(), i, 3);
 		}
@@ -632,7 +627,7 @@ public class EmailerClientGUI {
 	/**
 	 * This method alphabetizes the names in the JTable.
 	 */
-	public void alphabetize() {
+	public static void alphabetize() {
 		ArrayList<Patron> alphabetic = dblogic.getAlphabetic();
 		resetTable();
 		for (int i = 0; i < alphabetic.size(); i++) {

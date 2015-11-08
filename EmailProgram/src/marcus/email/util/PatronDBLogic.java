@@ -147,11 +147,33 @@ public class PatronDBLogic implements Serializable {
 	
 	/**
 	 * This method allows the user to add a patron to the database.
+	 * @param first the first name
+	 * @param last the last name
+	 * @param email the email
+	 * @param dob the birthday
+	 * @param anniv the anniversary
 	 */
 	public void addPatronToDB(String first, String last, String email, String dob, String anniv) {
 		Patron toAdd = new Patron(first, last, dob, email, anniv);
-		db.add(toAdd);
+		if (isUniquePatron(toAdd)) {
+			db.add(toAdd);
+		} else {
+			throw new IllegalArgumentException("Patron already exists in database.");
+		}
 
+	}
+	
+	/**
+	 * This method allows the user to add a patron object to the database that was
+	 * instantiated elsewhere.
+	 * @param patron the patron to add
+	 */
+	public void addPatronObject(Patron patron) {
+		if (isUniquePatron(patron)) {
+			db.add(patron);
+		} else {
+			throw new IllegalArgumentException("Patron already exists in database.");
+		}
 	}
 	
 	/**
@@ -272,6 +294,21 @@ public class PatronDBLogic implements Serializable {
 			backup.append(System.getProperty("line.separator"));
 		}
 		return backup.toString();
+	}
+	
+	/**
+	 * This method ensures the patron is unique. Email addresses are the unique
+	 * identifier for each patron.
+	 * @param patron a patron to inspect
+	 * @return true if the patron is unique and false otherwise
+	 */
+	private boolean isUniquePatron(Patron patron) {
+		for (int i = 0; i < db.getSize(); i++) {
+			if (db.get(i).getPatronEmail().equals(patron.getPatronEmail())) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

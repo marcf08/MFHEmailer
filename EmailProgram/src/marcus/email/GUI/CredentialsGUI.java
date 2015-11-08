@@ -7,7 +7,10 @@ import java.awt.BorderLayout;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.border.EtchedBorder;
+
+import com.sun.webkit.ContextMenu.ShowContext;
 
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -170,18 +173,27 @@ public class CredentialsGUI {
 					
 					char [] pwNewConfirmArray = pwNewConfirm.getPassword();
 					String pwNewConfirmString = new String(pwNewConfirmArray);
-					System.out.println(pwNewConfirmString);
 					
-					//try {
-						//logic.changePassword(PasswordHash.createHash(oldPw), pwNewString, pwNewConfirmString);
-					//} catch (NoSuchAlgorithmException | InvalidKeySpecException e1) {
-						// TODO Auto-generated catch block
-						//e1.printStackTrace();
-					//}			
+					boolean b = logic.changePassword(oldPw, pwNewString, pwNewConfirmString);
+					showDialog(b);			
 				}
 			}
 		});
 	}
+	
+	/**
+	 * This helper method simply shows the dialog based on whether or not the
+	 * password was successfully changed.
+	 */
+	private void showDialog(boolean b) {
+		if (b) {
+			JOptionPane.showMessageDialog(new JFrame(), "Password changed successfully.");
+			frmChangeCredentials.dispose();
+		} else {
+			JOptionPane.showMessageDialog(new JFrame(), "Error changing password. Try again.");
+		}
+	}
+	
 	
 	/**
 	 * This method sets up the cancel button.

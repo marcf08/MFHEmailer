@@ -49,6 +49,7 @@ public class Patron implements Comparable <Patron>, Serializable {
 
 		patronAddedDate();
 		checkAndSetDate(dob);
+		checkAndSetAnniv(anniv);
 	}
 
 	/**
