@@ -543,8 +543,6 @@ public class EmailerClientGUI {
 			table.setValueAt(alphabetic.get(i).getPatronSince(), i, COL_ADDED);
 			table.setValueAt(alphabetic.get(i).getAnniv().toString(), i, COL_ANNIV);
 		}
-		
-		
 	}
 	
 	/**
