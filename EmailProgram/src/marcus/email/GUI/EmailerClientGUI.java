@@ -385,7 +385,6 @@ public class EmailerClientGUI {
 		lblNewLabel_2 = new JLabel("New label");
 		panel_12.add(lblNewLabel_2);
 	}
-	
 	/**
 	 * This method sets up the import menu item by launching the
 	 * import gui method.
