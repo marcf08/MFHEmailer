@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.WindowConstants;
@@ -23,6 +24,7 @@ import java.awt.Insets;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.NoSuchElementException;
 
 import javax.swing.Box;
 import javax.swing.JTextField;
@@ -219,7 +221,13 @@ public class EditPatronGUI {
 			//This will make the changes.
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btnSave) {
-					
+					try {
+						saveChanges(txtFirst.getText(), txtLast.getText(), txtBirthday.getText(), txtEmail.getText(), txtAnniv.getText());
+						JOptionPane.showMessageDialog(new JFrame(), "Changes saved.");
+						contentPane.dispose();
+					} catch (NoSuchElementException nsee) {
+						JOptionPane.showMessageDialog(new JFrame(), "Error accessing patron.");
+					}
 				}
 			}
 		});
@@ -239,9 +247,8 @@ public class EditPatronGUI {
 	 * This method saves the changes.
 	 * @param email the patron's email
 	 */
-	private void saveChanges(String first, String last, String dob, String email) {
-		
-		
+	private void saveChanges(String first, String last, String dob, String email, String anniv) {
+		EmailerClientGUI.dblogic.edit(first, last, dob, email, anniv);
 	}
 
 }

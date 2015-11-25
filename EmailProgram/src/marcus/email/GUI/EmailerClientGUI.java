@@ -17,6 +17,8 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 import marcus.email.database.Patron;
 import marcus.email.util.PatronDBLogic;
+import marcus.email.util.time.Timer;
+
 import java.awt.FlowLayout;
 import java.awt.TextField;
 import java.awt.Button;
@@ -24,6 +26,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -37,6 +41,12 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.awt.Component;
 import javax.swing.Box;
+import javax.swing.JComboBox;
+import javax.swing.JToggleButton;
+import java.awt.CardLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
 /**
  * This class is the main GUI for the program. It consists of a tabbed pane and the
  * main panels that add the user information.
@@ -44,13 +54,13 @@ import javax.swing.Box;
  *
  */
 public class EmailerClientGUI {
-	public static JFrame frmMfhEmailer;
+
+    public static JFrame frmMfhEmailer;
 	private JTextField txtSearch;
-	private JTextField textField_1;
 	private static JTable table;
 	public static final int COL_COUNT = 6;
 	private static DefaultTableModel tableModel;
-	protected static PatronDBLogic dblogic = new PatronDBLogic();
+	public static PatronDBLogic dblogic = new PatronDBLogic();
 	protected static Properties prop;
 
 	//This controls how the user can search
@@ -58,7 +68,6 @@ public class EmailerClientGUI {
 	private static final String srchPatrons = "Search: Patrons";
 	private static final String srchEmails = "Search: Emails";
 	private JLabel lblNewLabel_1;
-	private JLabel lblNewLabel_2;
 	private JButton btnEditSelected;
 	
 	//Menu selections
@@ -77,6 +86,7 @@ public class EmailerClientGUI {
 	public static final int COL_BIRTH = 3;
 	public static final int COL_ADDED = 4;
 	public static final int COL_ANNIV = 5;
+	private JLabel lblTimeDate;
 	
 	/**
 	 * This was auto-written by Window Builder. It sets up the method to run the application.
@@ -98,6 +108,7 @@ public class EmailerClientGUI {
 	 * Create the application.
 	 */
 	public EmailerClientGUI() {
+		
 		//dblogic.load();
 		initialize();
 		setupFrameSaveFeature();
@@ -105,6 +116,7 @@ public class EmailerClientGUI {
 		setupCredentials();
 		setupBackup();
 		setupImport();
+		setupToggle();
 	}
 	
 	/**
@@ -345,45 +357,79 @@ public class EmailerClientGUI {
 		panel_7.add(panel_8, BorderLayout.CENTER);
 		panel_8.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_9 = new JPanel();
-		panel_8.add(panel_9, BorderLayout.NORTH);
-		panel_9.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
-		JLabel lblNewLabel = new JLabel("Current Email Template:");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel.setVerticalAlignment(SwingConstants.TOP);
-		panel_9.add(lblNewLabel);
-		
-		textField_1 = new JTextField();
-		panel_9.add(textField_1);
-		textField_1.setColumns(15);
-		
-		JButton btnNewButton_2 = new JButton("Browse");
-		panel_9.add(btnNewButton_2);
-		
 		JPanel panel_11 = new JPanel();
+		panel_11.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_8.add(panel_11, BorderLayout.SOUTH);
 		
 		JButton btnNewButton_3 = new JButton("New Promotion Email");
 		panel_11.add(btnNewButton_3);
 		
+		JPanel panel_15 = new JPanel();
+		panel_8.add(panel_15, BorderLayout.CENTER);
+		panel_15.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel_16 = new JPanel();
+		panel_16.setBorder(null);
+		panel_15.add(panel_16, BorderLayout.NORTH);
+		panel_16.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel_9 = new JPanel();
+		panel_9.setBorder(null);
+		panel_16.add(panel_9);
+		panel_9.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblNewLabel = new JLabel("Current Auto-Email Template:");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		lblNewLabel.setVerticalAlignment(SwingConstants.TOP);
+		panel_9.add(lblNewLabel, BorderLayout.WEST);
+		
+		JButton btnNewTemplate = new JButton("Add New Template");
+		panel_9.add(btnNewTemplate, BorderLayout.EAST);
+		
+		JPanel panel_18 = new JPanel();
+		FlowLayout flowLayout_3 = (FlowLayout) panel_18.getLayout();
+		flowLayout_3.setHgap(0);
+		flowLayout_3.setVgap(0);
+		panel_9.add(panel_18, BorderLayout.CENTER);
+		
+		JComboBox comboBox = new JComboBox();
+		panel_18.add(comboBox);
+		
+		JPanel panel_17 = new JPanel();
+		panel_17.setBorder(null);
+		panel_5.add(panel_17, BorderLayout.NORTH);
+		panel_17.setLayout(new BorderLayout(0, 0));
+		
+		JLabel lblStatus = new JLabel("Currently Auto-Sending Emails:");
+		lblStatus.setHorizontalAlignment(SwingConstants.CENTER);
+		panel_17.add(lblStatus, BorderLayout.WEST);
+		
+		JToggleButton tglbtnNewToggleButton = new JToggleButton("Status");
+		panel_17.add(tglbtnNewToggleButton, BorderLayout.EAST);
+		
 		JPanel panel_12 = new JPanel();
 		FlowLayout flowLayout_2 = (FlowLayout) panel_12.getLayout();
-		flowLayout_2.setAlignment(FlowLayout.LEFT);
 		frmMfhEmailer.getContentPane().add(panel_12, BorderLayout.SOUTH);
 		
 		JPanel panel_14 = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel_14.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
 		panel_12.add(panel_14);
 		
 		lblNewLabel_1 = new JLabel(srchPatrons);
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_14.add(lblNewLabel_1);
 		
-		Component horizontalStrut = Box.createHorizontalStrut(425);
+		Component horizontalStrut = Box.createHorizontalStrut(750);
 		panel_12.add(horizontalStrut);
 		
-		lblNewLabel_2 = new JLabel("New label");
-		panel_12.add(lblNewLabel_2);
+		JPanel panel_13 = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) panel_13.getLayout();
+		flowLayout_1.setAlignment(FlowLayout.RIGHT);
+		panel_12.add(panel_13);
+		
+		lblTimeDate = new JLabel("New label");
+		panel_13.add(lblTimeDate);
 	}
 	/**
 	 * This method sets up the import menu item by launching the
@@ -463,6 +509,17 @@ public class EmailerClientGUI {
 		}
 	}
 	
+	/**
+	 * This method enables the toggle button's functionality.
+	 */
+	public void setupToggle() {
+	}
+	
+	/**
+	 * This method sets up the timer.
+	 */
+	public void setupTimer() {
+	}
 	
 //*****TABLE LOGIC FOLLOWS BELOW*****//	
 	/**
@@ -474,7 +531,7 @@ public class EmailerClientGUI {
 			private static final long serialVersionUID = 1L;
 			@Override
 		    public boolean isCellEditable(int row, int column) {
-		       //all cells false
+		       //All cells false
 		       return false;
 		    }
 		};
@@ -486,8 +543,8 @@ public class EmailerClientGUI {
 
 		//Build rows
 		for (int i = 0; i < dblogic.getSize(); i++) {
-			table.setValueAt(dblogic.getPatronFromDB(i).getLast(), i, COL_LAST);
-			table.setValueAt(dblogic.getPatronFromDB(i).getFirst(), i, COL_FIRST);
+			table.setValueAt(dblogic.getPatronFromDB(i).getLastName(), i, COL_LAST);
+			table.setValueAt(dblogic.getPatronFromDB(i).getFirstName(), i, COL_FIRST);
 			table.setValueAt(dblogic.getPatronFromDB(i).getPatronEmail(), i, COL_EMAIL);
 			table.setValueAt(dblogic.getPatronFromDB(i).getDOB(), i, COL_BIRTH);
 			table.setValueAt(dblogic.getPatronFromDB(i).getPatronSinceString(), i, COL_ADDED);

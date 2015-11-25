@@ -3,7 +3,6 @@ package marcus.email.GUI;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -11,46 +10,34 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
-
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
-
 /**
  * MainLoginGUI is the main login panel the user will see upon logging in.
  * @author Marcus
  *
  */
 public class MainLoginGUI extends JFrame implements ActionListener {
-	/**
-	 * Simple serial.
-	 */
+	//Simple serial--this class doesn't need to be saved.
 	private static final long serialVersionUID = 1L;
 	
 	//String for name of the program
 	public static final String PRG_NAME = "MFH Emailer Application";
-
-	//Main panel for components
-	private JPanel pnlMain;
 	
 	//The middle panel is for the login buttons
 	private JPanel pnlMiddle;
 	
 	//This dimension is for centering the screen
 	Dimension dimCenter;
-	
-	/**
-	 * Defaults for length and width.
-	 */
+
+	//Length and width constants
 	public static final int WIDTH = 600;
 	public static final int HEIGHT = 400;
-	
 	
 	//Panels, labels and text for username and password
 	private JPanel pnlUserInfo;
@@ -66,46 +53,31 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 	//This panel is for the illustration
 	private JPanel pnlTop;
 	
-	/**
-	 * The home page buttons include login and exit.
-	 * This section also adds a panel for the buttons.
-	 */
+	//Buttons
 	private JButton btnNext;
 	private JButton btnExit;
 	private JPanel pnlButtons;
 	
-	/**
-	 * These are the constants for the login and -exit buttons
-	 */
+	//Constants for buttons
 	public final String NEXT = "Next";
 	public final String EXIT = "Exit";
 	
-	/**
-	 * This method is the main constructor for the emailer GUI.
-	 */
+	//Main constructor
 	public MainLoginGUI() {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 		this.setTitle(EmailerGUIMain.PRG_NAME);
 		this.setLocationRelativeTo(null);
-		
 		setupLoginPanel();
 		setHomePageButtons();
 		setButtonPanel();
-
 		registerListeners();
 		setupUserInfo();
 		setupTopPanel();
-
 		pack();
-		
-		//Center the login face		
 		setLocationRelativeTo(null);
-		
 	}
-	
-	
 	/**
 	 * This method sets up the main JPanel and adds it to the
 	 * home page.
@@ -137,13 +109,10 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 		pnlMiddle.add(pnlUserInfo, BorderLayout.NORTH);
 		pnlMiddle.add(pnlUserPw, BorderLayout.CENTER);
 
-	
 		this.add(pnlMiddle, BorderLayout.CENTER);
-
-
 		validate();
-		
 	}
+	
 	/**
 	 * This method instantiates the button objects
 	 * for the home page.
@@ -162,8 +131,8 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 		pnlButtons.add(btnNext);
 		this.add(pnlButtons, BorderLayout.SOUTH);
 		validate();
-		
 	}
+
 	/**
 	 * This method registers listeners for the JButtons.
 	 */
@@ -180,8 +149,7 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 		this.setVisible(false);
 		this.dispose();
 	}
-	
-	
+
 	/**
 	 * This method sets up the top panel with the illustration.
 	 */
@@ -189,7 +157,8 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 		pnlTop = new JPanel();
 		BufferedImage logo = null;
 		try {
-			logo = ImageIO.read(new File("/EmailProgram/resources/mfhLogo.png"));
+			
+			logo = ImageIO.read(new File("C:/Users/Marcus/git/MFHEmailer/EmailProgramresources"));
 		} catch (IOException e) {
 			// TODO Fix so that it runs with a blank/no logo
 			e.printStackTrace();
@@ -198,7 +167,6 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 		pnlTop.add(picLabel);
 		this.add(pnlTop, BorderLayout.NORTH);
 		validate();
-		
 		
 	}
 	

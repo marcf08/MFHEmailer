@@ -140,7 +140,7 @@ public class ImportPreviewGUI {
 	}
 	
 	/**
-	 * This method sets up the cancel button.
+	 * This method sets up the cancel button that kills the frame.
 	 */
 	public void setupCancel() {
 		btnCancel.addActionListener(new ActionListener() {
@@ -149,6 +149,4 @@ public class ImportPreviewGUI {
 			}
 		});
 	}
-	
-
 }

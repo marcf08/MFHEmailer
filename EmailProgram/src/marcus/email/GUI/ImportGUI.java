@@ -1,7 +1,6 @@
 package marcus.email.GUI;
 
 import java.awt.EventQueue;
-
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -14,11 +13,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.border.EtchedBorder;
-
-import sun.management.ManagementFactoryHelper;
-
 import javax.swing.JButton;
-import javax.swing.JProgressBar;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

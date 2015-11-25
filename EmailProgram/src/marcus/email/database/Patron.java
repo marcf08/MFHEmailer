@@ -22,12 +22,10 @@ public class Patron implements Comparable <Patron>, Serializable {
 	private LocalDate patronDOB;
 	private LocalDate patronSince;
 
-
 	// Ints for invalid date.
 	private final int defYear = 0000;
 	private final int defMonth = 00;
 	private final int defDay = 00;
-
 
 	/**
 	 * This class requires a null constructor in order to use the
@@ -70,7 +68,7 @@ public class Patron implements Comparable <Patron>, Serializable {
 	 */
 	public void checkAndSetDate(String dob) {
 		try {
-			
+		
 			String yearToConvert = dob.substring(0, 4);
 			String monthToConvert = dob.substring(5, 7);
 			String dayToConvert = dob.substring(8,10);
@@ -79,11 +77,9 @@ public class Patron implements Comparable <Patron>, Serializable {
 			int month = Integer.parseInt(monthToConvert);
 			int day = Integer.parseInt(dayToConvert);
 
-			
 			setDOB(year, month, day);
-			
-	
 		} catch (IndexOutOfBoundsException e) {
+			// If there's an error, simply set a default day
 			setDOB(defYear, defMonth, defDay);
 		} catch (NumberFormatException e) {
 			// If there's an error, simply set a default day
@@ -91,11 +87,10 @@ public class Patron implements Comparable <Patron>, Serializable {
 		}
 	}
 	
-	
 	/**
 	 * This method checks the anniversary date and sets it appropriately. If the date is
 	 * not valid, or if there were any errors parsing the string, this method
-	 * automatically sets the date to the default, 0000/00/00.
+	 * automatically sets the date to the default..
 	 * 
 	 * @param dob
 	 *            a date of birth formatted as a String--the method checks this
@@ -225,13 +220,7 @@ public class Patron implements Comparable <Patron>, Serializable {
 		return lastName;
 	}
 	
-	/**
-	 * Gets the first name
-	 * @return the patron's first name
-	 */
-	public String getFirst() {
-		return firstName;
-	}
+
 	
 	/**
 	 * Gets the date of birth in a simple string

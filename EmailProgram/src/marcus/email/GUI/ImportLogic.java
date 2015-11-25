@@ -47,7 +47,7 @@ public class ImportLogic {
 	public String[] getLastNames() {
 		String[] lastNames = new String[theList.length];
 		for (int i = 0; i < theList.length; i++) {
-			lastNames[i] = theList[i].getLast();
+			lastNames[i] = theList[i].getLastName();
 		}
 		return lastNames;
 	}
@@ -58,7 +58,7 @@ public class ImportLogic {
 	public String[] getFirstNames() {
 		String[] firstNames = new String[theList.length];
 		for (int i = 0; i < theList.length; i++) {
-			firstNames[i] = theList[i].getFirst();
+			firstNames[i] = theList[i].getFirstName();
 		}
 		return firstNames;
 	}

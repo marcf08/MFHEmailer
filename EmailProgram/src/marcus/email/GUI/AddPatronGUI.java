@@ -1,59 +1,44 @@
 package marcus.email.GUI;
 
 import java.awt.EventQueue;
-
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
 import java.awt.BorderLayout;
-
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
-
 import java.awt.Component;
-
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.swing.Box;
-
-
-
-
-
-
-
 import org.joda.time.IllegalFieldValueException;
 import net.java.balloontip.BalloonTip;
 import net.java.balloontip.BalloonTip.AttachLocation;
 import net.java.balloontip.BalloonTip.Orientation;
-import net.java.balloontip.positioners.BalloonTipPositioner;
 import net.java.balloontip.styles.BalloonTipStyle;
 import net.java.balloontip.styles.EdgedBalloonStyle;
-
 import java.awt.Color;
-import java.awt.Dialog;
-import java.awt.Dialog.ModalityType;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.nio.channels.ShutdownChannelGroupException;
-
+/**
+ * The add patron gui allows the user to add the patron to the database.
+ * @author Marcus
+ *
+ */
 public class AddPatronGUI {
 
 	private JDialog frmAddPatron;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField txtyyyymmdd;
+	private JTextField txtFirst;
+	private JTextField txtLast;
+	private JTextField txtEmail;
+	private JTextField txtBirth;
 	private JTextField txtAnniv;
 	
 	/**
@@ -85,7 +70,7 @@ public class AddPatronGUI {
 	 */
 	private void initialize() {
 		frmAddPatron = new JDialog(EmailerClientGUI.frmMfhEmailer, "Add Patron", true);
-		frmAddPatron.setBounds(100, 100, 400, 300);
+		frmAddPatron.setBounds(100, 100, 450, 350);
 		frmAddPatron.getContentPane().setLayout(new BorderLayout(0, 0));
 		frmAddPatron.setLocationRelativeTo(null);
 		
@@ -157,14 +142,14 @@ public class AddPatronGUI {
 		gbc_lblNewLabel.gridy = 2;
 		panel_4.add(lblNewLabel, gbc_lblNewLabel);
 		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 5;
-		gbc_textField.gridy = 2;
-		panel_4.add(textField, gbc_textField);
-		textField.setColumns(10);
+		txtFirst = new JTextField();
+		GridBagConstraints gbc_txtFirst = new GridBagConstraints();
+		gbc_txtFirst.insets = new Insets(0, 0, 5, 5);
+		gbc_txtFirst.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtFirst.gridx = 5;
+		gbc_txtFirst.gridy = 2;
+		panel_4.add(txtFirst, gbc_txtFirst);
+		txtFirst.setColumns(10);
 		
 		JLabel lblNewLabel_1 = new JLabel("Last Name:");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.LEFT);
@@ -174,14 +159,14 @@ public class AddPatronGUI {
 		gbc_lblNewLabel_1.gridy = 3;
 		panel_4.add(lblNewLabel_1, gbc_lblNewLabel_1);
 		
-		textField_1 = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.gridx = 5;
-		gbc_textField_1.gridy = 3;
-		panel_4.add(textField_1, gbc_textField_1);
-		textField_1.setColumns(10);
+		txtLast = new JTextField();
+		GridBagConstraints gbc_txtLast = new GridBagConstraints();
+		gbc_txtLast.insets = new Insets(0, 0, 5, 5);
+		gbc_txtLast.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtLast.gridx = 5;
+		gbc_txtLast.gridy = 3;
+		panel_4.add(txtLast, gbc_txtLast);
+		txtLast.setColumns(10);
 		
 		JLabel lblNewLabel_2 = new JLabel("Email:");
 		lblNewLabel_2.setHorizontalAlignment(SwingConstants.LEFT);
@@ -191,14 +176,14 @@ public class AddPatronGUI {
 		gbc_lblNewLabel_2.gridy = 4;
 		panel_4.add(lblNewLabel_2, gbc_lblNewLabel_2);
 		
-		textField_2 = new JTextField();
-		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
-		gbc_textField_2.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_2.gridx = 5;
-		gbc_textField_2.gridy = 4;
-		panel_4.add(textField_2, gbc_textField_2);
-		textField_2.setColumns(10);
+		txtEmail = new JTextField();
+		GridBagConstraints gbc_txtEmail = new GridBagConstraints();
+		gbc_txtEmail.insets = new Insets(0, 0, 5, 5);
+		gbc_txtEmail.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtEmail.gridx = 5;
+		gbc_txtEmail.gridy = 4;
+		panel_4.add(txtEmail, gbc_txtEmail);
+		txtEmail.setColumns(10);
 		
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		GridBagConstraints gbc_horizontalStrut = new GridBagConstraints();
@@ -216,20 +201,20 @@ public class AddPatronGUI {
 		gbc_lblBirthday.gridy = 5;
 		panel_4.add(lblBirthday, gbc_lblBirthday);
 		
-		txtyyyymmdd = new JTextField();
+		txtBirth = new JTextField();
 	
 		//Set up the balloon tip
 		BalloonTipStyle edgedLook = new EdgedBalloonStyle(Color.WHITE, Color.BLUE);
-			BalloonTip myBalloonTip = new BalloonTip(txtyyyymmdd, new JLabel("Use YYYY/MM/DD as a format with slashes."),
+			BalloonTip myBalloonTip = new BalloonTip(txtBirth, new JLabel("Use YYYY/MM/DD as a format with slashes."),
 			edgedLook, Orientation.RIGHT_BELOW, AttachLocation.ALIGNED, 10, 10, true);
 		
-		GridBagConstraints gbc_txtyyyymmdd = new GridBagConstraints();
-		gbc_txtyyyymmdd.insets = new Insets(0, 0, 5, 5);
-		gbc_txtyyyymmdd.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtyyyymmdd.gridx = 5;
-		gbc_txtyyyymmdd.gridy = 5;
-		panel_4.add(txtyyyymmdd, gbc_txtyyyymmdd);
-		txtyyyymmdd.setColumns(10);
+		GridBagConstraints gbc_txtBirth = new GridBagConstraints();
+		gbc_txtBirth.insets = new Insets(0, 0, 5, 5);
+		gbc_txtBirth.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txtBirth.gridx = 5;
+		gbc_txtBirth.gridy = 5;
+		panel_4.add(txtBirth, gbc_txtBirth);
+		txtBirth.setColumns(10);
 		
 		JLabel lblAnniv = new JLabel("Anniversary:");
 		GridBagConstraints gbc_lblAnniv = new GridBagConstraints();
@@ -247,16 +232,25 @@ public class AddPatronGUI {
 		gbc_txtAnniv.gridy = 6;
 		panel_4.add(txtAnniv, gbc_txtAnniv);
 		txtAnniv.setColumns(10);
-	
-	
+		
 		JButton btnNewButton = new JButton("Save");
 		panel_3.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					EmailerClientGUI.dblogic.addPatronToDB(textField.getText(), textField_1.getText(),
-							textField_2.getText(), txtyyyymmdd.getText(), txtAnniv.getText());
+					String first = txtFirst.getText();
+					String last = txtLast.getText();
+					String email = txtEmail.getText();
+					String birth = txtBirth.getText();
+					String anniv = txtAnniv.getText();
+					if (checkEmail(email)) {
+						JOptionPane.showMessageDialog(new JFrame(), "Invalid email. Check the email and try again.");
+						txtEmail.requestFocus();
+						txtEmail.selectAll();
+					} else {
+						EmailerClientGUI.dblogic.addPatronToDB(first, last,
+								email, birth, anniv);
+					}
 					frmAddPatron.dispose();
 				} catch (IllegalFieldValueException i) {
 					JOptionPane.showMessageDialog(new JFrame(), "The date of birth is incorrect. Try again.");
@@ -264,13 +258,22 @@ public class AddPatronGUI {
 			}
 
 		});
-		
-	
 	}
 	
+	/**
+	 * This method checks the patron email. If it doesn't throw an error, it will serve as a 
+	 * unique identifier.
+	 * @param email the email
+	 */
+	public boolean checkEmail(String email) {
+		try {
+			      InternetAddress emailAddr = new InternetAddress(email);
+			      emailAddr.validate();
+			      return true;
+			   } catch (AddressException ex) {
+				   return false;
+			   }
+	}
 	
-	
-	
-
 
 }

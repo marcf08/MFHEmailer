@@ -3,12 +3,14 @@ package marcus.email.database;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import javax.lang.model.element.Parameterizable;
@@ -20,14 +22,14 @@ import javax.lang.model.element.Parameterizable;
  * @author Marcus
  *
  */
- public class PatronDB implements Serializable {
+public class PatronDB implements Serializable {
 	//Serial id for changes
 	private static final long serialVersionUID = 1262692812915379833L;
 	//This is the main data member
 	private ArrayList<Patron> database;
 	//This is for deleted patrons
 	private ArrayList<Patron> deleted;
-	
+
 	/**
 	 * The constructor creates the array list referred to as database.
 	 */
@@ -53,7 +55,7 @@ import javax.lang.model.element.Parameterizable;
 		}
 		return listByLastName;
 	}
-	
+
 	/**
 	 * This method returns an array list of the patrons by a certain name.
 	 * For example, if we search for "John", this method pulls all the 
@@ -64,7 +66,7 @@ import javax.lang.model.element.Parameterizable;
 	 */
 	public ArrayList<Patron> getPatronListByFirstName(String firstName) {
 		ArrayList<Patron> listByFirstName = new ArrayList<>();
-		
+
 		for (int i = 0; i < database.size(); i++) {
 			//Ignoring case, if a last name matches the target last name,
 			//then the method will add it to the array list to return.
@@ -74,7 +76,7 @@ import javax.lang.model.element.Parameterizable;
 		}
 		return listByFirstName;
 	}
-	
+
 	/**
 	 * This method returns an array list of the patrons by a certain date of
 	 * birth. For example, if we search for 1900/10/10, this method pulls
@@ -86,7 +88,7 @@ import javax.lang.model.element.Parameterizable;
 	@SuppressWarnings("deprecation")
 	public ArrayList<Patron> getPatronListByDOB(Date dob) {
 		ArrayList<Patron> listByDOB = new ArrayList<>();
-	
+
 		int monthToMatch = dob.getMonth();
 		int dayToMatch = dob.getDay();
 
@@ -101,7 +103,7 @@ import javax.lang.model.element.Parameterizable;
 		}
 		return listByDOB;
 	}
-	
+
 	/**
 	 * This method returns an array list of the patrons by registration date.
 	 * For example, if we search for 1900/10/10, this method pulls
@@ -112,7 +114,7 @@ import javax.lang.model.element.Parameterizable;
 	@SuppressWarnings("deprecation")
 	public ArrayList<Patron> getPatronListBySince(Date since) {
 		ArrayList<Patron> listBySince = new ArrayList<>();
-		
+
 		//The date method is very precise. For that reason, we'll just
 		//try to match the day and month.
 		int monthToMatch = since.getMonth();
@@ -129,46 +131,46 @@ import javax.lang.model.element.Parameterizable;
 		}
 		return listBySince;
 	}
-	
-	
+
+
 	/**
 	 * This method sorts the list by emails. It does not alter the main data member.
 	 * @param partialEmail a partial email string
 	 */
 	public ArrayList<Patron> getSortedByEmails(String partialEmail) {
 		ArrayList<Patron> sortedByEmails = new ArrayList<Patron>();
-		
+
 		for (int i = 0; i < database.size(); i++) {
 			if (database.get(i).getPatronEmail().contains(partialEmail)) {
 				sortedByEmails.add(database.get(i));
 			}
 		}
-		
+
 		//Define a simple email comparator
 		Comparator<Patron> emailOrder =  new Comparator<Patron>() {
-	        public int compare(Patron patron, Patron otherPatron) {
-	            return patron.getPatronEmail().compareTo(otherPatron.getPatronEmail());
-	        }
-	    };
-	    
-	    Collections.sort(sortedByEmails, emailOrder);
-	    return sortedByEmails;
+			public int compare(Patron patron, Patron otherPatron) {
+				return patron.getPatronEmail().compareTo(otherPatron.getPatronEmail());
+			}
+		};
+
+		Collections.sort(sortedByEmails, emailOrder);
+		return sortedByEmails;
 	}
-	
-	
+
+
 	/**
 	 * This method sorts the list by last name. It does not alter the main data member,
 	 * but rather, it returns a sorted list.
 	 */
 	public ArrayList<Patron> getSortedByLast() {
 		ArrayList<Patron> sortedCopyOfMaster = new ArrayList<Patron>(database);
-		
+
 		Collections.sort(sortedCopyOfMaster);
-		
+
 		return sortedCopyOfMaster;
 	}
-	
-	
+
+
 	/**
 	 * The import method imports a simple text file. It assumes the file is
 	 * tab delimited. It uses separate helper methods to acquire the last name,
@@ -179,12 +181,12 @@ import javax.lang.model.element.Parameterizable;
 		Scanner fileScanner = null;
 		Scanner lineScanner = null;
 		String lineOfInput = null;
-	
+
 		try {
 			fileScanner = new Scanner(userFile);
 			fileScanner.useDelimiter("\t");
 			while (fileScanner.hasNextLine()) {
-				
+
 				lineOfInput = fileScanner.nextLine();
 				lineScanner = new Scanner(lineOfInput);
 				String tempLast = lineScanner.next();
@@ -192,7 +194,7 @@ import javax.lang.model.element.Parameterizable;
 				String email = lineScanner.next();
 				String dob = lineScanner.next();
 				String anniv = lineScanner.next();
-			
+
 				//Configure the new patron, add it to the list
 				Patron toAdd = new Patron(email);
 				toAdd.setLastName(tempLast);
@@ -200,13 +202,13 @@ import javax.lang.model.element.Parameterizable;
 				toAdd.checkAndSetDate(dob);
 				toAdd.checkAndSetAnniv(anniv);
 				database.add(toAdd);
-				
+
 			}
 		} catch (FileNotFoundException e) {
 			//Handle outside of this method
 		}
 	}
-	
+
 	/**
 	 * This method simply prints the list for testing.
 	 * @return a string representation of the database
@@ -218,10 +220,10 @@ import javax.lang.model.element.Parameterizable;
 			toReturn.append(database.get(i).toString());
 			toReturn.append("\n");
 		}
-		
+
 		return toReturn.toString();
 	}
-	
+
 	/**
 	 * This method gets the list of first names
 	 * @return the list of first names
@@ -229,11 +231,11 @@ import javax.lang.model.element.Parameterizable;
 	public String[] getListOfFirstNames() {
 		String [] firstNames = new String[database.size()];
 		for (int i = 0; i < database.size(); i++) {
-			firstNames[i] = database.get(i).getFirst();
+			firstNames[i] = database.get(i).getFirstName();
 		}
 		return firstNames;
 	}
-	
+
 	/**
 	 * This method gets the list of last names
 	 * @return the last of last names
@@ -245,7 +247,7 @@ import javax.lang.model.element.Parameterizable;
 		}
 		return lastNames;
 	}
-	
+
 	/**
 	 * This method returns the list of emails
 	 * @return the list of emails
@@ -257,7 +259,7 @@ import javax.lang.model.element.Parameterizable;
 		}
 		return emails;
 	}
-	
+
 	/**
 	 * This method returns the list of date of births
 	 * @return the date of birth list
@@ -269,7 +271,7 @@ import javax.lang.model.element.Parameterizable;
 		}
 		return birthdays;
 	}
-	
+
 	/**
 	 * This method returns the list of dates of patron since
 	 * @return the patron since list
@@ -281,7 +283,7 @@ import javax.lang.model.element.Parameterizable;
 		}
 		return since;
 	}
-	
+
 	/**
 	 * This method returns the list of dates of patron anniversaries.
 	 * @return the list of anniversary dates
@@ -293,7 +295,7 @@ import javax.lang.model.element.Parameterizable;
 		}
 		return anniv;
 	}
-	
+
 	/**
 	 * This method returns an array of patrons whose
 	 * last name matches the partial last name provided.
@@ -307,79 +309,84 @@ import javax.lang.model.element.Parameterizable;
 		}
 		return partialLastNamePatronList;
 	}
-	
+
 	/**
 	 * This method allows the method to search for the unique patron.
 	 * @param email the patron's email
 	 */
 	public void edit(String email, String newFirstName, String newLastName,
-					String dob) {
+			String dob, String anniv) {
 		for (int i = 0; i < database.size(); i++) {
 			if (database.get(i).getPatronEmail().equals(email)) {
-					database.get(i).setFirstName(newFirstName);
-					database.get(i).setLastName(newLastName);
-					database.get(i).checkAndSetDate(dob);
-				}
-			}
-	}
-	
-	/**
-	 * Simple getter via the indexes.
-	 * @param i the index of the patron
-	 */
-	public Patron get(int i) {
-		return database.get(i);
-	}
-	/**
-	 * This method returns the size of the list.
-	 * @return the size of the list
-	 */
-	public int getSize() {
-		return database.size();
-	}
-		
-	/**
-	 * This method adds a patron to the database.
-	 * @param fromGUI a patron from the GUI
-	 * @throws illegal argument exception if the patron already exists
-	 */
-	public void add(Patron fromGUI) {
-		if (isValidPatron(fromGUI)) {
-			database.add(fromGUI);
-		}
-		else {
-			throw new IllegalArgumentException();
-		}
-	}
-		
-	
-	
-	/**
-	 * This method ensures the patron does not exist in the database. 
-	 * The database does not permit multiple instances of the same
-	 * email address.
-	 * @param patron the patron to check
-	 */
-	public boolean isValidPatron(Patron patron) {
-		for (int i = 0; i < getSize(); i++) {
-			if (database.get(i).getPatronEmail().equals(patron.getPatronEmail())) {
-				return false;
+				database.get(i).setFirstName(newFirstName);
+				database.get(i).setLastName(newLastName);
+				database.get(i).checkAndSetDate(dob);
+				database.get(i).checkAndSetAnniv(anniv);
+				return;
 			}
 		}
-		return true;
+		//If we get here, there was an error finding the patron
+		//which should not happen.
+		throw new NoSuchElementException();
 	}
-	
-	/**
-	 * This method removes a patron from the database. It also
-	 * adds the patron to the deleted database.
-	 * @return the removed patron
-	 */
-	public void remove(String emailToRemove) {
-		for (int i = 0; i < database.size(); i++) {
-			if (database.get(i).getPatronEmail().equals(emailToRemove)) {
-				deleted.add(database.remove(i));
-			}
+
+/**
+ * Simple getter via the indexes.
+ * @param i the index of the patron
+ */
+public Patron get(int i) {
+	return database.get(i);
+}
+/**
+ * This method returns the size of the list.
+ * @return the size of the list
+ */
+public int getSize() {
+	return database.size();
+}
+
+/**
+ * This method adds a patron to the database.
+ * @param fromGUI a patron from the GUI
+ * @throws illegal argument exception if the patron already exists
+ */
+public void add(Patron fromGUI) {
+	if (isValidPatron(fromGUI)) {
+		database.add(fromGUI);
+	}
+	else {
+		throw new IllegalArgumentException();
+	}
+}
+
+
+
+/**
+ * This method ensures the patron does not exist in the database. 
+ * The database does not permit multiple instances of the same
+ * email address.
+ * @param patron the patron to check
+ */
+public boolean isValidPatron(Patron patron) {
+	for (int i = 0; i < getSize(); i++) {
+		if (database.get(i).getPatronEmail().equals(patron.getPatronEmail())) {
+			return false;
 		}
 	}
-	
+	return true;
+}
+
+/**
+ * This method removes a patron from the database. It also
+ * adds the patron to the deleted database.
+ * @return the removed patron
+ */
+public void remove(String emailToRemove) {
+	for (int i = 0; i < database.size(); i++) {
+		if (database.get(i).getPatronEmail().equals(emailToRemove)) {
+			deleted.add(database.remove(i));
+		}
+	}
+}
+
 }

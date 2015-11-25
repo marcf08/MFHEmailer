@@ -1,62 +1,34 @@
 package marcus.email.GUI;
-
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 import java.awt.BorderLayout;
-
 import javax.swing.JTabbedPane;
 import javax.swing.JButton;
-
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
 import com.sendgrid.SendGrid;
 import com.sendgrid.SendGrid.Email;
 import com.sendgrid.SendGridException;
-
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import javax.swing.JPasswordField;
-
-import java.awt.FlowLayout;
-
 import javax.swing.border.EtchedBorder;
-
-import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.Font;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.event.WindowStateListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.channels.ShutdownChannelGroupException;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.Properties;
-
 import javax.swing.Box;
-import javax.swing.JCheckBox;
-import javax.swing.JToggleButton;
-
 import org.joda.time.LocalDate;
-
+/**
+ * This class is for changing the email settings of the program.
+ * @author Marcus
+ *
+ */
 public class EmailSettingsGUI {
 
 	private JDialog frmSmtpSettings;
@@ -79,24 +51,19 @@ public class EmailSettingsGUI {
 	private static EmailSettingsLogic logic;
 	private JLabel lblFrom;
 	private JTextField txtFrom;
-	
-
 	/**
-	 * Create the application.
+	 * This method creates the application.
 	 */
 	public EmailSettingsGUI() {
 		logic = new EmailSettingsLogic();
-	
 		initialize();
 		setupWindowClose();
 		test();
 		load();
 		enableDisableFields(false);
-		
 		setupEditButton();
 		setupCancelButton();
 		setupSaveButton();
-		
 		frmSmtpSettings.setVisible(true);
 	}
 
@@ -255,10 +222,7 @@ public class EmailSettingsGUI {
 			}
 		});
 	}
-	
-	
-	
-	
+
 	/**
 	 * This method saves the settings to the properties file.
 	 */
@@ -298,13 +262,6 @@ public class EmailSettingsGUI {
 			}
 		});;
 	}
-	
-
-	
-	
-	
-	
-	
 	/**
 	 * This method colors the fields grey and sets them to disabled.
 	 * It will change depending on if the user hits "Edit Settings."
@@ -328,7 +285,6 @@ public class EmailSettingsGUI {
 					email.setText("Test From Development " + LocalTime.now().toString() + "\n Success.");
 					email.setSubject("Test from MFHEmailer " + LocalDate.now().toString());
 					email.setFrom(txtFrom.getText());
-					email.setHtml("<html><head>HELLO TEST</head><body><strong>TEST BODY</strong></body></html>");
 					try {
 						SendGrid.Response response = send.send(email);
 						JOptionPane.showMessageDialog(new JFrame(), "Server replied: " + response.getMessage());	

@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 
 import marcus.email.database.Patron;
@@ -57,7 +58,7 @@ public class PatronDBLogic implements Serializable {
 	public String[] getListOfFirstNames() {
 		String [] firstNames = new String[db.getSize()];
 		for (int i = 0; i < db.getSize(); i++) {
-			firstNames[i] = db.get(i).getFirst();
+			firstNames[i] = db.get(i).getFirstName();
 		}
 		return firstNames;
 	}
@@ -205,9 +206,10 @@ public class PatronDBLogic implements Serializable {
 	 * @param last the new last name
 	 * @param dob the new birthday
 	 * @param email the email to find
+	 * @param anniv the anniversary
 	 */
-	public void edit(String first, String last, String dob, String email) {
-		db.edit(email, first, last, dob);
+	public void edit(String first, String last, String dob, String email, String anniv) {
+			db.edit(email, first, last, dob, anniv);
 	}
 	
 	/**
@@ -282,7 +284,7 @@ public class PatronDBLogic implements Serializable {
 		for (int i = 0; i < db.getSize(); i++) {
 			backup.append(db.get(i).getLast());
 			backup.append("\t");
-			backup.append(db.get(i).getFirst());
+			backup.append(db.get(i).getFirstName());
 			backup.append("\t");
 			backup.append(db.get(i).getPatronEmail());
 			backup.append("\t");
