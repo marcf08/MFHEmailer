@@ -1,5 +1,7 @@
 package marcus.email.util;
 
+import java.io.Serializable;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -11,8 +13,12 @@ import marcus.email.database.Patron;
  * This simple bean contains an email object and methods for retrieving it.
  * @author Marcus
  */
-public class EmailTemplate {
-	//Each template has a name
+public class EmailTemplate implements Serializable {
+	/**
+	 * ID for serialization
+	 */
+	private static final long serialVersionUID = -6071607869618498533L;
+	//Each template has a name and content
 	private String name;
 	private String htmlContent;
 	
@@ -20,8 +26,14 @@ public class EmailTemplate {
 	 * This is the simple null constructor
 	 */
 	public EmailTemplate() {
+		//Null
 	}
 	
+	/**
+	 * This constructor allows for instantiation given string arguments.
+	 * @param name the name of this template
+	 * @param htmlContent the content of this template
+	 */
 	public EmailTemplate(String name, String htmlContent) {
 		this.name = name;
 		this.htmlContent = htmlContent;
@@ -57,7 +69,7 @@ public class EmailTemplate {
 		
 		//Replace the birthday
 		Elements varsBirthday= doc.select("var#birthday");
-		for (Element element : varsDateAdded) {
+		for (Element element : varsBirthday) {
 			element.text(patron.getPatronDOB().toString());
 		}
 		
@@ -68,12 +80,8 @@ public class EmailTemplate {
 		}
 		
 		return doc.html();
+	}
 		
-}
-		
-		
-	
-
 	//Getters and setters below
 	public String getName() {
 		return name;
@@ -87,6 +95,4 @@ public class EmailTemplate {
 	public void setHtmlContent(String htmlContent) {
 		this.htmlContent = htmlContent;
 	}
-	
-
 }

@@ -33,7 +33,7 @@ import java.awt.event.ActionListener;
  *
  */
 public class AddPatronGUI {
-
+	//Field names
 	private JDialog frmAddPatron;
 	private JTextField txtFirst;
 	private JTextField txtLast;
@@ -41,20 +41,6 @@ public class AddPatronGUI {
 	private JTextField txtBirth;
 	private JTextField txtAnniv;
 	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new AddPatronGUI();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
@@ -243,14 +229,8 @@ public class AddPatronGUI {
 					String email = txtEmail.getText();
 					String birth = txtBirth.getText();
 					String anniv = txtAnniv.getText();
-					if (checkEmail(email)) {
-						JOptionPane.showMessageDialog(new JFrame(), "Invalid email. Check the email and try again.");
-						txtEmail.requestFocus();
-						txtEmail.selectAll();
-					} else {
-						EmailerClientGUI.dblogic.addPatronToDB(first, last,
+					EmailerClientGUI.dblogic.addPatronToDB(first, last,
 								email, birth, anniv);
-					}
 					frmAddPatron.dispose();
 				} catch (IllegalFieldValueException i) {
 					JOptionPane.showMessageDialog(new JFrame(), "The date of birth is incorrect. Try again.");
@@ -260,20 +240,6 @@ public class AddPatronGUI {
 		});
 	}
 	
-	/**
-	 * This method checks the patron email. If it doesn't throw an error, it will serve as a 
-	 * unique identifier.
-	 * @param email the email
-	 */
-	public boolean checkEmail(String email) {
-		try {
-			      InternetAddress emailAddr = new InternetAddress(email);
-			      emailAddr.validate();
-			      return true;
-			   } catch (AddressException ex) {
-				   return false;
-			   }
-	}
-	
+
 
 }

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+
 /**
  * This class stores the api key. It will be edited later in order to
  * make it more difficult to locate the key.
@@ -12,11 +13,9 @@ import java.util.Properties;
  *
  */
 public class EmailSettingsLogic {
-	
-
+	//The properties file is used for reading from the configuration file
 	private Properties prop;
 
-	
 	/**
 	 * This instantiates the logic class.
 	 */
@@ -34,7 +33,6 @@ public class EmailSettingsLogic {
 			prop.setProperty(FileConstants.CONFIG_API, api);
 			prop.store(fos, null);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -49,7 +47,6 @@ public class EmailSettingsLogic {
 			prop.load(fis);
 			return prop.getProperty(FileConstants.CONFIG_API);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
@@ -79,7 +76,6 @@ public class EmailSettingsLogic {
 			prop.load(fis);
 			return prop.getProperty(FileConstants.CONFIG_FROM);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;

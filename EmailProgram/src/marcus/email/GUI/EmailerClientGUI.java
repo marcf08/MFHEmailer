@@ -6,6 +6,7 @@ import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -15,7 +16,10 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
+
+
 import marcus.email.database.Patron;
+import marcus.email.util.EmailStorage;
 import marcus.email.util.PatronDBLogic;
 import marcus.email.util.time.Timer;
 
@@ -38,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.awt.Component;
 import javax.swing.Box;
@@ -55,13 +60,17 @@ import java.awt.Insets;
  */
 public class EmailerClientGUI {
 
+	public static EmailGUI g;
+	
     public static JFrame frmMfhEmailer;
+    public static EmailStorage emailStorage;
 	private JTextField txtSearch;
 	private static JTable table;
 	public static final int COL_COUNT = 6;
 	private static DefaultTableModel tableModel;
 	public static PatronDBLogic dblogic = new PatronDBLogic();
 	protected static Properties prop;
+
 
 	//This controls how the user can search
 	private boolean searchEmails = false;
@@ -87,6 +96,11 @@ public class EmailerClientGUI {
 	public static final int COL_ADDED = 4;
 	public static final int COL_ANNIV = 5;
 	private JLabel lblTimeDate;
+	private JButton btnEdit;
+	private JLabel lblOnOff;
+	private static JComboBox <String> comboEmails;
+	private JButton btnNewTemplate;
+	private JButton btnDelete;
 	
 	/**
 	 * This was auto-written by Window Builder. It sets up the method to run the application.
@@ -108,8 +122,8 @@ public class EmailerClientGUI {
 	 * Create the application.
 	 */
 	public EmailerClientGUI() {
-		
 		//dblogic.load();
+		setupEmailStorage();
 		initialize();
 		setupFrameSaveFeature();
 		setupServerSettings();
@@ -117,6 +131,7 @@ public class EmailerClientGUI {
 		setupBackup();
 		setupImport();
 		setupToggle();
+		setupEditAndTemplate();
 	}
 	
 	/**
@@ -361,15 +376,12 @@ public class EmailerClientGUI {
 		panel_11.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_8.add(panel_11, BorderLayout.SOUTH);
 		
-		JButton btnNewButton_3 = new JButton("New Promotion Email");
-		panel_11.add(btnNewButton_3);
-		
 		JPanel panel_15 = new JPanel();
 		panel_8.add(panel_15, BorderLayout.CENTER);
 		panel_15.setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_16 = new JPanel();
-		panel_16.setBorder(null);
+		panel_16.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_15.add(panel_16, BorderLayout.NORTH);
 		panel_16.setLayout(new BorderLayout(0, 0));
 		
@@ -380,11 +392,24 @@ public class EmailerClientGUI {
 		
 		JLabel lblNewLabel = new JLabel("Current Auto-Email Template:");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel.setVerticalAlignment(SwingConstants.TOP);
 		panel_9.add(lblNewLabel, BorderLayout.WEST);
 		
-		JButton btnNewTemplate = new JButton("Add New Template");
-		panel_9.add(btnNewTemplate, BorderLayout.EAST);
+		JPanel panel_19 = new JPanel();
+		FlowLayout flowLayout_4 = (FlowLayout) panel_19.getLayout();
+		flowLayout_4.setHgap(0);
+		panel_9.add(panel_19, BorderLayout.EAST);
+		
+		JButton btnNewButton_3 = new JButton("Run Promo");
+		panel_19.add(btnNewButton_3);
+		
+		btnDelete = new JButton("Delete Selected");
+		panel_19.add(btnDelete);
+		
+		btnEdit = new JButton("Edit Selected");
+		panel_19.add(btnEdit);
+		
+		btnNewTemplate = new JButton("Add New Template");
+		panel_19.add(btnNewTemplate);
 		
 		JPanel panel_18 = new JPanel();
 		FlowLayout flowLayout_3 = (FlowLayout) panel_18.getLayout();
@@ -392,11 +417,14 @@ public class EmailerClientGUI {
 		flowLayout_3.setVgap(0);
 		panel_9.add(panel_18, BorderLayout.CENTER);
 		
-		JComboBox comboBox = new JComboBox();
-		panel_18.add(comboBox);
+		JPanel panel_22 = new JPanel();
+		panel_18.add(panel_22);
+		
+		comboEmails = new JComboBox<String>(emailStorage.getTemplateNames());
+		panel_22.add(comboEmails);
 		
 		JPanel panel_17 = new JPanel();
-		panel_17.setBorder(null);
+		panel_17.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_5.add(panel_17, BorderLayout.NORTH);
 		panel_17.setLayout(new BorderLayout(0, 0));
 		
@@ -404,8 +432,17 @@ public class EmailerClientGUI {
 		lblStatus.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_17.add(lblStatus, BorderLayout.WEST);
 		
+		JPanel panel_20 = new JPanel();
+		FlowLayout flowLayout_5 = (FlowLayout) panel_20.getLayout();
+		flowLayout_5.setHgap(0);
+		panel_17.add(panel_20, BorderLayout.EAST);
+		
+		lblOnOff = new JLabel("");
+		panel_20.add(lblOnOff);
+		
+		
 		JToggleButton tglbtnNewToggleButton = new JToggleButton("Status");
-		panel_17.add(tglbtnNewToggleButton, BorderLayout.EAST);
+		panel_20.add(tglbtnNewToggleButton);
 		
 		JPanel panel_12 = new JPanel();
 		FlowLayout flowLayout_2 = (FlowLayout) panel_12.getLayout();
@@ -431,6 +468,8 @@ public class EmailerClientGUI {
 		lblTimeDate = new JLabel("New label");
 		panel_13.add(lblTimeDate);
 	}
+	
+
 	/**
 	 * This method sets up the import menu item by launching the
 	 * import gui method.
@@ -521,6 +560,72 @@ public class EmailerClientGUI {
 	public void setupTimer() {
 	}
 	
+	/**
+	 * This method sets up the static email storage data member.
+	 */
+	public void setupEmailStorage() {
+		emailStorage = new EmailStorage();
+	}
+	
+	/**
+	 * These methods add action listeners to the edit/add/delete new template members.
+	 */
+	public void setupEditAndTemplate() {
+		//Edit button
+		btnEdit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btnEdit) {
+					try {
+						String templateName = (String) comboEmails.getSelectedItem();
+						new EmailGUI(emailStorage.extractContent(templateName), true);
+					} catch (NoSuchElementException nse) {
+						JOptionPane.showMessageDialog(new JFrame(), "Nothing selected.");
+					}
+				}
+			}
+		});
+		//New Template button
+		btnNewTemplate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btnNewTemplate) {
+					new EmailGUI(null, false);
+				}
+			}
+		});
+		//Delete tempalte button
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btnDelete) {
+					JFrame frmConfirm = new JFrame("Confirm Deletetion");
+					int input = JOptionPane.showConfirmDialog(frmConfirm, "Are you sure?");
+					if (input == JOptionPane.CANCEL_OPTION) {
+						frmConfirm.dispose();
+					}
+					if (input == JOptionPane.NO_OPTION) {
+						frmConfirm.dispose();
+					}
+					if (input == JOptionPane.YES_OPTION) {
+						String templateName = (String) comboEmails.getSelectedItem();
+						emailStorage.deleteTemplateByName(templateName);
+						updateCombo();
+					}
+				}
+			}
+		});
+	}
+	
+	/**
+	 * This method runs an update on the combo box if new
+	 * templates are added.
+	 */
+	public static void updateCombo() {
+		comboEmails.removeAllItems();
+		String [] templateNames = emailStorage.getTemplateNames();
+		for (int i = 0; i < emailStorage.size(); i++) {
+			comboEmails.addItem(templateNames[i]);
+		}
+	}
+	
 //*****TABLE LOGIC FOLLOWS BELOW*****//	
 	/**
 	 * This method sets up the table.
@@ -534,11 +639,16 @@ public class EmailerClientGUI {
 		       //All cells false
 		       return false;
 		    }
+			
 		};
+		
 		tableModel.setNumRows(dblogic.getSize());
 		tableModel.setColumnCount(COL_COUNT);
 		tableModel.setColumnIdentifiers(columnNames);
 		table.setRowSelectionAllowed(true);
+		table.setColumnSelectionAllowed(false);
+		table.setDragEnabled(false);
+		table.getTableHeader().setReorderingAllowed(false);
 		table.setModel(tableModel);
 
 		//Build rows
