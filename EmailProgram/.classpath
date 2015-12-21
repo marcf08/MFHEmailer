@@ -11,6 +11,11 @@
 	<classpathentry kind="lib" path="lib/sendgrid-java.jar"/>
 	<classpathentry kind="lib" path="lib/javax.mail.jar"/>
 	<classpathentry kind="lib" path="lib/jsoup-1.8.3.jar"/>
-	<classpathentry kind="lib" path="lib/SteelCheckBox.jar"/>
+	<classpathentry kind="lib" path="lib/c3p0-0.9.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="lib/quartz-2.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/quartz-jobs-2.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.7.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.7.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

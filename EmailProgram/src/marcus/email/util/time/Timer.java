@@ -72,4 +72,45 @@ public final class Timer {
 		return localDate.toString();
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((localDate == null) ? 0 : localDate.hashCode());
+		result = prime * result + ((localTime == null) ? 0 : localTime.hashCode());
+		result = prime * result + ((timeZone == null) ? 0 : timeZone.hashCode());
+		return result;
+	}
+
+	/**
+	 * The equals method compares this timer to another timer.
+	 */
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Timer other = (Timer) obj;
+		if (localDate == null) {
+			if (other.localDate != null)
+				return false;
+		} else if (!localDate.equals(other.localDate))
+			return false;
+		if (localTime == null) {
+			if (other.localTime != null)
+				return false;
+		} else if (!localTime.equals(other.localTime))
+			return false;
+		if (timeZone == null) {
+			if (other.timeZone != null)
+				return false;
+		} else if (!timeZone.equals(other.timeZone))
+			return false;
+		return true;
+	}
+	
+	
+
 }

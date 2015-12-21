@@ -40,15 +40,12 @@ public class AddPatronGUI {
 	private JTextField txtEmail;
 	private JTextField txtBirth;
 	private JTextField txtAnniv;
-	
-
 	/**
 	 * Create the application.
 	 */
 	public AddPatronGUI() {
 		initialize();
 		frmAddPatron.setVisible(true);
-
 	}
 
 	/**

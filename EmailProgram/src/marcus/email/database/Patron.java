@@ -241,8 +241,8 @@ public class Patron implements Comparable <Patron>, Serializable {
 	 * This is a simple getter for the anniversary date.
 	 * @return the patron anniversary date
 	 */
-	public LocalDate getAnniv() {
-		return this.patronAnniv;
+	public String getAnniv() {
+		return this.patronAnniv.toString();
 	}
 	
 	

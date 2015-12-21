@@ -11,8 +11,11 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.SwingConstants;
 import javax.swing.JProgressBar;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JRadioButton;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
@@ -20,26 +23,12 @@ import java.beans.PropertyChangeListener;
 
 public class RunPromoGUI {
 
-	private JFrame frmRunPromotionalEmail;
+	private JDialog frmRunPromotionalEmail;
 	private JButton btnSendPromo;
 	private JRadioButton rdbtnSecondAuth;
 	private JRadioButton rdbtnFirstAuth;
+	private JButton btnCancel;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RunPromoGUI window = new RunPromoGUI();
-					window.frmRunPromotionalEmail.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application. The second authorization and send buttons are
@@ -47,11 +36,12 @@ public class RunPromoGUI {
 	 */
 	public RunPromoGUI() {
 		initialize();
+		configureCancel();
 		rdbtnSecondAuth.setEnabled(false);
 		btnSendPromo.setEnabled(false);
 		configureFirstRadio();
 		configureSecondRadio();
-		
+		frmRunPromotionalEmail.setVisible(true);
 		
 	}
 
@@ -59,10 +49,9 @@ public class RunPromoGUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frmRunPromotionalEmail = new JFrame();
-		frmRunPromotionalEmail.setTitle("Run Promotional Email");
-		frmRunPromotionalEmail.setBounds(100, 100, 640, 360);
-		frmRunPromotionalEmail.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmRunPromotionalEmail = new JDialog(EmailerClientGUI.frmMfhEmailer, "Run Promotional Email", true);
+		frmRunPromotionalEmail.setBounds(100, 100, 650, 300);
+		frmRunPromotionalEmail.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
 		JPanel panel = new JPanel();
 		frmRunPromotionalEmail.getContentPane().add(panel, BorderLayout.CENTER);
@@ -116,20 +105,11 @@ public class RunPromoGUI {
 		JPanel panel_6 = new JPanel();
 		panel_3.add(panel_6, BorderLayout.SOUTH);
 		
+		btnCancel = new JButton("Cancel");
+		panel_6.add(btnCancel);
+		
 		btnSendPromo = new JButton("SEND");
 		panel_6.add(btnSendPromo);
-	}
-	
-	
-	/**
-	 * This method verifies that both authorization radio buttons are active.
-	 * @return true if both radio buttons are active and false otherwise
-	 */
-	public boolean confirmSend() {
-		if (rdbtnFirstAuth.isSelected() && rdbtnSecondAuth.isSelected()) {
-			return true;
-		}
-		return false;
 	}
 	
 	/**
@@ -160,6 +140,19 @@ public class RunPromoGUI {
 				}
 				if (e.getStateChange() == ItemEvent.DESELECTED) {
 					btnSendPromo.setEnabled(false);
+				}
+			}
+		});
+	}
+	
+	/**
+	 * This method configures the cancel button
+	 */
+	public void configureCancel() {
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btnCancel) {
+					frmRunPromotionalEmail.dispose();
 				}
 			}
 		});

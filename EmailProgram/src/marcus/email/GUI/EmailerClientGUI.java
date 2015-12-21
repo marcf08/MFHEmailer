@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
 
-
+import javafx.scene.control.ComboBox;
 import marcus.email.database.Patron;
 import marcus.email.util.EmailStorage;
 import marcus.email.util.PatronDBLogic;
@@ -101,6 +101,7 @@ public class EmailerClientGUI {
 	private static JComboBox <String> comboEmails;
 	private JButton btnNewTemplate;
 	private JButton btnDelete;
+	private JButton btnPromo;
 	
 	/**
 	 * This was auto-written by Window Builder. It sets up the method to run the application.
@@ -132,6 +133,7 @@ public class EmailerClientGUI {
 		setupImport();
 		setupToggle();
 		setupEditAndTemplate();
+		configurePromo();
 	}
 	
 	/**
@@ -399,8 +401,8 @@ public class EmailerClientGUI {
 		flowLayout_4.setHgap(0);
 		panel_9.add(panel_19, BorderLayout.EAST);
 		
-		JButton btnNewButton_3 = new JButton("Run Promo");
-		panel_19.add(btnNewButton_3);
+		btnPromo = new JButton("Run Promo");
+		panel_19.add(btnPromo);
 		
 		btnDelete = new JButton("Delete Selected");
 		panel_19.add(btnDelete);
@@ -592,10 +594,10 @@ public class EmailerClientGUI {
 				}
 			}
 		});
-		//Delete tempalte button
+		//Delete template button
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (e.getSource() == btnDelete) {
+				if (e.getSource() == btnDelete && comboEmails.getSelectedItem() != null) {
 					JFrame frmConfirm = new JFrame("Confirm Deletetion");
 					int input = JOptionPane.showConfirmDialog(frmConfirm, "Are you sure?");
 					if (input == JOptionPane.CANCEL_OPTION) {
@@ -609,6 +611,22 @@ public class EmailerClientGUI {
 						emailStorage.deleteTemplateByName(templateName);
 						updateCombo();
 					}
+				} else {
+					JOptionPane.showMessageDialog(new JFrame(), "Nothing selected.");
+				}
+			}
+		});
+	}
+	
+	
+	/**
+	 * This method enables the promotional button.
+	 */
+	public void configurePromo() {
+		btnPromo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btnPromo) {
+					new RunPromoGUI();
 				}
 			}
 		});
