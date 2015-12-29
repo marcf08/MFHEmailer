@@ -61,7 +61,6 @@ public class SettingsGUI extends JFrame implements ActionListener {
 	public SettingsGUI() {
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setTitle(EmailerGUIMain.PRG_NAME);
 		setLayout(new BorderLayout());
 		
 		//Setup the grid and pack it

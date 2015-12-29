@@ -37,8 +37,8 @@ public class EmailStorage {
 	 * This method adds the template to the list.
 	 * @param html
 	 */
-	public void addTemplate(String templateName, String html) {
-		EmailTemplate t = new EmailTemplate(templateName, html);
+	public void addTemplate(String templateName, String html, String subject) {
+		EmailTemplate t = new EmailTemplate(templateName, html, subject);
 		if (isUniqueTemplate(t)) {
 			templates.add(t);
 		} else {

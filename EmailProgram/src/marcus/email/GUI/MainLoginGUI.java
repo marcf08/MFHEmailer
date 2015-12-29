@@ -67,7 +67,6 @@ public class MainLoginGUI extends JFrame implements ActionListener {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
-		this.setTitle(EmailerGUIMain.PRG_NAME);
 		this.setLocationRelativeTo(null);
 		setupLoginPanel();
 		setHomePageButtons();

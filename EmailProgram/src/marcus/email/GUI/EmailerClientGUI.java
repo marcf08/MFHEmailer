@@ -16,13 +16,11 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
-
 import javafx.scene.control.ComboBox;
 import marcus.email.database.Patron;
 import marcus.email.util.EmailStorage;
 import marcus.email.util.PatronDBLogic;
 import marcus.email.util.time.Timer;
-
 import java.awt.FlowLayout;
 import java.awt.TextField;
 import java.awt.Button;
@@ -134,6 +132,7 @@ public class EmailerClientGUI {
 		setupToggle();
 		setupEditAndTemplate();
 		configurePromo();
+		setupTimer();
 	}
 	
 	/**
@@ -560,6 +559,8 @@ public class EmailerClientGUI {
 	 * This method sets up the timer.
 	 */
 	public void setupTimer() {
+		Timer t = new Timer();
+		lblTimeDate.setText("Time: " + t.getCurrentTime());
 	}
 	
 	/**
@@ -579,7 +580,8 @@ public class EmailerClientGUI {
 				if (e.getSource() == btnEdit) {
 					try {
 						String templateName = (String) comboEmails.getSelectedItem();
-						new EmailGUI(emailStorage.extractContent(templateName), true);
+						//TODO: Fix this--argument needed is not NULL but the template subject
+						new EmailGUI(emailStorage.extractContent(templateName), true, null);
 					} catch (NoSuchElementException nse) {
 						JOptionPane.showMessageDialog(new JFrame(), "Nothing selected.");
 					}
@@ -590,7 +592,8 @@ public class EmailerClientGUI {
 		btnNewTemplate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btnNewTemplate) {
-					new EmailGUI(null, false);
+					//TODO: Fix this--last argument needed is not null but the template subject
+					new EmailGUI(null, false, null);
 				}
 			}
 		});
@@ -731,7 +734,7 @@ public class EmailerClientGUI {
 	}
 	
 	/**
-	 * This method resets the table.
+	 * This method simply resets the table.
 	 */
 	public static void resetTable() {
 		tableModel.setRowCount(0); //Clear the table

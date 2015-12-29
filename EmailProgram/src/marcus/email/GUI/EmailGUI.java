@@ -1,57 +1,28 @@
 package marcus.email.GUI;
-
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.border.EtchedBorder;
-
-import org.w3c.dom.Element;
-
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Worker;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-import javafx.scene.web.WebView;
-import javafx.stage.Stage;
-
 import javax.swing.JTextArea;
-import javax.swing.JSplitPane;
-import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
-
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridLayout;
-import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
-import java.awt.Component;
 import javax.swing.BoxLayout;
+import javax.swing.JTextField;
 
 public class EmailGUI extends JDialog {
-
+	
+	private static final long serialVersionUID = 1426909398272131299L;
 	public static JDialog contentPanel;
 	public static SaveDialogGUI save;
 	private JButton btnTest;
 	private JScrollPane scrollPane;
 	private static JTextArea textPane;
 	private String htmlToLoad;
-
-	//The data member is used to determine if this window edits an existing template or 
-	//if it's a new template. If it's the latter, it will open with a set of instructions as seen below.
-	private boolean isEdit;
 
 	private String instructions = "<!-- Type/paste your html message here. Click parse below to preview."
 			+ " Use the var tag to enter user data."
@@ -60,14 +31,18 @@ public class EmailGUI extends JDialog {
 
 	private String instrLastName = "<!-- \"<var id = \"lastName\"></var> -->";
 	private String instrFirstName = "<!-- \"<var id = \"firstName\"></var> -->";
+	private String instrSubject = "<!-- Use #first and/or #last to use a patron's name in the subject line -->";
 	private JButton cancelButton;
 	private JButton btnSave;
+	private JPanel panel_1;
+	private JLabel lblNewLabel;
+	private static JTextField txtSubject;
 
 	/**
 	 * Create the dialog.
 	 * @param htmlToLoad the html (if any) to load -- leave null if opening an add new template window
 	 */
-	public EmailGUI(String htmlToLoad, boolean isEdit) {
+	public EmailGUI(String htmlToLoad, boolean isEdit, String subject) {
 		//Set this to the argument, if any
 		this.htmlToLoad = htmlToLoad;
 
@@ -76,6 +51,16 @@ public class EmailGUI extends JDialog {
 		contentPanel.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		contentPanel.setBounds(100, 100, 1200, 800);
 		contentPanel.getContentPane().setLayout(new BoxLayout(contentPanel.getContentPane(), BoxLayout.Y_AXIS));
+		
+		panel_1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		contentPanel.getContentPane().add(panel_1);
+		
+		lblNewLabel = new JLabel("Subject Line:");
+		panel_1.add(lblNewLabel);
+		
+		txtSubject = new JTextField();
+		panel_1.add(txtSubject);
+		txtSubject.setColumns(50);
 		JPanel panel = new JPanel();
 		contentPanel.getContentPane().add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
@@ -87,7 +72,6 @@ public class EmailGUI extends JDialog {
 		textPane = new JTextArea();
 		scrollPane.setViewportView(textPane);
 		textPane.setLineWrap(true);
-		this.isEdit = isEdit;
 		
 		JPanel buttonPane = new JPanel();
 		buttonPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -105,15 +89,15 @@ public class EmailGUI extends JDialog {
 		cancelButton.setActionCommand("Cancel");
 		buttonPane.add(cancelButton);
 
-
-
 		setupCancel();
 		if (!isEdit) {
 			setInstructions();
 		}
 		if (this.htmlToLoad != null) {
 			textPane.setText(this.htmlToLoad);
+			txtSubject.setText(t);
 		}
+		
 		setupParseAndPanes();
 		setupSave();
 		contentPanel.setLocationRelativeTo(null);
@@ -142,6 +126,8 @@ public class EmailGUI extends JDialog {
 		textPane.append(instrLastName);
 		textPane.append("\n");
 		textPane.append(instrFirstName);
+		textPane.append("\n");
+		textPane.append(instrSubject);
 	}
 
 	/**
@@ -177,23 +163,14 @@ public class EmailGUI extends JDialog {
 	public static String getHtmlContent() {
 		return textPane.getText();
 	}
-
+	
 	/**
-	 * This method kills the current frame--to be used following a successful save.
+	 * This method returns the subject content from it's field.
+	 * @return the subject line
 	 */
-	public static void closeAndDispose() {
-		contentPanel.dispose();
+	public static String getSubject() {
+		 return txtSubject.getText();
 	}
-
-	/**
-	 * The window needs to know if it's an edit or if the user is creating new text.
-	 * For new text, it will need to show instructions. If not, it will simply load the
-	 * existing html.
-	 */
-	public void isEdit() {
-
-	}
-
 
 
 

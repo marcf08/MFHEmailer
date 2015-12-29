@@ -120,7 +120,7 @@ public class SaveDialogGUI {
 	 * edited.
 	 */
 	public void saveNewTemplate() {
-		EmailerClientGUI.emailStorage.addTemplate(txtName.getText(), EmailGUI.getHtmlContent());
+		EmailerClientGUI.emailStorage.addTemplate(txtName.getText(), EmailGUI.getHtmlContent(), EmailGUI.getSubject());
 		EmailerClientGUI.updateCombo();
 		EmailerClientGUI.validate();
 		EmailGUI.contentPanel.dispose();

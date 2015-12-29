@@ -21,6 +21,9 @@ public class EmailTemplate implements Serializable {
 	//Each template has a name and content
 	private String name;
 	private String htmlContent;
+	private String subject;
+	private String firstTag = "#first";
+	private String lastTag = "#last";
 	
 	/**
 	 * This is the simple null constructor
@@ -37,6 +40,17 @@ public class EmailTemplate implements Serializable {
 	public EmailTemplate(String name, String htmlContent) {
 		this.name = name;
 		this.htmlContent = htmlContent;
+	}
+	
+	/**
+	 * This constructor allows for instantiation given string arguments.
+	 * @param name the name of this template
+	 * @param htmlContent the content of this template
+	 */
+	public EmailTemplate(String name, String htmlContent, String subject) {
+		this.name = name;
+		this.htmlContent = htmlContent;
+		this.subject = subject;
 	}
 	
 	/**
@@ -81,6 +95,18 @@ public class EmailTemplate implements Serializable {
 		
 		return doc.html();
 	}
+	
+	/**
+	 * This method retrieves the subject line given the patrons name.
+	 * @return the subject line with the fields replaced by the patron's name
+	 */
+	public String getFormattedSubject(Patron patron) {
+		String formattedSubject = getSubject();
+		formattedSubject.replaceAll(firstTag, patron.getFirstName());
+		formattedSubject.replaceAll(lastTag, patron.getLast());
+		return formattedSubject;
+	}
+	
 		
 	//Getters and setters below
 	public String getName() {
@@ -95,4 +121,11 @@ public class EmailTemplate implements Serializable {
 	public void setHtmlContent(String htmlContent) {
 		this.htmlContent = htmlContent;
 	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	
 }

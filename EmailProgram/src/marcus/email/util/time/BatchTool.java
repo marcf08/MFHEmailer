@@ -112,6 +112,21 @@ public class BatchTool {
 			return -1;
 		}
 	}
+	
+	/**
+	 * This method retrieves the day of the current patron.
+	 */
+	public int getDay(String dob) {
+		try {
+			Integer day = Integer.parseInt(dob.substring(8, 10));
+			if (day < 1 || day > 31) {
+				return -1;
+			}
+			return day;
+		} catch (NumberFormatException nfe) {
+			return -1;
+		}
+	}
 
 
 }

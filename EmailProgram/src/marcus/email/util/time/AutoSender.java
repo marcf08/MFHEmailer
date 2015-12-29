@@ -2,8 +2,11 @@ package marcus.email.util.time;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.spi.MutableTrigger;
+
+import marcus.email.util.EmailTemplate;
 
 import static org.quartz.JobBuilder.*;
 import static org.quartz.TriggerBuilder.*;
@@ -13,6 +16,8 @@ import java.text.ParseException;
 import org.quartz.CronExpression;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
+import org.quartz.JobBuilder;
+import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.ScheduleBuilder;
 import static org.quartz.TriggerBuilder.*;
@@ -33,29 +38,40 @@ public class AutoSender {
 	 private CronScheduleBuilder mainSchedule;
 	 private CronTrigger dateTrigger;
 	 private CronExpression daily;
-	 private JobDetail testJob;
-
+	 private JobDetail mainJob;
+	 private JobDataMap dataMap;
+	 private EmailTemplate template;
+	 private String subject;
+	 private String defaultSubject = "Happy Birthday from the Marshall Free House!";
+			 
+	public final static String SUBJ = "Subject";
+	 public final static String TEMP_HTML = "The Template";
+	 
+	 
+	 
 	/**
 	 * The default constructor instantiates but does not start the
-	 * scheduler.
+	 * scheduler given a year and month as parameters.
 	 */
-	public AutoSender() {
-		//Quick and dirty log4 configuration
+	public AutoSender(EmailTemplate template) {
+		//Quick and dirty log4j configuration
 		org.apache.log4j.BasicConfigurator.configure();
+		this.template = template;
 		try {
-			daily = new CronExpression("* * * * * ?");
-			//Valid expression every day at noon: "0 0 12 * * ?"
-			mainSchedule = CronScheduleBuilder.cronSchedule(daily);
+			//Valid expression for every day at noon: "0 0 12 * * ?"
+			dataMap = new JobDataMap();
+			dataMap.put(TEMP_HTML, template);			
+			
 			schedulerBirthdays = StdSchedulerFactory.getDefaultScheduler();
-			//schedulerAnniversaries = StdSchedulerFactory.getDefaultScheduler();
-			dateTrigger = newTrigger().withSchedule(mainSchedule).build();
-			testJob = newJob(TestJobClass.class).storeDurably(true).withIdentity("Test").build();
-			schedulerBirthdays.addJob(testJob, true);
+			mainJob = JobBuilder.newJob(PrepareBirthdays.class).storeDurably(true).withIdentity("Test").usingJobData(dataMap).build();
+			
+			CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("crontrigger","crontriggergroup1")					
+					                             .withSchedule(CronScheduleBuilder.cronSchedule("* * * * * ?"))
+					                             .build();
+			schedulerBirthdays.scheduleJob(mainJob, cronTrigger);
+			
 			
 		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -102,7 +118,7 @@ public class AutoSender {
 	
 	public boolean resumeSendingAnniv() {
 		try {
-			schedulerAnniversaries.resumeAll();;
+			schedulerAnniversaries.resumeAll();
 			return true;
 		} catch (SchedulerException e) {
 			// TODO Auto-generated catch block

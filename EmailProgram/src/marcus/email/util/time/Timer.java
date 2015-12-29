@@ -12,7 +12,7 @@ import org.joda.time.LocalTime;
  * @author Marcus
  *
  */
-public final class Timer {
+public class Timer {
 	
 	//These simple data members control the main features of the time class.
 	private LocalTime localTime;
