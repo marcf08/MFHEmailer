@@ -20,20 +20,6 @@ public class EmailStorage {
 	}
 	
 	/**
-	 * This method retrieves the template with a given template
-	 * @param templateName the name of the template
-	 * @return the template matching the name or null if it was not found
-	 */
-	public EmailTemplate getTemplate(String templateName) {
-		for (int i = 0; i <= templates.size(); i++) {
-			if (templates.get(i).getName().equals(templateName)) {
-				return templates.get(i);
-			}
-		}
-		return null;
-	}
-	
-	/**
 	 * This method adds the template to the list.
 	 * @param html
 	 */
@@ -76,10 +62,11 @@ public class EmailStorage {
 	 * @param html the new html content
 	 * @return true if the operation was successful and false otherwise
 	 */
-	public boolean modifyTemplateByName(String name, String html) {
+	public boolean modifyTemplateByName(String name, String html,  String subject) {
 		for (int i = 0; i < templates.size(); i++) {
 			if (templates.get(i).getName().equals(name)) {
 				templates.get(i).setHtmlContent(html);
+				templates.get(i).setSubject(subject);
 				return true;
 			}
 		}
@@ -110,6 +97,56 @@ public class EmailStorage {
 				templates.remove(i);
 			}
 		}
+	}
+	
+	/**
+	 * Returns the list of all templates.
+	 * @return an array of all templates
+	 */
+	public EmailTemplate[] getAll() {
+		EmailTemplate [] et = new EmailTemplate[size()];
+		for (int i = 0; i < size(); i++) {
+			et[i] = get(i);
+		}
+		return et;
+	}
+
+	/**
+	 * Returns the template at the given position in the array
+	 * @param i the position of the template
+	 * @return the given template at position i
+	 */
+	public EmailTemplate get(int i) {
+		return templates.get(i);
+	}
+	
+	
+	/**
+	 * Returns the template with the given name or null if it does not exist
+	 * @param name the template name
+	 * @return the template object of the parameterized name
+	 */
+	public EmailTemplate getTemplateByName(String name) {
+		for (int i = 0; i < templates.size(); i++) {
+			if (templates.get(i).getName().equals(name)) {
+				return templates.get(i);
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * This method retrieves the template with a given template
+	 * @param templateName the name of the template
+	 * @return the template matching the name or null if it was not found
+	 */
+	public EmailTemplate getTemplate(String templateName) {
+		for (int i = 0; i <= templates.size(); i++) {
+			if (templates.get(i).getName().equals(templateName)) {
+				return templates.get(i);
+			}
+		}
+		return null;
 	}
 	
 	/**

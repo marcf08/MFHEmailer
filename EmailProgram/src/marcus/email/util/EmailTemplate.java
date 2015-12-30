@@ -8,7 +8,6 @@ import org.jsoup.select.Elements;
 import org.jsoup.nodes.Element;
 
 import marcus.email.database.Patron;
-
 /**
  * This simple bean contains an email object and methods for retrieving it.
  * @author Marcus
@@ -106,8 +105,7 @@ public class EmailTemplate implements Serializable {
 		formattedSubject.replaceAll(lastTag, patron.getLast());
 		return formattedSubject;
 	}
-	
-		
+
 	//Getters and setters below
 	public String getName() {
 		return name;
@@ -127,5 +125,4 @@ public class EmailTemplate implements Serializable {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-	
 }

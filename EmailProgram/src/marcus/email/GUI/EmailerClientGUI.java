@@ -1,5 +1,4 @@
 package marcus.email.GUI;
-
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
@@ -16,7 +15,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.DefaultTableModel;
-import javafx.scene.control.ComboBox;
 import marcus.email.database.Patron;
 import marcus.email.util.EmailStorage;
 import marcus.email.util.PatronDBLogic;
@@ -28,8 +26,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
@@ -40,16 +36,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.awt.Component;
 import javax.swing.Box;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JToggleButton;
-import java.awt.CardLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
+
 /**
  * This class is the main GUI for the program. It consists of a tabbed pane and the
  * main panels that add the user information.
@@ -58,10 +51,9 @@ import java.awt.Insets;
  */
 public class EmailerClientGUI {
 
-	public static EmailGUI g;
-	
-    public static JFrame frmMfhEmailer;
-    public static EmailStorage emailStorage;
+	public EmailGUI g;
+	public static JFrame frmMfhEmailer;
+	public static EmailStorage emailStorage;
 	private JTextField txtSearch;
 	private static JTable table;
 	public static final int COL_COUNT = 6;
@@ -76,13 +68,13 @@ public class EmailerClientGUI {
 	private static final String srchEmails = "Search: Emails";
 	private JLabel lblNewLabel_1;
 	private JButton btnEditSelected;
-	
+
 	//Menu selections
 	private JMenuItem mnuServerSettings;
 	private JMenuItem mnuCredentials;
 	private JMenuItem mnuBackup;
 	private JMenuItem mnuImport;
-	
+
 	//The string contains the column names/headers
 	public static String[] columnNames = {"Last Name", "First Name", "Email", "Birthday", "Date Added", "Anniversary"};
 
@@ -96,11 +88,11 @@ public class EmailerClientGUI {
 	private JLabel lblTimeDate;
 	private JButton btnEdit;
 	private JLabel lblOnOff;
-	private static JComboBox <String> comboEmails;
+	private static JComboBox<String> comboEmails;
 	private JButton btnNewTemplate;
 	private JButton btnDelete;
 	private JButton btnPromo;
-	
+
 	/**
 	 * This was auto-written by Window Builder. It sets up the method to run the application.
 	 */
@@ -122,6 +114,7 @@ public class EmailerClientGUI {
 	 */
 	public EmailerClientGUI() {
 		//dblogic.load();
+
 		setupEmailStorage();
 		initialize();
 		setupFrameSaveFeature();
@@ -129,12 +122,11 @@ public class EmailerClientGUI {
 		setupCredentials();
 		setupBackup();
 		setupImport();
-		setupToggle();
 		setupEditAndTemplate();
 		configurePromo();
 		setupTimer();
 	}
-	
+
 	/**
 	 * This method is an enable feature for use
 	 * when opening other JFrames.
@@ -142,7 +134,7 @@ public class EmailerClientGUI {
 	public static void enableMainGUI() {
 		frmMfhEmailer.setEnabled(true);
 	}
-	
+
 	/**
 	 * This method is an enable feature for use
 	 * when opening other JFrames.
@@ -150,14 +142,14 @@ public class EmailerClientGUI {
 	public static void disableMainGUI() {
 		frmMfhEmailer.setEnabled(false);
 	}
-	
+
 	/**
 	 * This method validates the static frame.
 	 */
 	public static void validate() {
 		frmMfhEmailer.validate();
 	}
-	
+
 	/**
 	 * This method starts the properties file.
 	 */
@@ -167,16 +159,16 @@ public class EmailerClientGUI {
 		try {
 			prop.load(in);
 			FileInputStream fin = new FileInputStream("C:/Users/Marcus/git/EmailProgram/EmailProgram/resources/config.properties");
-		    ObjectInputStream ois = new ObjectInputStream(fin);
-		    dblogic = (PatronDBLogic) ois.readObject();
-		    ois.close();
-			
+			ObjectInputStream ois = new ObjectInputStream(fin);
+			dblogic = (PatronDBLogic) ois.readObject();
+			ois.close();
+
 		} catch (IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -185,52 +177,52 @@ public class EmailerClientGUI {
 		frmMfhEmailer.setTitle("MFH Emailer");
 		frmMfhEmailer.setBounds(100, 100, 1000, 800);
 		frmMfhEmailer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		frmMfhEmailer.setJMenuBar(menuBar);
-		
+
 		JMenu mnNewMenu = new JMenu("File");
 		menuBar.add(mnNewMenu);
-		
+
 		JMenuItem mntmNewMenuItem = new JMenuItem("Exit");
 		mnNewMenu.add(mntmNewMenuItem);
-		
+
 		JMenu mnNewMenu_1 = new JMenu("Settings");
 		menuBar.add(mnNewMenu_1);
-		
+
 		mnuCredentials = new JMenuItem("Credentials");
 		mnNewMenu_1.add(mnuCredentials);
-		
+
 		mnuServerSettings = new JMenuItem("Server Settings");
 		mnNewMenu_1.add(mnuServerSettings);
-		
+
 		JMenu mnNewMenu_2 = new JMenu("Database");
 		menuBar.add(mnNewMenu_2);
-		
+
 		mnuBackup = new JMenuItem("Backup");
 		mnNewMenu_2.add(mnuBackup);
-		
+
 		JMenu mnNewMenu_3 = new JMenu("Help");
 		menuBar.add(mnNewMenu_3);
-		
+
 		JMenuItem mntmNewMenuItem_7 = new JMenuItem("View Help");
 		mnNewMenu_3.add(mntmNewMenuItem_7);
-		
+
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		frmMfhEmailer.getContentPane().add(tabbedPane, BorderLayout.CENTER);
-		
+
 		JPanel panel = new JPanel();
 		tabbedPane.addTab("Patrons", null, panel, null);
 		panel.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel panel_1 = new JPanel();
 		panel.add(panel_1, BorderLayout.CENTER);
 		panel_1.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel panel_2 = new JPanel();
 		panel_1.add(panel_2, BorderLayout.CENTER);
 		panel_2.setLayout(new BorderLayout(0, 0));
-				
+
 		txtSearch = new JTextField();
 		txtSearch.setText("Search Patrons");
 		txtSearch.addFocusListener(new FocusListener() {
@@ -241,7 +233,7 @@ public class EmailerClientGUI {
 				txtSearch.setText("");
 			}
 		});
-		
+
 		txtSearch.addKeyListener(new KeyListener() {
 			//Search for names when a key is typed
 			public void keyTyped(KeyEvent e) {
@@ -260,29 +252,29 @@ public class EmailerClientGUI {
 					searchSwitch();
 				}
 				if (((k >= 65)&&( k <= 90))||((k >= 97) && (k <= 122))) {
-						if (!searchEmails) {
-							String partialLast = txtSearch.getText();
-							searchLogic(partialLast);
-							table.validate();
-						}
-						if (searchEmails) {
-							String partialEmail = txtSearch.getText();
-							searchByEmail(partialEmail);
-							table.validate();
-						}
+					if (!searchEmails) {
+						String partialLast = txtSearch.getText();
+						searchLogic(partialLast);
+						table.validate();
 					}
-					if (k == KeyEvent.VK_DELETE || k == KeyEvent.VK_BACK_SPACE) {
-						if (!searchEmails) {
-							String partialLast = txtSearch.getText();
-							searchLogic(partialLast);
-							table.validate();
-						}
-						if (searchEmails) {
-							String partialEmail = txtSearch.getText();
-							searchByEmail(partialEmail);
-							table.validate();
-						}
+					if (searchEmails) {
+						String partialEmail = txtSearch.getText();
+						searchByEmail(partialEmail);
+						table.validate();
 					}
+				}
+				if (k == KeyEvent.VK_DELETE || k == KeyEvent.VK_BACK_SPACE) {
+					if (!searchEmails) {
+						String partialLast = txtSearch.getText();
+						searchLogic(partialLast);
+						table.validate();
+					}
+					if (searchEmails) {
+						String partialEmail = txtSearch.getText();
+						searchByEmail(partialEmail);
+						table.validate();
+					}
+				}
 			}
 			//Sort the list at the user's command
 			public void keyPressed(KeyEvent e) {
@@ -301,23 +293,23 @@ public class EmailerClientGUI {
 		JPanel panel_3 = new JPanel();
 		panel_3.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_2.add(panel_3, BorderLayout.SOUTH);
-		
+
 		JButton btnNewButton = new JButton("New Patron");
 		panel_3.add(btnNewButton);
 		btnNewButton.addActionListener(new ActionListener() {
-		//Opens the add patron section	
+			//Opens the add patron section	
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btnNewButton) {
 					new AddPatronGUI();		
 					buildTable();
 					alphabetize();
 				}
-		}});
+			}});
 
 		btnEditSelected = new JButton("Edit Selected");
 		panel_3.add(btnEditSelected);
 		btnEditSelected.addActionListener(new ActionListener() {
-		//Opens the edit patron section
+			//Opens the edit patron section
 			public void actionPerformed(ActionEvent e) {
 				int rowEmail = table.getSelectedRow();
 				if (rowEmail > -1) {
@@ -331,145 +323,149 @@ public class EmailerClientGUI {
 		});
 
 		table = new JTable(dblogic.getSize(), 5);
-		
+
 		buildTable();
 		panel_2.add(table, BorderLayout.CENTER);
-		
+
 		JScrollPane scrollPane = new JScrollPane(table);
 		panel_2.add(scrollPane, BorderLayout.CENTER);
-		
-		
+
+
 		JPanel panel_4 = new JPanel();
 		tabbedPane.addTab("Status", null, panel_4, null);
 		panel_4.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel panel_6 = new JPanel();
 		panel_4.add(panel_6, BorderLayout.CENTER);
 		panel_6.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel panel_10 = new JPanel();
 		panel_6.add(panel_10, BorderLayout.CENTER);
 		panel_10.setLayout(new BorderLayout(0, 0));
-		
+
 		TextField textField = new TextField();
 		panel_10.add(textField, BorderLayout.CENTER);
-		
+
 		Button button = new Button("Export Log");
 		panel_10.add(button, BorderLayout.SOUTH);
-		
+
 		mnuImport = new JMenuItem("Import");
 		mnNewMenu_2.add(mnuImport);
-		
+
 		JPanel panel_5 = new JPanel();
 		panel_5.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		tabbedPane.addTab("Emails", null, panel_5, null);
 		panel_5.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel panel_7 = new JPanel();
 		panel_5.add(panel_7, BorderLayout.CENTER);
 		panel_7.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel panel_8 = new JPanel();
 		panel_7.add(panel_8, BorderLayout.CENTER);
 		panel_8.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel panel_11 = new JPanel();
 		panel_11.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_8.add(panel_11, BorderLayout.SOUTH);
-		
+
 		JPanel panel_15 = new JPanel();
 		panel_8.add(panel_15, BorderLayout.CENTER);
 		panel_15.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel panel_16 = new JPanel();
 		panel_16.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_15.add(panel_16, BorderLayout.NORTH);
 		panel_16.setLayout(new BorderLayout(0, 0));
-		
+
 		JPanel panel_9 = new JPanel();
 		panel_9.setBorder(null);
 		panel_16.add(panel_9);
 		panel_9.setLayout(new BorderLayout(0, 0));
-		
+
 		JLabel lblNewLabel = new JLabel("Current Auto-Email Template:");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		panel_9.add(lblNewLabel, BorderLayout.WEST);
-		
+
 		JPanel panel_19 = new JPanel();
 		FlowLayout flowLayout_4 = (FlowLayout) panel_19.getLayout();
 		flowLayout_4.setHgap(0);
 		panel_9.add(panel_19, BorderLayout.EAST);
-		
+
 		btnPromo = new JButton("Run Promo");
 		panel_19.add(btnPromo);
-		
+
 		btnDelete = new JButton("Delete Selected");
 		panel_19.add(btnDelete);
-		
+
 		btnEdit = new JButton("Edit Selected");
 		panel_19.add(btnEdit);
-		
+
 		btnNewTemplate = new JButton("Add New Template");
 		panel_19.add(btnNewTemplate);
-		
+
 		JPanel panel_18 = new JPanel();
 		FlowLayout flowLayout_3 = (FlowLayout) panel_18.getLayout();
 		flowLayout_3.setHgap(0);
 		flowLayout_3.setVgap(0);
 		panel_9.add(panel_18, BorderLayout.CENTER);
-		
+
 		JPanel panel_22 = new JPanel();
 		panel_18.add(panel_22);
-		
-		comboEmails = new JComboBox<String>(emailStorage.getTemplateNames());
+
+		comboEmails = new JComboBox<String>();
+		for (int i = 0; i < emailStorage.size(); i++) {
+			comboEmails.addItem(emailStorage.get(i).toString());
+		}
+
 		panel_22.add(comboEmails);
-		
+
 		JPanel panel_17 = new JPanel();
 		panel_17.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		panel_5.add(panel_17, BorderLayout.NORTH);
 		panel_17.setLayout(new BorderLayout(0, 0));
-		
+
 		JLabel lblStatus = new JLabel("Currently Auto-Sending Emails:");
 		lblStatus.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_17.add(lblStatus, BorderLayout.WEST);
-		
+
 		JPanel panel_20 = new JPanel();
 		FlowLayout flowLayout_5 = (FlowLayout) panel_20.getLayout();
 		flowLayout_5.setHgap(0);
 		panel_17.add(panel_20, BorderLayout.EAST);
-		
+
 		lblOnOff = new JLabel("");
 		panel_20.add(lblOnOff);
-		
-		
+
+
 		JToggleButton tglbtnNewToggleButton = new JToggleButton("Status");
 		panel_20.add(tglbtnNewToggleButton);
-		
+
 		JPanel panel_12 = new JPanel();
 		FlowLayout flowLayout_2 = (FlowLayout) panel_12.getLayout();
 		frmMfhEmailer.getContentPane().add(panel_12, BorderLayout.SOUTH);
-		
+
 		JPanel panel_14 = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel_14.getLayout();
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		panel_12.add(panel_14);
-		
+
 		lblNewLabel_1 = new JLabel(srchPatrons);
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_14.add(lblNewLabel_1);
-		
+
 		Component horizontalStrut = Box.createHorizontalStrut(750);
 		panel_12.add(horizontalStrut);
-		
+
 		JPanel panel_13 = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) panel_13.getLayout();
 		flowLayout_1.setAlignment(FlowLayout.RIGHT);
 		panel_12.add(panel_13);
-		
+
 		lblTimeDate = new JLabel("New label");
 		panel_13.add(lblTimeDate);
 	}
-	
+
 
 	/**
 	 * This method sets up the import menu item by launching the
@@ -494,7 +490,7 @@ public class EmailerClientGUI {
 			}
 		});
 	}
-	
+
 	/**
 	 * This method configures the credentials button. The button
 	 * launches the credentials page.
@@ -506,7 +502,7 @@ public class EmailerClientGUI {
 			}
 		});
 	}
-	
+
 	/**
 	 * This method sets up the database backup button. The button
 	 * launches the backup page.
@@ -518,7 +514,7 @@ public class EmailerClientGUI {
 			}
 		});
 	}
-	
+
 	/**
 	 * This method adds a window close event to the frame for saving.
 	 */
@@ -548,13 +544,7 @@ public class EmailerClientGUI {
 			lblNewLabel_1.setText(srchEmails);
 		}
 	}
-	
-	/**
-	 * This method enables the toggle button's functionality.
-	 */
-	public void setupToggle() {
-	}
-	
+
 	/**
 	 * This method sets up the timer.
 	 */
@@ -562,27 +552,26 @@ public class EmailerClientGUI {
 		Timer t = new Timer();
 		lblTimeDate.setText("Time: " + t.getCurrentTime());
 	}
-	
+
 	/**
 	 * This method sets up the static email storage data member.
 	 */
 	public void setupEmailStorage() {
 		emailStorage = new EmailStorage();
 	}
-	
+
 	/**
 	 * These methods add action listeners to the edit/add/delete new template members.
 	 */
 	public void setupEditAndTemplate() {
-		//Edit button
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btnEdit) {
-					try {
-						String templateName = (String) comboEmails.getSelectedItem();
-						//TODO: Fix this--argument needed is not NULL but the template subject
-						new EmailGUI(emailStorage.extractContent(templateName), true, null);
-					} catch (NoSuchElementException nse) {
+					String templateName = (String)comboEmails.getSelectedItem();
+					if (templateName != null) {
+						//TODO: Fix this--argument needed is not NULL but the template subject is needed
+						g = new EmailGUI(emailStorage.getTemplateByName(templateName), true);
+					} else {
 						JOptionPane.showMessageDialog(new JFrame(), "Nothing selected.");
 					}
 				}
@@ -592,8 +581,7 @@ public class EmailerClientGUI {
 		btnNewTemplate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btnNewTemplate) {
-					//TODO: Fix this--last argument needed is not null but the template subject
-					new EmailGUI(null, false, null);
+					g = new EmailGUI(null, false);
 				}
 			}
 		});
@@ -620,8 +608,8 @@ public class EmailerClientGUI {
 			}
 		});
 	}
-	
-	
+
+
 	/**
 	 * This method enables the promotional button.
 	 */
@@ -634,6 +622,14 @@ public class EmailerClientGUI {
 			}
 		});
 	}
+
+	/**
+	 * This method returns the currently existing window.
+	 */
+	public JDialog getInstanceOfEmailGUI() {
+		return g.contentPanel;
+	}
+	
 	
 	/**
 	 * This method runs an update on the combo box if new
@@ -646,8 +642,8 @@ public class EmailerClientGUI {
 			comboEmails.addItem(templateNames[i]);
 		}
 	}
-	
-//*****TABLE LOGIC FOLLOWS BELOW*****//	
+
+	//*****TABLE LOGIC FOLLOWS BELOW*****//	
 	/**
 	 * This method sets up the table.
 	 */
@@ -656,13 +652,13 @@ public class EmailerClientGUI {
 		tableModel = new DefaultTableModel() {
 			private static final long serialVersionUID = 1L;
 			@Override
-		    public boolean isCellEditable(int row, int column) {
-		       //All cells false
-		       return false;
-		    }
-			
+			public boolean isCellEditable(int row, int column) {
+				//All cells false
+				return false;
+			}
+
 		};
-		
+
 		tableModel.setNumRows(dblogic.getSize());
 		tableModel.setColumnCount(COL_COUNT);
 		tableModel.setColumnIdentifiers(columnNames);
@@ -699,7 +695,7 @@ public class EmailerClientGUI {
 			table.setValueAt(partialEmail.get(i).getAnniv().toString(), i, COL_ANNIV);
 		}
 	}
-	
+
 	/**
 	 * The search logic is used for when the user types in the search field
 	 * @param partialLast the partial last name
@@ -716,7 +712,7 @@ public class EmailerClientGUI {
 			table.setValueAt(partialLastList.get(i).getAnniv().toString(), i, COL_ANNIV);
 		}
 	}
-	
+
 	/**
 	 * This method alphabetizes the names in the JTable.
 	 */
@@ -732,7 +728,7 @@ public class EmailerClientGUI {
 			table.setValueAt(alphabetic.get(i).getAnniv().toString(), i, COL_ANNIV);
 		}
 	}
-	
+
 	/**
 	 * This method simply resets the table.
 	 */
@@ -743,5 +739,5 @@ public class EmailerClientGUI {
 		table.setRowSelectionAllowed(true);
 		table.setModel(tableModel);
 	}
-	
+
 }

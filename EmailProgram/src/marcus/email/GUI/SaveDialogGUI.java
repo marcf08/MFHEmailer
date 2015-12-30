@@ -5,10 +5,15 @@ import java.awt.EventQueue;
 
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Dialog;
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.border.EtchedBorder;
+
+import marcus.email.util.EmailTemplate;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -17,17 +22,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class SaveDialogGUI {
-
+	//Swing Components
 	private JDialog frmSaveTitle;
 	private JButton btnCancel;
 	private JButton btnSave;
 	private JTextField txtName;
+	private EmailGUI parent;
 
+	//Email Template data member
+	EmailTemplate templateToSave;
 
 	/**
 	 * Create the application.
 	 */
-	public SaveDialogGUI() {
+	public SaveDialogGUI(EmailTemplate templateToSave) {
+		//this.parent = parent;
+		this.templateToSave = templateToSave;
 		initialize();
 		setupCancelAndSave();
 		frmSaveTitle.setLocationRelativeTo(null);
@@ -38,7 +48,7 @@ public class SaveDialogGUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frmSaveTitle = new JDialog(EmailGUI.contentPanel, "Save Template", true);
+		frmSaveTitle = new JDialog(frmSaveTitle, Dialog.DEFAULT_MODALITY_TYPE);
 		frmSaveTitle.setTitle("Save Template");
 		frmSaveTitle.setBounds(100, 100, 500, 125);
 		frmSaveTitle.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -72,7 +82,7 @@ public class SaveDialogGUI {
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btnCancel) {
-					frmSaveTitle.dispose();
+					closeAndDispose();
 				}
 			}
 		});
@@ -80,39 +90,39 @@ public class SaveDialogGUI {
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btnSave) {
-					if (exists()) {
+					//If it's null, then we know it does not exist and can use other methods
+					if (exists() != null) {
 						JFrame frmOverwrite = new JFrame("Overwrite");
 						int response = JOptionPane.showConfirmDialog(frmOverwrite, "Template already exists. Overwrite?");
-		 				if (response == JOptionPane.CANCEL_OPTION) {
+						if (response == JOptionPane.CANCEL_OPTION || response == JOptionPane.NO_OPTION) {
 							frmOverwrite.dispose();
 							frmSaveTitle.dispose();
 						}
 						if (response == JOptionPane.OK_OPTION) {
-							EmailerClientGUI.emailStorage.modifyTemplateByName(txtName.getText(), EmailGUI.getHtmlContent());
+							System.out.println("LINE 102" + templateToSave.getSubject());
+							EmailerClientGUI.emailStorage.modifyTemplateByName(exists().getName(), templateToSave.getHtmlContent(), templateToSave.getSubject());
 							frmOverwrite.dispose();
-							EmailGUI.contentPanel.dispose();
+							frmSaveTitle.dispose();
 						}
-						if (response == JOptionPane.NO_OPTION) {
-							frmOverwrite.dispose();
-							
-						}
-				} else {
-					saveNewTemplate();
-				}
+					} else {
+						saveNewTemplate();
+					}
 				}}});
 	}
 
 	/**
-	 * This method sees if a template with this name already exists
+	 * This method sees if a template with this name already exists. If this method returns null,
+	 * then the template with the given name does not exist. If it exists, this method returns 
+	 * the name of the template. This effectively combines two methods into one.
 	 */
-	public boolean exists() {
-		String [] templateNames = EmailerClientGUI.emailStorage.getTemplateNames(); 
-		for (int i = 0; i < templateNames.length; i++) {
-			if (txtName.getText().equals(templateNames[i])) {
-				return true;
-			};
+	private EmailTemplate exists() {
+		EmailTemplate [] templates = EmailerClientGUI.emailStorage.getAll();
+		for (int i = 0; i < templates.length; i++) {
+			if (txtName.getText().equals(templates[i].getName())) {
+				return templates[i];
+			}
 		}
-		return false;
+		return null;
 	}
 
 	/**
@@ -120,10 +130,10 @@ public class SaveDialogGUI {
 	 * edited.
 	 */
 	public void saveNewTemplate() {
-		EmailerClientGUI.emailStorage.addTemplate(txtName.getText(), EmailGUI.getHtmlContent(), EmailGUI.getSubject());
+		EmailerClientGUI.emailStorage.addTemplate(txtName.getText(), templateToSave.getHtmlContent(), templateToSave.getSubject());
 		EmailerClientGUI.updateCombo();
 		EmailerClientGUI.validate();
-		EmailGUI.contentPanel.dispose();
+		closeAndDispose();
 	}
 
 	/**
