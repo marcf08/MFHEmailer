@@ -38,8 +38,10 @@ public class EmailStorage {
 	 * @return true if the template is unique and false otherwise
 	 */
 	public boolean isUniqueTemplate(EmailTemplate t) {
-		if (templates.contains(t)) {
-			return false;
+		for (int i = 0; i < templates.size(); i++) {
+			if (templates.get(i).getName().equals(t.getName())) {
+				return false;
+			}
 		}
 		return true;
 	}

@@ -30,9 +30,9 @@ import com.sendgrid.SendGridException;
 public class BackupLogic {
 	//The properties class is needed in order to get the api key.
 	Properties prop;
-	public static final String API_KEY = "SendGridAPIKey";
-	public static final String FROM_KEY = "FromAddress";
-	public static final String SUBJ = "Backup";
+	public final String API_KEY = "SendGridAPIKey";
+	public final String FROM_KEY = "FromAddress";
+	public final String SUBJ = "Backup";
 	
 	
 	/**

@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.border.EtchedBorder;
@@ -18,7 +19,6 @@ import javax.swing.table.DefaultTableModel;
 import marcus.email.database.Patron;
 import marcus.email.util.EmailStorage;
 import marcus.email.util.PatronDBLogic;
-import marcus.email.util.time.Timer;
 import java.awt.FlowLayout;
 import java.awt.TextField;
 import java.awt.Button;
@@ -36,12 +36,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Properties;
 import java.awt.Component;
 import javax.swing.Box;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JToggleButton;
+import javax.swing.BoxLayout;
 
 /**
  * This class is the main GUI for the program. It consists of a tabbed pane and the
@@ -61,7 +62,6 @@ public class EmailerClientGUI {
 	public static PatronDBLogic dblogic = new PatronDBLogic();
 	protected static Properties prop;
 
-
 	//This controls how the user can search
 	private boolean searchEmails = false;
 	private static final String srchPatrons = "Search: Patrons";
@@ -76,7 +76,7 @@ public class EmailerClientGUI {
 	private JMenuItem mnuImport;
 
 	//The string contains the column names/headers
-	public static String[] columnNames = {"Last Name", "First Name", "Email", "Birthday", "Date Added", "Anniversary"};
+	public static final String[] columnNames = {"Last Name", "First Name", "Email", "Birthday", "Date Added", "Anniversary"};
 
 	//These constants are for accessing the column headers
 	public static final int COL_LAST = 0;
@@ -92,10 +92,9 @@ public class EmailerClientGUI {
 	private JButton btnNewTemplate;
 	private JButton btnDelete;
 	private JButton btnPromo;
+	private JPanel pnlTime;
 
-	/**
-	 * This was auto-written by Window Builder. It sets up the method to run the application.
-	 */
+	//Auto-generated run menu
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -109,12 +108,9 @@ public class EmailerClientGUI {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
+	//Basic load sequence method calls
 	public EmailerClientGUI() {
 		//dblogic.load();
-
 		setupEmailStorage();
 		initialize();
 		setupFrameSaveFeature();
@@ -441,36 +437,29 @@ public class EmailerClientGUI {
 		JToggleButton tglbtnNewToggleButton = new JToggleButton("Status");
 		panel_20.add(tglbtnNewToggleButton);
 
-		JPanel panel_12 = new JPanel();
-		FlowLayout flowLayout_2 = (FlowLayout) panel_12.getLayout();
-		frmMfhEmailer.getContentPane().add(panel_12, BorderLayout.SOUTH);
+		pnlTime = new JPanel();
+		frmMfhEmailer.getContentPane().add(pnlTime, BorderLayout.SOUTH);
+		pnlTime.setLayout(new BoxLayout(pnlTime, BoxLayout.X_AXIS));
 
 		JPanel panel_14 = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) panel_14.getLayout();
 		flowLayout.setAlignment(FlowLayout.LEFT);
-		panel_12.add(panel_14);
+		pnlTime.add(panel_14);
 
 		lblNewLabel_1 = new JLabel(srchPatrons);
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		panel_14.add(lblNewLabel_1);
 
-		Component horizontalStrut = Box.createHorizontalStrut(750);
-		panel_12.add(horizontalStrut);
-
 		JPanel panel_13 = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) panel_13.getLayout();
 		flowLayout_1.setAlignment(FlowLayout.RIGHT);
-		panel_12.add(panel_13);
+		pnlTime.add(panel_13);
 
-		lblTimeDate = new JLabel("New label");
+		lblTimeDate = new JLabel();
 		panel_13.add(lblTimeDate);
 	}
 
-
-	/**
-	 * This method sets up the import menu item by launching the
-	 * import gui method.
-	 */
+	//Launches import GUI method
 	public void setupImport() {
 		mnuImport.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -479,10 +468,7 @@ public class EmailerClientGUI {
 		});
 	}
 
-	/**
-	 * This method configures the settings button. The button
-	 * launches the settings page.
-	 */
+	//Launches server settings method
 	public void setupServerSettings() {
 		mnuServerSettings.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -491,10 +477,7 @@ public class EmailerClientGUI {
 		});
 	}
 
-	/**
-	 * This method configures the credentials button. The button
-	 * launches the credentials page.
-	 */
+	//Password change menu
 	public void setupCredentials() {
 		mnuCredentials.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -503,10 +486,7 @@ public class EmailerClientGUI {
 		});
 	}
 
-	/**
-	 * This method sets up the database backup button. The button
-	 * launches the backup page.
-	 */
+	//Database backup operation
 	public void setupBackup() {
 		mnuBackup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -515,9 +495,8 @@ public class EmailerClientGUI {
 		});
 	}
 
-	/**
-	 * This method adds a window close event to the frame for saving.
-	 */
+	//Saves when the window closes
+	//TODO: Reenable for final testing
 	public void setupFrameSaveFeature() {
 		frmMfhEmailer.addWindowListener(new WindowListener() {
 			public void windowOpened(WindowEvent e) {}
@@ -532,9 +511,7 @@ public class EmailerClientGUI {
 		});;
 	}
 
-	/**
-	 * This method controls whether to search emails or patrons.
-	 */
+	//Switches the search logic by emails or patrons
 	public void searchSwitch() {
 		if (searchEmails) {
 			searchEmails = false;
@@ -545,24 +522,35 @@ public class EmailerClientGUI {
 		}
 	}
 
-	/**
-	 * This method sets up the timer.
-	 */
+	//The swing timer updates the actual timer instantiated via the 
+	// Quartz timer class
 	public void setupTimer() {
-		Timer t = new Timer();
-		lblTimeDate.setText("Time: " + t.getCurrentTime());
+		//This is the timer imported from the custom timer class (via Quartz) 
+		//marcus.email.util.time.Timer actualTime = new marcus.email.util.time.Timer();
+		Date current = new Date();
+		ActionListener l = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				current.setTime(System.currentTimeMillis());
+				lblTimeDate.setText(current.toString());
+				
+			}
+		};
+		
+		//This is the Swing timer class that updates the actual timer
+		Timer t = new Timer(100, l);
+		t.start();
+
+		
+			
 	}
 
-	/**
-	 * This method sets up the static email storage data member.
-	 */
+	//Initializes email storage
 	public void setupEmailStorage() {
 		emailStorage = new EmailStorage();
 	}
 
-	/**
-	 * These methods add action listeners to the edit/add/delete new template members.
-	 */
+	//Assigns action listeners
 	public void setupEditAndTemplate() {
 		btnEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -610,9 +598,7 @@ public class EmailerClientGUI {
 	}
 
 
-	/**
-	 * This method enables the promotional button.
-	 */
+	//Promo button setup
 	public void configurePromo() {
 		btnPromo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -623,18 +609,7 @@ public class EmailerClientGUI {
 		});
 	}
 
-	/**
-	 * This method returns the currently existing window.
-	 */
-	public JDialog getInstanceOfEmailGUI() {
-		return g.contentPanel;
-	}
-	
-	
-	/**
-	 * This method runs an update on the combo box if new
-	 * templates are added.
-	 */
+	//Updates combo box
 	public static void updateCombo() {
 		comboEmails.removeAllItems();
 		String [] templateNames = emailStorage.getTemplateNames();
@@ -644,9 +619,7 @@ public class EmailerClientGUI {
 	}
 
 	//*****TABLE LOGIC FOLLOWS BELOW*****//	
-	/**
-	 * This method sets up the table.
-	 */
+	//Sets up the table
 	public static void buildTable() {
 		//This method keeps the user from editing the table
 		tableModel = new DefaultTableModel() {
@@ -656,7 +629,6 @@ public class EmailerClientGUI {
 				//All cells false
 				return false;
 			}
-
 		};
 
 		tableModel.setNumRows(dblogic.getSize());
@@ -713,9 +685,7 @@ public class EmailerClientGUI {
 		}
 	}
 
-	/**
-	 * This method alphabetizes the names in the JTable.
-	 */
+	//Alphabetizes the names in the table
 	public static void alphabetize() {
 		ArrayList<Patron> alphabetic = dblogic.getAlphabetic();
 		resetTable();
@@ -729,9 +699,7 @@ public class EmailerClientGUI {
 		}
 	}
 
-	/**
-	 * This method simply resets the table.
-	 */
+	//Rebuild/updates the table
 	public static void resetTable() {
 		tableModel.setRowCount(0); //Clear the table
 		tableModel.setNumRows(dblogic.getSize());

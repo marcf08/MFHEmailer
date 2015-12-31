@@ -28,18 +28,21 @@ public class ImportPreviewGUI {
 	private DefaultTableModel model;
 
 	//These arrays will be for the information in the table
+	//Also contains a data member for the import logic
 	private String[] lastNames;
 	private String[] firstNames;
 	private String[] emails;
 	private String[] birthdays;
 	private String[] anniv;
 	private JButton btnConfirm;
+	private ImportLogic logic;
 
 	/**
 	 * Create the application.
 	 * @param file the file to preview
 	 */
-	public ImportPreviewGUI() {
+	public ImportPreviewGUI(ImportLogic logic) {
+		this.logic = logic;
 		initialize();
 		setupTableModel();
 		initArrays();
@@ -52,7 +55,7 @@ public class ImportPreviewGUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JDialog(ImportGUI.frmMain, "Review Additions", true);
+		frame = new JDialog(frame, "Review Additions", true);
 		frame.setBounds(100, 100, 600, 300);
 		frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
@@ -99,7 +102,7 @@ public class ImportPreviewGUI {
 		};
 
 		model.setColumnCount(EmailerClientGUI.COL_COUNT);
-		model.setNumRows(ImportGUI.logic.size());
+		model.setNumRows(logic.size());
 		model.setColumnIdentifiers(EmailerClientGUI.columnNames);
 		tblMain.setModel(model);
 		
@@ -110,13 +113,13 @@ public class ImportPreviewGUI {
 	 * It reaches back to the main import import gui class.
 	 */
 	public void initArrays() {
-		lastNames = ImportGUI.logic.getLastNames();
-		firstNames = ImportGUI.logic.getFirstNames();
-		emails = ImportGUI.logic.getEmails();
-		birthdays = ImportGUI.logic.getBirthdays();
-		anniv = ImportGUI.logic.getAnniv();
+		lastNames = logic.getLastNames();
+		firstNames = logic.getFirstNames();
+		emails = logic.getEmails();
+		birthdays = logic.getBirthdays();
+		anniv = logic.getAnniv();
 		
-		for (int i = 0; i < ImportGUI.logic.size(); i++) {
+		for (int i = 0; i < logic.size(); i++) {
 			tblMain.setValueAt(lastNames[i], i, 0);
 			tblMain.setValueAt(firstNames[i], i, 1);
 			tblMain.setValueAt(emails[i], i, 2);
@@ -133,7 +136,6 @@ public class ImportPreviewGUI {
 	public void setupOK() {
 		btnConfirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ImportGUI.enableFinalize();
 				frame.dispose();
 			}
 		});

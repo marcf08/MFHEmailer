@@ -46,9 +46,9 @@ public class EmailSettingsGUI {
 	private Component verticalStrut;
 	private Component horizontalStrut;
 	private JPanel panel_1;
-	private static JPanel pnlButtons;
+	private JPanel pnlButtons;
 	
-	private static EmailSettingsLogic logic;
+	private EmailSettingsLogic logic;
 	private JLabel lblFrom;
 	private JTextField txtFrom;
 	/**
@@ -289,7 +289,8 @@ public class EmailSettingsGUI {
 						SendGrid.Response response = send.send(email);
 						JOptionPane.showMessageDialog(new JFrame(), "Server replied: " + response.getMessage());	
 					} catch (SendGridException e1) {
-						JOptionPane.showMessageDialog(new JFrame(), "Error sending mail. Please try again.");
+						e1.fillInStackTrace();
+						JOptionPane.showMessageDialog(new JFrame(), "Error sending mail. Check connection/credentials and try again.");
 					}
 			}
 			else {

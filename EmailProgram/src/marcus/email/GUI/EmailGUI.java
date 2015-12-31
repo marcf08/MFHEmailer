@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,23 +15,25 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.BoxLayout;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import java.awt.Component;
 
 public class EmailGUI extends JDialog {
 	//Swing data members
 	public JDialog contentPanel;
-	private SaveDialogGUI save;
 	private JButton btnTest;
 	private JScrollPane scrollPane;
-	private JTextArea textPane;
+	private JTextArea txtHtmlContent;
 	private JButton cancelButton;
 	private JButton btnSave;
 	private JPanel panel_1;
 	private JLabel lblNewLabel;
-	private JTextField txtSubject;
+	private JTextField txtTemplateSubject;
 	
-	//Information needed
+	//Information needed to load a template.
 	private EmailTemplate templateToLoad;
 	private String instructions = "<!-- Type/paste your html message here. Click parse below to preview."
 			+ " Use the var tag to enter user data."
@@ -40,6 +43,10 @@ public class EmailGUI extends JDialog {
 	private String instrLastName = "<!-- \"<var id = \"lastName\"></var> -->";
 	private String instrFirstName = "<!-- \"<var id = \"firstName\"></var> -->";
 	private String instrSubject = "<!-- Use #first and/or #last to use a patron's name in the subject line -->";
+	private JPanel panel_2;
+	private JLabel lblTemplateName;
+	private JPanel panel_3;
+	private JTextField txtTemplateName;
 	
 	/**
 	 * Create the dialog.
@@ -53,15 +60,33 @@ public class EmailGUI extends JDialog {
 		contentPanel.setBounds(100, 100, 1200, 800);
 		contentPanel.getContentPane().setLayout(new BoxLayout(contentPanel.getContentPane(), BoxLayout.Y_AXIS));
 		
-		panel_1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		panel_1 = new JPanel();
+		panel_1.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		contentPanel.getContentPane().add(panel_1);
+		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.X_AXIS));
+		
+		panel_3 = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel_3.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		panel_1.add(panel_3);
+		
+		lblTemplateName = new JLabel("Template Name:");
+		panel_3.add(lblTemplateName);
+		
+		txtTemplateName = new JTextField();
+		panel_3.add(txtTemplateName);
+		txtTemplateName.setColumns(15);
+		
+		panel_2 = new JPanel();
+		panel_1.add(panel_2);
+		panel_2.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
 		
 		lblNewLabel = new JLabel("Subject Line:");
-		panel_1.add(lblNewLabel);
+		panel_2.add(lblNewLabel);
 		
-		txtSubject = new JTextField();
-		panel_1.add(txtSubject);
-		txtSubject.setColumns(50);
+		txtTemplateSubject = new JTextField();
+		panel_2.add(txtTemplateSubject);
+		txtTemplateSubject.setColumns(50);
 		JPanel panel = new JPanel();
 		contentPanel.getContentPane().add(panel);
 		panel.setLayout(new BorderLayout(0, 0));
@@ -70,9 +95,9 @@ public class EmailGUI extends JDialog {
 		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		panel.add(scrollPane);
 
-		textPane = new JTextArea();
-		scrollPane.setViewportView(textPane);
-		textPane.setLineWrap(true);
+		txtHtmlContent = new JTextArea();
+		scrollPane.setViewportView(txtHtmlContent);
+		txtHtmlContent.setLineWrap(true);
 		
 		JPanel buttonPane = new JPanel();
 		buttonPane.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -95,8 +120,10 @@ public class EmailGUI extends JDialog {
 		if (!isEdit) {
 			setInstructions();
 		} else {
-			txtSubject.setText(template.getSubject());	
-			textPane.setText(template.getHtmlContent());
+			txtTemplateName.setText(template.getName());
+			txtTemplateSubject.setText(template.getSubject());	
+			txtHtmlContent.setText(template.getHtmlContent());
+			
 		}
 		
 		setupParseAndPanes();
@@ -122,18 +149,16 @@ public class EmailGUI extends JDialog {
 	 * This method sets up the text instructions in the text pane.
 	 */
 	public void setInstructions() {
-		textPane.setText(instructions);
-		textPane.append("\n\n");
-		textPane.append(instrLastName);
-		textPane.append("\n");
-		textPane.append(instrFirstName);
-		textPane.append("\n");
-		textPane.append(instrSubject);
+		txtHtmlContent.setText(instructions);
+		txtHtmlContent.append("\n\n");
+		txtHtmlContent.append(instrLastName);
+		txtHtmlContent.append("\n");
+		txtHtmlContent.append(instrFirstName);
+		txtHtmlContent.append("\n");
+		txtHtmlContent.append(instrSubject);
 	}
 
-	/**
-	 * This method sets up the cancel button.
-	 */
+	//Cancel Button
 	public void setupCancel() {
 		cancelButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -144,51 +169,42 @@ public class EmailGUI extends JDialog {
 		});
 	}
 
-	/**
-	 * This method builds the save button.
-	 */
+	//Save button
 	public void setupSave() {
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btnSave) {
-					save = new SaveDialogGUI(new EmailTemplate(null, textPane.getText()));
-					//TODO: Start here to figure it out
+					try {
+						EmailerClientGUI.emailStorage.addTemplate(txtTemplateName.getText(), txtHtmlContent.getText(), txtTemplateSubject.getText());
+						updateMainGUI();
+						contentPanel.dispose();
+					} catch (IllegalArgumentException eae) {
+						int response = JOptionPane.showConfirmDialog(new JFrame(), eae.getMessage() + " Overwrite?");
+						doOverWriteLogic(response);
+					}
 				}
 			}
 		});
-	}
+	}	
 	
 	/**
-	 * This method allows the class to reference
-	 * @return
+	 * This method overwrites the existing template,  if the user desires to do so.
+	 * @param response the user's response to the confirm dialog question
 	 */
-	public EmailGUI outer() {
-		   return this;
+	public void doOverWriteLogic(int response) {
+		if (response == JOptionPane.YES_OPTION) {
+			EmailerClientGUI.emailStorage.modifyTemplateByName(txtTemplateName.getText(), txtHtmlContent.getText(), txtTemplateSubject.getText());
+			contentPanel.dispose();
 		}
-
-	/**
-	 * This method returns the html content from the text pane
-	 * @return the html content
-	 */
-	public String getHtmlContent() {
-		return textPane.getText();
 	}
 	
-	/**
-	 * This method returns the subject content from it's field.
-	 * @return the subject line
-	 */
-	public String getSubject() {
-		 return txtSubject.getText();
+	//Updates the main gui to reload the combo  box to show a new template
+	private void updateMainGUI() {
+		EmailerClientGUI.updateCombo();
+		EmailerClientGUI.validate();
 	}
 
-	/**
-	 * This method disposes of this instance of the frame.
-	 */
-	public void closeAndDisepose() {
-		contentPanel.dispose();
-	}
 }
-
+	
 
 

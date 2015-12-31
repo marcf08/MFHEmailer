@@ -18,25 +18,24 @@ import javax.swing.JDialog;
 import javax.swing.SwingConstants;
 
 public class ImportStatusGUI {
-
-	private static JDialog frmStatus;
-	private JLabel lblStatus;
-	private JButton btnOK;
-	
-	private Task task;
-	
-	//These data members are passed into the labels to report on the status of the import
-	private static String complete = "Import Complete";
-	private String status;
-	
-	//This integer is used by the progress bar to know it's maximum status.
-	private Integer total;
-	
-	private static JLabel lblNumber;
-	private static JLabel lblComplete;
+	//Swing members
+	private JLabel lblNumber;
+	private JLabel lblComplete;
 	public static JProgressBar progressBar;
 	private boolean done;
 	private JButton btnStart;
+	private JDialog frmStatus;
+	private JLabel lblStatus;
+	private JButton btnOK;
+
+	//These data members are passed into the labels to report on the status of the import
+	private final String complete = "Import Complete";
+	//For status
+	private Integer total;
+	private ImportLogic logic;
+	private JButton btnCancel;
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -44,7 +43,7 @@ public class ImportStatusGUI {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ImportStatusGUI window = new ImportStatusGUI();
+					ImportStatusGUI window = new ImportStatusGUI(null);
 					window.frmStatus.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,24 +55,22 @@ public class ImportStatusGUI {
 	/**
 	 * Create the application.
 	 */
-	public ImportStatusGUI() {
+	public ImportStatusGUI(ImportLogic logic) {
+		this.logic = logic;
 		initialize();
 		setupBar();
 		done = false;
 		setupStart();
-		
-		
-		
+		setupCancel();
 		frmStatus.setVisible(true);
-		
-		
+	
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frmStatus = new JDialog(ImportGUI.frmMain, "Status", true);
+		frmStatus = new JDialog(frmStatus, "Status", true);
 		frmStatus.setBounds(100, 100, 450, 200);
 		frmStatus.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
@@ -101,6 +98,9 @@ public class ImportStatusGUI {
 		btnStart = new JButton("Start Import");
 		panel_2.add(btnStart);
 		
+		btnCancel = new JButton("Cancel");
+		panel_2.add(btnCancel);
+		
 		btnOK = new JButton("OK");
 		panel_2.add(btnOK);
 		
@@ -109,44 +109,44 @@ public class ImportStatusGUI {
 		panel_1.add(lblComplete, BorderLayout.CENTER);
 	}
 	
-	/**
-	 * This method sets up the ok button. It is initially not enabled.
-	 * It will be enabled whenever the import is complete.
-	 */
+	//Sets up the OK button
 	public void setupOK() {
 		btnOK.setEnabled(false);
 		btnOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EmailerClientGUI.alphabetize();
 				frmStatus.dispose();
-				ImportGUI.frmMain.dispose();
 			}
 		});
 	}
 	
-	/**
-	 * This enables the OK button once the import is complete.
-	 */
+	//Sets up the Cancel button
+	public void setupCancel() {
+		btnCancel.setEnabled(true);
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frmStatus.dispose();
+			}
+		});
+	}
+	
+	//Enables OK when the import comples
 	private void enableOK() {
 		btnOK.setEnabled(true);
 	}
 	
-	/**
-	 * This method sets up the progress bar. It does not update it.
-	 */
+	//Builds progress bar
 	public void setupBar() {
-		total = ImportGUI.logic.size();
+		total = logic.size();
 		progressBar.setMaximum(total);
 	}
 
-	/**
-	 * This method sets up the start import button, which in turn begins the import.
-	 */
+	//Sets up the start import button
 	public void setupStart() {
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 					lblStatus.setText("Importing Patrons...");
-					ImportGUI.logic.addPatronList();
+					logic.addPatronList();
 					setupOK();
 					enableOK();
 					lblComplete.setText(complete);

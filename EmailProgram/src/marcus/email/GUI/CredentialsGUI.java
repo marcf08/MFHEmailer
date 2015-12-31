@@ -41,7 +41,7 @@ public class CredentialsGUI {
 	private JPasswordField pwNewInit;
 	private JPasswordField pwNewConfirm;
 	
-	private static CredentialsLogic logic;
+	private CredentialsLogic logic;
 	private Component verticalStrut;
 
 	/**
@@ -61,7 +61,7 @@ public class CredentialsGUI {
 	private void initialize() {
 		frmChangeCredentials = new JDialog(EmailerClientGUI.frmMfhEmailer, "Change Credntials", true);
 		frmChangeCredentials.setTitle("Change Credentials");
-		frmChangeCredentials.setBounds(100, 100, 533, 347);
+		frmChangeCredentials.setBounds(100, 100, 550, 350);
 		frmChangeCredentials.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		
 		JPanel panel = new JPanel();

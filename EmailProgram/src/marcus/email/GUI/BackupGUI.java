@@ -37,7 +37,7 @@ public class BackupGUI {
 	private JPanel panel_6;
 	private JButton btnCancel;
 
-	private static BackupLogic logic;
+	private BackupLogic logic;
 	private JTextField txtEmail;
 	
 	/**

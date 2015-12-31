@@ -27,7 +27,7 @@ import java.awt.Component;
  */
 public class ImportGUI {
 
-	public static JDialog frmMain;
+	public JDialog frmMain;
 	private JPanel pnlSimple;
 	private JButton btnCancel;
 	private JButton btnPreview;
@@ -35,9 +35,9 @@ public class ImportGUI {
 	private JButton btnBrowse;
 	private JPanel panel_5;
 	
-	protected static ImportLogic logic;
+	protected ImportLogic logic;
 	private JLabel lblTheSimpleImport;
-	private static JButton btnFinalize;
+	private JButton btnFinalize;
 
 	/**
 	 * Launch the application.
@@ -170,7 +170,8 @@ public class ImportGUI {
 					JOptionPane.showMessageDialog(new JFrame(), "No file selected. Select a file.");
 				} else {
 					logic = new ImportLogic(new File(txtFile.getText()));
-					new ImportPreviewGUI();
+					new ImportPreviewGUI(logic);
+					enableFinalize();
 				}
 			}
 		});
@@ -195,7 +196,8 @@ public class ImportGUI {
 		btnFinalize.setEnabled(false);
 		btnFinalize.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ImportStatusGUI();
+				new ImportStatusGUI(logic);
+				frmMain.dispose();
 			}
 		});
 	}
@@ -204,7 +206,7 @@ public class ImportGUI {
 	 * This method enables the finalize button. It can only be enabled
 	 * after the user previews the list.
 	 */
-	public static void enableFinalize() {
+	public void enableFinalize() {
 		btnFinalize.setEnabled(true);
 	}
 }

@@ -71,7 +71,7 @@ public class Timer {
 	public String getLocalDate() {
 		return localDate.toString();
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -110,6 +110,7 @@ public class Timer {
 			return false;
 		return true;
 	}
+	
 	
 	
 

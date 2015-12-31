@@ -2,6 +2,7 @@ package marcus.email.GUI;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
@@ -18,11 +19,11 @@ public class ImportLogic {
 	//This will be used for getting the provisional list of patrons
 	private Patron[] theList;
 	
+	//This will be used for getting the list of patrons not added
+	private ArrayList<Patron> notAdded;
+	
 	//This is the size of the main list
 	private Integer size;
-	
-	//This is the status integer used to indicate the progress of the import
-	private int status = 0;
 	
 	//Null constructor
 	public ImportLogic() {
@@ -139,7 +140,6 @@ public class ImportLogic {
 		return list;
 	}
 	
-	
 	/**
 	 * This gets the size of the list.
 	 */
@@ -149,19 +149,23 @@ public class ImportLogic {
 	
 	/**
 	 * This adds the list of patrons to the database.
-	 * @return the number of patrons not added
+	 * It also builds a list of patrons not added to the database.
 	 */
-	public int addPatronList() {
-		int notAdded = 0;
+	public void addPatronList() {
+		notAdded = new ArrayList<Patron>();
 		for (int i = 0; i < theList.length; i++) {
 			try {
 				EmailerClientGUI.dblogic.addPatronObject(theList[i]);
 				updateStatus(i);
 			} catch (IllegalArgumentException iae) {
+				notAdded.add(theList[i]);
 				i++; //Skip the patron that already exists
-				notAdded++;
 			}
 		}
+	}
+	
+	//Gets the number of patrons not added due to conflicts with emails
+	public ArrayList<Patron> getNotAdded() {
 		return notAdded;
 	}
 	
@@ -174,11 +178,4 @@ public class ImportLogic {
 		ImportStatusGUI.progressBar.setValue(n);
 	}
 	
-	/**
-	 * This gets the status.
-	 */
-	public int getStatus() {
-		return status;
-	}
-
 }
