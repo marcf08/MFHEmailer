@@ -52,6 +52,7 @@ public class EmailTemplate implements Serializable {
 		this.subject = subject;
 	}
 	
+	//Test for push
 	/**
 	 * This method returns a copy of the template with the patron
 	 * information added (if desired by the user). It uses JSoup to
