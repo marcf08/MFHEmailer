@@ -18,7 +18,7 @@ public class EmailStorage {
 	public EmailStorage() {
 		templates = new ArrayList<EmailTemplate>();
 	}
-	
+
 	/**
 	 * This method adds the template to the list.
 	 * @param html
@@ -31,7 +31,7 @@ public class EmailStorage {
 			throw new IllegalArgumentException("Already exists");
 		}
 	}
-	
+
 	/**
 	 * This method ensures there are no matching email templates.
 	 * @param t the email template to check
@@ -45,7 +45,7 @@ public class EmailStorage {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * This method gets the existing array of templates.
 	 * @return the list of template names
@@ -57,7 +57,7 @@ public class EmailStorage {
 		}
 		return names;
 	}
-	
+
 	/**
 	 * This method allows the client to modify a specific template from the list.
 	 * @param name the name of the template to modify
@@ -74,7 +74,7 @@ public class EmailStorage {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * This method returns the html given a template name.
 	 * @param name the name of the template
@@ -88,7 +88,7 @@ public class EmailStorage {
 		}
 		throw new NoSuchElementException();
 	}
-	
+
 	/**
 	 * This method deletes a template given it's name.
 	 * @param name the name of the template to delete.
@@ -100,7 +100,7 @@ public class EmailStorage {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns the list of all templates.
 	 * @return an array of all templates
@@ -121,8 +121,8 @@ public class EmailStorage {
 	public EmailTemplate get(int i) {
 		return templates.get(i);
 	}
-	
-	
+
+
 	/**
 	 * Returns the template with the given name or null if it does not exist
 	 * @param name the template name
@@ -136,21 +136,25 @@ public class EmailStorage {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * This method retrieves the template with a given template
 	 * @param templateName the name of the template
 	 * @return the template matching the name or null if it was not found
 	 */
 	public EmailTemplate getTemplate(String templateName) {
-		for (int i = 0; i <= templates.size(); i++) {
-			if (templates.get(i).getName().equals(templateName)) {
-				return templates.get(i);
+		try {
+			for (int i = 0; i <= templates.size(); i++) {
+				if (templates.get(i).getName().equals(templateName)) {
+					return templates.get(i);
+				}
 			}
+			return null;
+		} catch (IndexOutOfBoundsException e) {
+			return null;
 		}
-		return null;
 	}
-	
+
 	/**
 	 * This method simply returns the size of the templates array.
 	 */

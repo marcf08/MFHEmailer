@@ -18,8 +18,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.BoxLayout;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import java.awt.Component;
 
 public class EmailGUI extends JDialog {
 	//Swing data members

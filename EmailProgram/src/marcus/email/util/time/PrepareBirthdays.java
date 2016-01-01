@@ -19,6 +19,7 @@ import org.quartz.simpl.SimpleTimeBroker;
 
 import com.sendgrid.SendGrid;
 import com.sendgrid.SendGrid.Email;
+import com.sendgrid.SendGridException;
 
 import marcus.email.GUI.EmailerClientGUI;
 import marcus.email.GUI.FileConstants;
@@ -37,10 +38,10 @@ public class PrepareBirthdays implements Job{
 		//When the job executes, we need a means to determine the year and month
 		//of the current day.
 		int [] timeAndDay = getDayAndMonth();
-		
 		int currentDay =  timeAndDay[0];
 		int currentMonth = timeAndDay[1];
-		
+
+		//Build the list of patrons
 		ArrayList<Patron> patrons = new ArrayList<Patron>();
 		for (int i = 0; i < EmailerClientGUI.dblogic.getSize(); i++) {
 			int currentPatronMonth = getMonth(EmailerClientGUI.dblogic.getPatronFromDB(i).getDOB());
@@ -49,39 +50,40 @@ public class PrepareBirthdays implements Job{
 				patrons.add(patrons.get(i));
 			}
 		}
+		
 		SendGrid send = getSend();
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		EmailTemplate template = (EmailTemplate) dataMap.get(AutoSender.TEMP_HTML);
-	
-		
+		dataMap.put("RESULTS", sendEmails(patrons, template, send));
 	}
-	
+
 	/**
 	 * This method sends the emails given a list of patrons and the template to be used by the auto
 	 * sender.
 	 */
-	public String sendEmails(ArrayList<Patron> list, EmailTemplate template, SendGrid send) {
+	public String sendEmails(ArrayList<Patron> list, EmailTemplate templateToSend, SendGrid send) {
 		StringBuilder result = new StringBuilder();
-		for (int i = 0; i < EmailerClientGUI.emailStorage.templates.size(); i++) {
-			if (EmailerClientGUI.emailStorage.templates.get(i).getName().equals(template.getName())) {
-				for (int j = 0; j < list.size(); j++) {
-					Email email = new Email();
-					email.addTo(list.get(j).getPatronEmail());
-					email.setSubject(template.getFormattedSubject(list.get(j)));
-					
-	
-					try {
-						SendGrid.Response response = send.send(email);
-					
-				}
+		for (int j = 0; j < list.size(); j++) {
+			Email email = new Email();
+			String personalizedHtmlEmail = templateToSend.addPatronInformation(list.get(j));
+			email.setSubject(templateToSend.getFormattedSubject(list.get(j)));
+			email.addTo(list.get(j).getPatronEmail());
+			email.setHtml(personalizedHtmlEmail);
+			try {
+				SendGrid.Response response = send.send(email);
+				result.append(response);
+			} catch (SendGridException e) {
+				//Move on if there's a failure, but record the message
+				result.append(e.getMessage());
+				j++;
 			}
+
 		}
 		return result.toString();
 	}
-	
 
-	
-	
+
+
 	/**
 	 * This method gets the time and returns it in the form of an integer-based array.
 	 */
@@ -94,9 +96,10 @@ public class PrepareBirthdays implements Job{
 		timeAndDate[1] = day.getMonth();
 		return timeAndDate;
 	}
-	
+
 	/**
 	 * This method loads the properties file used to get the API Key and Send Grid instance.
+	 * @return the send grid instance from the properties file
 	 */
 	private SendGrid getSend() {
 		try {
@@ -128,26 +131,7 @@ public class PrepareBirthdays implements Job{
 			return -1;
 		}
 	}
-	
-	/**
-	 * This method gets the year from the current patron.
-	 * @param dob the date of birth string
-	 * @return the year or -1 if there's an error for number format exceptions
-	 * or out of range dates
-	 */
-	private int getYear(String dob) {
-		try {
-			Integer year = Integer.parseInt(dob.substring(0, 4));
-			if (year  < 1900 || year > 2015) {
-				return -1;
-			}
-			return year;
-		} catch (NumberFormatException nfe) {
-			return -1;
-		}
-	}
-	
-	
+
 	/**
 	 * This method retrieves the day of the current patron.
 	 */

@@ -1,5 +1,7 @@
 package marcus.email.GUI;
 
+import marcus.email.util.EmailTemplate;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -7,7 +9,11 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.border.EtchedBorder;
+
+import marcus.email.util.SendPromo;
+
 import javax.swing.SwingConstants;
 import javax.swing.JProgressBar;
 import javax.swing.JButton;
@@ -23,12 +29,16 @@ import java.beans.PropertyChangeListener;
 
 public class RunPromoGUI {
 
+	//Swing members
 	private JDialog frmRunPromotionalEmail;
 	private JButton btnSendPromo;
 	private JRadioButton rdbtnSecondAuth;
 	private JRadioButton rdbtnFirstAuth;
 	private JButton btnCancel;
-
+	
+	//Data member used to initialize the GUI
+	private SendPromo sp;
+	private String results;
 
 	/**
 	 * Create the application. The second authorization and send buttons are
@@ -38,9 +48,11 @@ public class RunPromoGUI {
 		initialize();
 		configureCancel();
 		rdbtnSecondAuth.setEnabled(false);
-		btnSendPromo.setEnabled(false);
 		configureFirstRadio();
 		configureSecondRadio();
+		configureSendButton();
+		configureSender();
+		btnSendPromo.setEnabled(false);
 		frmRunPromotionalEmail.setVisible(true);
 		
 	}
@@ -113,6 +125,35 @@ public class RunPromoGUI {
 	}
 	
 	/**
+	 * This sets up the data member used to send the promotional email.
+	 */
+	public void configureSender() {
+		sp = new SendPromo();
+		sp.defaultSetup(FileConstants.CONFIG_LOC);
+		EmailTemplate t = null;
+		t = EmailerClientGUI.emailStorage.getTemplate(EmailerClientGUI.getSelectedTemplate());
+		sp.setTemplate(t);
+	}
+	
+	/**
+	 * This method sends the promo.
+	 * @return the string of results
+	 */
+	public void sendPromo() {
+		sp.setPatrons(EmailerClientGUI.dblogic.getAlphabetic());
+		results = sp.send();
+		showResults();
+	}
+	
+	/**
+	 * This method shows the results.
+	 */
+	private void showResults() {
+		JOptionPane.showConfirmDialog(new JFrame(), results);
+	}
+	
+	
+	/**
 	 * This method configures the property change listener for the
 	 * second radio button.
 	 */
@@ -141,6 +182,20 @@ public class RunPromoGUI {
 				if (e.getStateChange() == ItemEvent.DESELECTED) {
 					btnSendPromo.setEnabled(false);
 				}
+			}
+		});
+	}
+	
+	/**
+	 * This method configures the send button.
+	 */
+	public void configureSendButton() {
+		btnSendPromo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btnSendPromo) {
+					sendPromo();
+				}
+				
 			}
 		});
 	}

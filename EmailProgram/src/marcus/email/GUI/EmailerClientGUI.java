@@ -36,10 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Properties;
-import java.awt.Component;
-import javax.swing.Box;
 import javax.swing.JComboBox;
 import javax.swing.JToggleButton;
 import javax.swing.BoxLayout;
@@ -61,6 +58,9 @@ public class EmailerClientGUI {
 	private static DefaultTableModel tableModel;
 	public static PatronDBLogic dblogic = new PatronDBLogic();
 	protected static Properties prop;
+
+	//Tray icon dismissal
+	private Dismiss dismiss;
 
 	//This controls how the user can search
 	private boolean searchEmails = false;
@@ -93,6 +93,9 @@ public class EmailerClientGUI {
 	private JButton btnDelete;
 	private JButton btnPromo;
 	private JPanel pnlTime;
+	private JMenu mnNewMenu;
+	private JMenuItem mnuExit;
+	
 
 	//Auto-generated run menu
 	public static void main(String[] args) {
@@ -121,6 +124,8 @@ public class EmailerClientGUI {
 		setupEditAndTemplate();
 		configurePromo();
 		setupTimer();
+		setupDismiss();
+		setupExit();
 	}
 
 	/**
@@ -172,16 +177,16 @@ public class EmailerClientGUI {
 		frmMfhEmailer = new JFrame();
 		frmMfhEmailer.setTitle("MFH Emailer");
 		frmMfhEmailer.setBounds(100, 100, 1000, 800);
-		frmMfhEmailer.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmMfhEmailer.setDefaultCloseOperation(JFrame.ICONIFIED);
 
 		JMenuBar menuBar = new JMenuBar();
 		frmMfhEmailer.setJMenuBar(menuBar);
 
-		JMenu mnNewMenu = new JMenu("File");
+		mnNewMenu = new JMenu("File");
 		menuBar.add(mnNewMenu);
 
-		JMenuItem mntmNewMenuItem = new JMenuItem("Exit");
-		mnNewMenu.add(mntmNewMenuItem);
+		mnuExit = new JMenuItem("Exit");
+		mnNewMenu.add(mnuExit);
 
 		JMenu mnNewMenu_1 = new JMenu("Settings");
 		menuBar.add(mnNewMenu_1);
@@ -304,6 +309,10 @@ public class EmailerClientGUI {
 
 		btnEditSelected = new JButton("Edit Selected");
 		panel_3.add(btnEditSelected);
+
+
+
+
 		btnEditSelected.addActionListener(new ActionListener() {
 			//Opens the edit patron section
 			public void actionPerformed(ActionEvent e) {
@@ -458,6 +467,14 @@ public class EmailerClientGUI {
 		lblTimeDate = new JLabel();
 		panel_13.add(lblTimeDate);
 	}
+	
+	/**
+	 * This method returns the get selected template from the combo emails.
+	 * @return
+	 */
+	public static String getSelectedTemplate() {
+		return (String) comboEmails.getSelectedItem();
+	}
 
 	//Launches import GUI method
 	public void setupImport() {
@@ -473,6 +490,17 @@ public class EmailerClientGUI {
 		mnuServerSettings.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new EmailSettingsGUI();
+			}
+		});
+	}
+
+	//Kills the application
+	public void setupExit() {
+		mnuExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == mnuExit) {
+					System.exit(0);
+				}
 			}
 		});
 	}
@@ -525,24 +553,44 @@ public class EmailerClientGUI {
 	//The swing timer updates the actual timer instantiated via the 
 	// Quartz timer class
 	public void setupTimer() {
-		//This is the timer imported from the custom timer class (via Quartz) 
-		//marcus.email.util.time.Timer actualTime = new marcus.email.util.time.Timer();
-		Date current = new Date();
+		marcus.email.util.time.Timer actualTime = new marcus.email.util.time.Timer();
+		actualTime.start();
 		ActionListener l = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				current.setTime(System.currentTimeMillis());
-				lblTimeDate.setText(current.toString());
-				
+				lblTimeDate.setText(actualTime.getCurrentTime());
 			}
 		};
-		
 		//This is the Swing timer class that updates the actual timer
 		Timer t = new Timer(100, l);
 		t.start();
 
-		
-			
+
+
+	}
+
+	//Shuts the whole thing down--from dismiss menu
+	public static void exitAll() {
+		System.exit(0);
+	}
+
+	//Sets visible--for tray menus
+	public static void setInvisible() {
+		frmMfhEmailer.setVisible(false);
+	}
+
+	//Sets invisible--for tray menus
+	public static void setVisible() {
+		frmMfhEmailer.setVisible(true);
+	}
+
+	public void setupDismiss() {
+		dismiss = new Dismiss();
+	}
+
+
+	public void doDismiss() {
+		dismiss.sendToTray();
 	}
 
 	//Initializes email storage

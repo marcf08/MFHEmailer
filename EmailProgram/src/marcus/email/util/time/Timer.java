@@ -1,7 +1,11 @@
 package marcus.email.util.time;
 
-import java.time.format.DateTimeFormatter;
-import java.util.Set;
+
+import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
@@ -18,16 +22,38 @@ public class Timer {
 	private LocalTime localTime;
 	private LocalDate localDate;
 	private DateTimeZone timeZone;
+	private Date localCurrent;
+	private ScheduledExecutorService scheduler;
 	
-	/**
-	 * The null constructor simple sets the time zone and time to
-	 * default values.
-	 */
+	
+	//By default use the system time.
 	public Timer() {
-		localTime = new LocalTime();
-		timeZone = DateTimeZone.getDefault();
-		localDate = new LocalDate(timeZone);
+		localCurrent = new Date(System.currentTimeMillis());
+		scheduler = Executors.newSingleThreadScheduledExecutor();
 	}
+	
+	//Starts this timer
+	public void start() {
+		Runnable timerUpdate = new Runnable() {
+			public void run() {
+				localCurrent.setTime(System.currentTimeMillis());
+			}
+		};
+	scheduler.scheduleAtFixedRate(timerUpdate, 0, 100, TimeUnit.MILLISECONDS);
+	}
+	
+	//Retrieves the current time--will appear to be "frozen" if the timer is not started
+	public String getTime() {
+		return localCurrent.toString();
+	}
+	
+	
+	
+
+	
+	
+	
+	
 	
 	/**
 	 * This constructor allows the timer to be constructed given a time zone.
@@ -37,41 +63,13 @@ public class Timer {
 		timeZone = DateTimeZone.forID(id);
 		localTime = new LocalTime(timeZone);
 	}
+
 	
-	/**
-	 * This method gets a list of acceptable time zones.
-	 * @return a set of the available IDs
-	 */
-	public  Set<String> getTimeZones() {
-		return DateTimeZone.getAvailableIDs();
-	}
-	
-	/**
-	 * This methods gets the current time and date for use by the client
-	 * (primarily the GUI.) 
-	 */
-	public String getCurrentTimeAndDate() {
-		return localDate.toString() + "  " + localTime.toString();
-	}
-	
-	/**
-	 * This method returns the local time. If standard time is enabled,
-	 * this method returns the standard time in traditional format. Otherwise,
-	 * it returns it in 24-hour format.
-	 * @return the local time
-	 */
+	//Returns the current time in String form
 	public String getCurrentTime() {
-		return localTime.toString();
+		return localCurrent.toString();
 	}
-	
-	/**
-	 * This method returns the local date. 
-	 * @return the local date in yyyy/mm/dd format.
-	 */
-	public String getLocalDate() {
-		return localDate.toString();
-	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
