@@ -25,58 +25,100 @@ import static org.quartz.CronScheduleBuilder.*;
 import static org.quartz.DateBuilder.*;
 
 import static org.quartz.SimpleScheduleBuilder.*;
-
-
-
 /**
  * This class automatically sends the birthday emails.
  * @author Marcus
  */
 public class AutoSender {
-	 private Scheduler schedulerBirthdays;
-	 private Scheduler schedulerAnniversaries;
-	 private CronScheduleBuilder mainSchedule;
-	 private CronTrigger dateTrigger;
-	 private CronExpression daily;
-	 private JobDetail mainJob;
-	 private JobDataMap dataMap;
-	 private EmailTemplate template;
-	 private String subject;
-	 private String defaultSubject = "Happy Birthday from the Marshall Free House!";
-			 
-	public final static String SUBJ = "Subject";
-	 public final static String TEMP_HTML = "The Template";
-	 
-	 
-	 
+	private Scheduler schedulerBirthdays;
+	private Scheduler schedulerAnniversaries;
+	private CronScheduleBuilder mainSchedule;
+	private CronTrigger dateTrigger;
+	private CronExpression daily;
+	private JobDetail jobBirthdays;
+	private JobDetail jobAnniv;
+	private JobDataMap dataMap;
+	private EmailTemplate birthdayTemplate;
+	private EmailTemplate annivTemplate;
+	
+	private String theExpression = "0 * 14 * * ?";
+
+	public final String SUBJ = "Subject";
+	public final String TEMP_BIRTH = "Birthday Template";
+	public final String TEMP_ANNIV = "Anniversary Template";
+	public final String resultsBirth = "RESULTS_BIRTH";
+	public final String resultsAnniv = "RESULTS_ANNIV";
+
+
+
 	/**
 	 * The default constructor instantiates but does not start the
 	 * scheduler given a year and month as parameters.
 	 */
-	public AutoSender(EmailTemplate template) {
+	public AutoSender() {
 		//Quick and dirty log4j configuration
 		org.apache.log4j.BasicConfigurator.configure();
-		this.template = template;
+		//this.birthdayTemplate = birthdayTemplate;
+		//this.annivTemplate = annivTemplate;
+		//Valid expression for every day at noon: "0 0 12 * * ?"
+		dataMap = new JobDataMap();
+
+	}
+	
+	/**
+	 * This method instantiates the data members and readies the sender.
+	 */
+	public void runBirthdaySetUp() {
 		try {
-			//Valid expression for every day at noon: "0 0 12 * * ?"
-			dataMap = new JobDataMap();
-			dataMap.put(TEMP_HTML, template);			
-			
 			schedulerBirthdays = StdSchedulerFactory.getDefaultScheduler();
-			mainJob = JobBuilder.newJob(PrepareBirthdays.class).storeDurably(true).withIdentity("Test").usingJobData(dataMap).build();
-			
+			jobBirthdays = JobBuilder.newJob(PrepareBirthdays.class).storeDurably(true).withIdentity("Birthday").usingJobData(dataMap).build();
 			CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("crontrigger","crontriggergroup1")					
-					                             .withSchedule(CronScheduleBuilder.cronSchedule("* * * * * ?"))
-					                             .build();
-			schedulerBirthdays.scheduleJob(mainJob, cronTrigger);
-			
-			
+					.withSchedule(CronScheduleBuilder.cronSchedule(theExpression))
+					.build();
+			schedulerBirthdays.scheduleJob(jobBirthdays, cronTrigger);
 		} catch (SchedulerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * This method instantiates data members and readies the sender.
+	 */
+	public void runAnnivSetUp() {
+		try {
+			schedulerAnniversaries = StdSchedulerFactory.getDefaultScheduler();
+			jobAnniv = JobBuilder.newJob(PrepareAnniv.class).storeDurably(true).withIdentity("Anniversary").usingJobData(dataMap).build();
+			CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("crontrigger","crontriggergroup1")					
+					.withSchedule(CronScheduleBuilder.cronSchedule("theExpression"))
+					.build();
+			schedulerAnniversaries.scheduleJob(jobAnniv, cronTrigger);
+		} catch (SchedulerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * This method sets the birthday template.
+	 * @param template the chosen birthday template
+	 */
+	public void setBirthdayTemplate(EmailTemplate birthdayTemplate) {
+		this.birthdayTemplate = birthdayTemplate;
+		dataMap.put(TEMP_BIRTH, birthdayTemplate);	
+	}
+	
+	/**
+	 * This method sets the anniversary template.
+	 */
+	public void setAnnivTemplate(EmailTemplate annivTemplate) {
+		dataMap.put(TEMP_ANNIV, annivTemplate);
+		this.annivTemplate = annivTemplate;
+	}
+	
+	
+	
+
 	/**
 	 * These methods stop and start the sender from sending birthday emails.
 	 * @return true if the scheduler was paused and false otherwise
@@ -90,7 +132,7 @@ public class AutoSender {
 			return false;
 		}
 	}
-	
+
 	public boolean resumeSendingBirthdays() {
 		try {
 			schedulerBirthdays.start();
@@ -100,7 +142,7 @@ public class AutoSender {
 			return false;
 		}
 	}
-	
+
 
 	/**
 	 * These methods stop and start the sender from sending anniversary emails.
@@ -115,10 +157,10 @@ public class AutoSender {
 			return false;
 		}
 	}
-	
+
 	public boolean resumeSendingAnniv() {
 		try {
-			schedulerAnniversaries.resumeAll();
+			schedulerAnniversaries.start();
 			return true;
 		} catch (SchedulerException e) {
 			// TODO Auto-generated catch block
@@ -126,4 +168,20 @@ public class AutoSender {
 		}
 	}
 	
+	/**
+	 * This method gets the results of sending birthday emails.
+	 * @return the results of the birthday send operation.
+	 */
+	public String getBirthdayResults() {
+		return (String) dataMap.get("RESULTS_BIRTH");
+	}
+	
+	/**
+	 * This method gets the results of sending anniversary emails.
+	 * @return the results of the anniversary send operation.
+	 */
+	public String getAnnivResults() {
+		return (String) dataMap.getString("RESULTS_ANNIV");
+	}
+
 }

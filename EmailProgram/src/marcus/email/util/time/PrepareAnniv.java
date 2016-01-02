@@ -3,35 +3,33 @@ package marcus.email.util.time;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
 
-import org.joda.time.LocalDate;
-import org.quartz.Calendar;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.quartz.TimeOfDay;
 import org.quartz.simpl.SimpleTimeBroker;
 
 import com.sendgrid.SendGrid;
-import com.sendgrid.SendGrid.Email;
 import com.sendgrid.SendGridException;
+import com.sendgrid.SendGrid.Email;
 
 import marcus.email.GUI.EmailerClientGUI;
 import marcus.email.GUI.FileConstants;
 import marcus.email.database.Patron;
 import marcus.email.util.EmailTemplate;
+
 /**
- * This class creates the birthday list.
+ * This class prepares the anniversaries to be sent. It's similar to the prepare birthdays
+ * class. In fact, at a later date, these two classes should be combined into one given the
+ * similarity of their features.
  * @author Marcus
- *
  */
-public class PrepareBirthdays implements Job{
-	public final String TEMP_BIRTH = "Birthday Template";
+public class PrepareAnniv implements Job {
+	public final String TEMP_ANNIV = "Anniversary Template";
 	public String from;
 	
 	/**
@@ -41,27 +39,23 @@ public class PrepareBirthdays implements Job{
 		//When the job executes, we need a means to determine the year and month
 		//of the current day.
 		int [] timeAndDay = getDayAndMonth();
-		
 		int currentDay =  timeAndDay[0];
 		int currentMonth = timeAndDay[1];
-		
-		System.out.println("Current day=" + timeAndDay[0]);
-		System.out.println("Current Mont=" + timeAndDay[1]);
-		
+
 		//Build the list of patrons
 		ArrayList<Patron> patrons = new ArrayList<Patron>();
 		for (int i = 0; i < EmailerClientGUI.dblogic.getSize(); i++) {
-			int currentPatronMonth = getMonth(EmailerClientGUI.dblogic.getPatronFromDB(i).getDOB());
-			int currentPatronDay = getDay(EmailerClientGUI.dblogic.getPatronFromDB(i).getDOB());
+			int currentPatronMonth = getMonth(EmailerClientGUI.dblogic.getPatronFromDB(i).getAnniv());
+			int currentPatronDay = getDay(EmailerClientGUI.dblogic.getPatronFromDB(i).getAnniv());
 			if (currentPatronDay == currentDay && currentPatronMonth == currentMonth) {
-				patrons.add(EmailerClientGUI.dblogic.getPatronFromDB(i));
+				patrons.add(patrons.get(i));
 			}
 		}
 		
 		SendGrid send = getSend();
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-		EmailTemplate template = (EmailTemplate) dataMap.get(TEMP_BIRTH);
-		dataMap.put("RESULTS_BIRTH", sendEmails(patrons, template, send));
+		EmailTemplate template = (EmailTemplate) dataMap.get(TEMP_ANNIV);
+		dataMap.put("RESULTS_ANNIV", sendEmails(patrons, template, send));
 	}
 
 	/**
@@ -76,8 +70,6 @@ public class PrepareBirthdays implements Job{
 			email.setSubject(templateToSend.getFormattedSubject(list.get(j)));
 			email.addTo(list.get(j).getPatronEmail());
 			email.setHtml(personalizedHtmlEmail);
-			email.setFrom(from);
-			
 			try {
 				SendGrid.Response response = send.send(email);
 				result.append(list.get(j).getPatronEmail() + "     " + response);
@@ -102,9 +94,8 @@ public class PrepareBirthdays implements Job{
 		int [] timeAndDate = new int[2];
 		SimpleTimeBroker today = new SimpleTimeBroker();
 		Date day = today.getCurrentTime();
-		System.out.println(day.toString());
-		timeAndDate[0] = day.getDate();
-		timeAndDate[1] = day.getMonth() + 1;
+		timeAndDate[0] = day.getDay();
+		timeAndDate[1] = day.getMonth();
 		return timeAndDate;
 	}
 
@@ -128,7 +119,7 @@ public class PrepareBirthdays implements Job{
 
 	/**
 	 * This method gets the month from the current patron.
-	 * @param dob the date of birth string
+	 * @param date the date to parse
 	 * @return the month or -1 if there's an error for number format exceptions
 	 * or out of range dates
 	 */
@@ -161,3 +152,7 @@ public class PrepareBirthdays implements Job{
 
 
 }
+
+	
+	
+

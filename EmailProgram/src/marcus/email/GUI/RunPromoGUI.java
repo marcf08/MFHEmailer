@@ -2,20 +2,12 @@ package marcus.email.GUI;
 
 import marcus.email.util.EmailTemplate;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import javax.swing.JTextField;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.border.EtchedBorder;
-
 import marcus.email.util.SendPromo;
-
 import javax.swing.SwingConstants;
-import javax.swing.JProgressBar;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JRadioButton;
@@ -24,11 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class RunPromoGUI {
-
 	//Swing members
 	private JDialog frmRunPromotionalEmail;
 	private JButton btnSendPromo;
@@ -142,17 +131,9 @@ public class RunPromoGUI {
 	public void sendPromo() {
 		sp.setPatrons(EmailerClientGUI.dblogic.getAlphabetic());
 		results = sp.send();
-		showResults();
+		new PromoResultsGUI(results);
+		btnSendPromo.setEnabled(false);
 	}
-	
-	/**
-	 * This method shows the results.
-	 */
-	private void showResults() {
-		JOptionPane.showConfirmDialog(new JFrame(), results);
-	}
-	
-	
 	/**
 	 * This method configures the property change listener for the
 	 * second radio button.
@@ -195,7 +176,6 @@ public class RunPromoGUI {
 				if (e.getSource() == btnSendPromo) {
 					sendPromo();
 				}
-				
 			}
 		});
 	}

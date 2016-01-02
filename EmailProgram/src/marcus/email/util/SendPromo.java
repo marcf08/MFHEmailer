@@ -26,6 +26,8 @@ public class SendPromo {
  	private FileInputStream fis;
  	private String api;
  	private File file;
+ 	private String space = "     ";
+ 	private String defaultFromAddress;
  	
  	
 	//Simply instantiates the main data member
@@ -45,6 +47,7 @@ public class SendPromo {
 			fis = new FileInputStream(file);
 			prop.load(fis);
 			send = new SendGrid(prop.getProperty(FileConstants.CONFIG_API));
+			defaultFromAddress = (String) prop.get(FileConstants.CONFIG_FROM);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -93,19 +96,23 @@ public class SendPromo {
 		for (int i = 0; i < recipients.size(); i++) {
 			Email emailToSend = new Email();
 			emailToSend.addTo(recipients.get(i).getPatronEmail());
-			emailToSend.setFrom(FileConstants.CONFIG_FROM);
+			emailToSend.setFrom(defaultFromAddress);
 			emailToSend.setSubject(template.getFormattedSubject(recipients.get(i)));
 			emailToSend.setHtml(template.addPatronInformation(recipients.get(i)));
 			try {
 				SendGrid.Response response = send.send(emailToSend);
-				result.append(response.getMessage());
+				result.append(recipients.get(i).getPatronEmail() + space + response.getMessage());
+				result.append("\n");
 			} catch (SendGridException e) {
-				result.append(e.getMessage());
+				result.append(recipients.get(i).getPatronEmail() + space + e.getMessage());
+				result.append("\n");
 				i++;
 		}
 		
 		}
 		return result.toString();
 	}
+	
+	
 		
 }

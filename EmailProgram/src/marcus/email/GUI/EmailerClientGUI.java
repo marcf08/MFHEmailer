@@ -19,6 +19,8 @@ import javax.swing.table.DefaultTableModel;
 import marcus.email.database.Patron;
 import marcus.email.util.EmailStorage;
 import marcus.email.util.PatronDBLogic;
+import marcus.email.util.time.AutoSender;
+
 import java.awt.FlowLayout;
 import java.awt.TextField;
 import java.awt.Button;
@@ -40,12 +42,12 @@ import java.util.Properties;
 import javax.swing.JComboBox;
 import javax.swing.JToggleButton;
 import javax.swing.BoxLayout;
+import java.awt.Component;
 
 /**
  * This class is the main GUI for the program. It consists of a tabbed pane and the
  * main panels that add the user information.
  * @author Marcus
- *
  */
 public class EmailerClientGUI {
 
@@ -58,6 +60,13 @@ public class EmailerClientGUI {
 	private static DefaultTableModel tableModel;
 	public static PatronDBLogic dblogic = new PatronDBLogic();
 	protected static Properties prop;
+	
+	private AutoSender theSender;
+	
+	//Template strings
+	private String templateBirthday;
+	private String templateAnniv;
+	private String templatePromo;
 
 	//Tray icon dismissal
 	private Dismiss dismiss;
@@ -87,7 +96,6 @@ public class EmailerClientGUI {
 	public static final int COL_ANNIV = 5;
 	private JLabel lblTimeDate;
 	private JButton btnEdit;
-	private JLabel lblOnOff;
 	private static JComboBox<String> comboEmails;
 	private JButton btnNewTemplate;
 	private JButton btnDelete;
@@ -95,6 +103,14 @@ public class EmailerClientGUI {
 	private JPanel pnlTime;
 	private JMenu mnNewMenu;
 	private JMenuItem mnuExit;
+	private JButton btnSetBirth;
+	private JButton btnSetAnniv;
+	private JButton btnSetPromo;
+	private JLabel lblTemplateBirthday;
+	private JLabel lblTemplateAnniv;
+	private JLabel lblPromoTemplate;
+	private JToggleButton tglbtnBirthdays;
+	private JToggleButton tglbtnAnniv;
 	
 
 	//Auto-generated run menu
@@ -126,6 +142,22 @@ public class EmailerClientGUI {
 		setupTimer();
 		setupDismiss();
 		setupExit();
+		setTemplateButtons();
+		configureEnableButtons();
+		
+		setupSender();
+	
+	}
+	
+
+	
+	
+	
+	/**
+	 * This method starts and initializes the autosender.
+	 */
+	private void setupSender() {
+		theSender = new AutoSender();
 	}
 
 	/**
@@ -367,6 +399,7 @@ public class EmailerClientGUI {
 		panel_7.setLayout(new BorderLayout(0, 0));
 
 		JPanel panel_8 = new JPanel();
+		panel_8.setBorder(null);
 		panel_7.add(panel_8, BorderLayout.CENTER);
 		panel_8.setLayout(new BorderLayout(0, 0));
 
@@ -386,65 +419,137 @@ public class EmailerClientGUI {
 		JPanel panel_9 = new JPanel();
 		panel_9.setBorder(null);
 		panel_16.add(panel_9);
-		panel_9.setLayout(new BorderLayout(0, 0));
+		panel_9.setLayout(new BoxLayout(panel_9, BoxLayout.X_AXIS));
 
-		JLabel lblNewLabel = new JLabel("Current Auto-Email Template:");
+		JLabel lblNewLabel = new JLabel("Promotional Emails:");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		panel_9.add(lblNewLabel, BorderLayout.WEST);
+		panel_9.add(lblNewLabel);
 
 		JPanel panel_19 = new JPanel();
 		FlowLayout flowLayout_4 = (FlowLayout) panel_19.getLayout();
-		flowLayout_4.setHgap(0);
-		panel_9.add(panel_19, BorderLayout.EAST);
+		flowLayout_4.setAlignment(FlowLayout.RIGHT);
+		panel_9.add(panel_19);
+		
+		lblPromoTemplate = new JLabel("Using Template:");
+		panel_19.add(lblPromoTemplate);
 
 		btnPromo = new JButton("Run Promo");
 		panel_19.add(btnPromo);
-
-		btnDelete = new JButton("Delete Selected");
-		panel_19.add(btnDelete);
-
-		btnEdit = new JButton("Edit Selected");
-		panel_19.add(btnEdit);
-
-		btnNewTemplate = new JButton("Add New Template");
-		panel_19.add(btnNewTemplate);
-
-		JPanel panel_18 = new JPanel();
-		FlowLayout flowLayout_3 = (FlowLayout) panel_18.getLayout();
-		flowLayout_3.setHgap(0);
-		flowLayout_3.setVgap(0);
-		panel_9.add(panel_18, BorderLayout.CENTER);
-
-		JPanel panel_22 = new JPanel();
-		panel_18.add(panel_22);
-
-		comboEmails = new JComboBox<String>();
 		for (int i = 0; i < emailStorage.size(); i++) {
 			comboEmails.addItem(emailStorage.get(i).toString());
 		}
-
-		panel_22.add(comboEmails);
+		
+		JPanel panel_12 = new JPanel();
+		panel_12.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_15.add(panel_12, BorderLayout.CENTER);
+		panel_12.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel_27 = new JPanel();
+		panel_12.add(panel_27, BorderLayout.NORTH);
+		panel_27.setLayout(new BoxLayout(panel_27, BoxLayout.X_AXIS));
+		
+		JLabel lblTempConfig = new JLabel("Template Configuration:");
+		panel_27.add(lblTempConfig);
+				
+				JPanel panel_30 = new JPanel();
+				panel_27.add(panel_30);
+				panel_30.setLayout(new BoxLayout(panel_30, BoxLayout.X_AXIS));
+				
+				JPanel panel_29 = new JPanel();
+				panel_30.add(panel_29);
+				FlowLayout flowLayout_7 = (FlowLayout) panel_29.getLayout();
+				flowLayout_7.setAlignment(FlowLayout.RIGHT);
+		
+				comboEmails = new JComboBox<String>();
+				panel_29.add(comboEmails);
+						
+								btnNewTemplate = new JButton("Add New Template");
+								panel_29.add(btnNewTemplate);
+						
+								btnEdit = new JButton("Edit Selected");
+								panel_29.add(btnEdit);
+				
+						btnDelete = new JButton("Delete Selected");
+						panel_29.add(btnDelete);
+						
+						JPanel panel_18 = new JPanel();
+						panel_12.add(panel_18, BorderLayout.CENTER);
+						panel_18.setLayout(new BorderLayout(0, 0));
+						
+						JPanel panel_22 = new JPanel();
+						panel_18.add(panel_22, BorderLayout.NORTH);
+						panel_22.setLayout(new BoxLayout(panel_22, BoxLayout.X_AXIS));
+						
+						JLabel lblSetSelected = new JLabel("Set Selected Template As:");
+						panel_22.add(lblSetSelected);
+						
+						JPanel panel_28 = new JPanel();
+						FlowLayout flowLayout_3 = (FlowLayout) panel_28.getLayout();
+						flowLayout_3.setAlignment(FlowLayout.RIGHT);
+						panel_22.add(panel_28);
+						
+						btnSetBirth = new JButton("BirthdayTemplate");
+						panel_28.add(btnSetBirth);
+						
+						btnSetAnniv = new JButton("Anniversary Template");
+						panel_28.add(btnSetAnniv);
+						
+						btnSetPromo = new JButton("Promo Template");
+						panel_28.add(btnSetPromo);
 
 		JPanel panel_17 = new JPanel();
-		panel_17.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_17.setBorder(null);
 		panel_5.add(panel_17, BorderLayout.NORTH);
-		panel_17.setLayout(new BorderLayout(0, 0));
-
-		JLabel lblStatus = new JLabel("Currently Auto-Sending Emails:");
-		lblStatus.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_17.add(lblStatus, BorderLayout.WEST);
-
-		JPanel panel_20 = new JPanel();
-		FlowLayout flowLayout_5 = (FlowLayout) panel_20.getLayout();
-		flowLayout_5.setHgap(0);
-		panel_17.add(panel_20, BorderLayout.EAST);
-
-		lblOnOff = new JLabel("");
-		panel_20.add(lblOnOff);
-
-
-		JToggleButton tglbtnNewToggleButton = new JToggleButton("Status");
-		panel_20.add(tglbtnNewToggleButton);
+		panel_17.setLayout(new BoxLayout(panel_17, BoxLayout.Y_AXIS));
+		
+		JPanel panel_21 = new JPanel();
+		panel_21.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panel_17.add(panel_21);
+				panel_21.setLayout(new BoxLayout(panel_21, BoxLayout.X_AXIS));
+		
+				JPanel panel_20 = new JPanel();
+				panel_21.add(panel_20);
+										panel_20.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
+								
+										JLabel lblStatus = new JLabel("Currently Auto-Sending Birthday Emails:");
+										panel_20.add(lblStatus);
+										lblStatus.setHorizontalAlignment(SwingConstants.CENTER);
+																				
+																				JPanel panel_23 = new JPanel();
+																				FlowLayout flowLayout_2 = (FlowLayout) panel_23.getLayout();
+																				flowLayout_2.setAlignment(FlowLayout.RIGHT);
+																				panel_21.add(panel_23);
+																						
+																						lblTemplateBirthday = new JLabel("Using Template:");
+																						panel_23.add(lblTemplateBirthday);
+																				
+																				
+																						tglbtnBirthdays = new JToggleButton("Status");
+																						panel_23.add(tglbtnBirthdays);
+																						
+																						JPanel panel_24 = new JPanel();
+																						panel_24.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+																						panel_17.add(panel_24);
+																						panel_24.setLayout(new BoxLayout(panel_24, BoxLayout.X_AXIS));
+																						
+																						JPanel panel_25 = new JPanel();
+																						FlowLayout flowLayout_5 = (FlowLayout) panel_25.getLayout();
+																						flowLayout_5.setAlignment(FlowLayout.LEFT);
+																						panel_24.add(panel_25);
+																						
+																						JLabel lblAnniv = new JLabel("Currently Auto-Sending Anniversary Emails:");
+																						panel_25.add(lblAnniv);
+																						
+																						JPanel panel_26 = new JPanel();
+																						FlowLayout flowLayout_6 = (FlowLayout) panel_26.getLayout();
+																						flowLayout_6.setAlignment(FlowLayout.RIGHT);
+																						panel_24.add(panel_26);
+																						
+																						lblTemplateAnniv = new JLabel("Using Template:");
+																						panel_26.add(lblTemplateAnniv);
+																						
+																						tglbtnAnniv = new JToggleButton("Status");
+																						panel_26.add(tglbtnAnniv);
 
 		pnlTime = new JPanel();
 		frmMfhEmailer.getContentPane().add(pnlTime, BorderLayout.SOUTH);
@@ -467,6 +572,41 @@ public class EmailerClientGUI {
 		lblTimeDate = new JLabel();
 		panel_13.add(lblTimeDate);
 	}
+	
+	/**
+	 * This method configures the set template buttons to set the labels to whatever the template
+	 * is selected by the user.
+	 */
+	public void setTemplateButtons() {
+		btnSetBirth.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btnSetBirth) {
+					lblTemplateBirthday.setText("Using Template: " + comboEmails.getSelectedItem());
+					templateBirthday = (String) comboEmails.getSelectedItem();
+				}
+			}
+		});
+		btnSetAnniv.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btnSetAnniv) {
+					lblTemplateAnniv.setText("Using Template: " + comboEmails.getSelectedItem());
+					templateAnniv = (String) comboEmails.getSelectedItem();
+				}
+			}
+		});
+		btnSetPromo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btnSetPromo) {
+					lblPromoTemplate.setText("Using Template: " + comboEmails.getSelectedItem());
+					templatePromo = (String) comboEmails.getSelectedItem();
+				}
+			}
+		});
+	
+	}
+	
+	
+	
 	
 	/**
 	 * This method returns the get selected template from the combo emails.
@@ -557,16 +697,12 @@ public class EmailerClientGUI {
 		actualTime.start();
 		ActionListener l = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				lblTimeDate.setText(actualTime.getCurrentTime());
 			}
 		};
 		//This is the Swing timer class that updates the actual timer
 		Timer t = new Timer(100, l);
 		t.start();
-
-
-
 	}
 
 	//Shuts the whole thing down--from dismiss menu
@@ -647,7 +783,7 @@ public class EmailerClientGUI {
 
 
 	//Promo button setup
-	public void configurePromo() {
+	private void configurePromo() {
 		btnPromo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btnPromo) {
@@ -655,6 +791,45 @@ public class EmailerClientGUI {
 				}
 			}
 		});
+	}
+	
+	//Configures the enable buttons and their logic
+	private void configureEnableButtons() {
+		tglbtnBirthdays.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == tglbtnBirthdays) {
+					if (tglbtnBirthdays.isSelected()) {
+						tglbtnBirthdays.setText("Disable");
+						theSender.setBirthdayTemplate(emailStorage.getTemplate(templateBirthday));
+						theSender.runBirthdaySetUp();
+						theSender.resumeSendingBirthdays();
+					}
+					if (!tglbtnBirthdays.isSelected()) {
+						tglbtnBirthdays.setText("Enable");
+						theSender.stopSendingBirthdays();
+					}
+				}
+				
+			}
+		});
+		tglbtnAnniv.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == tglbtnAnniv) {
+					if (tglbtnAnniv.isSelected()) {
+						tglbtnAnniv.setText("Disable");
+						theSender.setAnnivTemplate(emailStorage.getTemplate(templateAnniv));
+						theSender.runAnnivSetUp();
+						theSender.resumeSendingAnniv();
+					}
+					if (!tglbtnAnniv.isSelected()) {
+						tglbtnAnniv.setText("Enable");
+						theSender.stopSendingAnniv();
+					}
+				}
+				
+			}
+		});
+		
 	}
 
 	//Updates combo box

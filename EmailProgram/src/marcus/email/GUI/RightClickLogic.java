@@ -1,22 +1,26 @@
 package marcus.email.GUI;
 
-import java.awt.Desktop.Action;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
-
+import java.awt.event.MouseEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JPopupMenu;
 import javax.swing.text.JTextComponent;
-
+/**
+ * This method configures the right click for the details of the promo send.
+ * Taken from http://stackoverflow.com/questions/2793940/why-right-click-is-not-working-on-java-application.
+ * @author Marcus
+ */
 public class RightClickLogic extends MouseAdapter {
     private JPopupMenu popup = new JPopupMenu();
-
-    private Action cutAction;
-    private Action copyAction;
-    private Action pasteAction;
+    private AbstractAction cutAction;
+    private AbstractAction copyAction;
+    private AbstractAction pasteAction;
     private AbstractAction undoAction;
-    private Action selectAllAction;
-
+    private AbstractAction selectAllAction;
     private JTextComponent textComponent;
     private String savedString = "";
     private Actions lastActionSelected;
@@ -25,8 +29,6 @@ public class RightClickLogic extends MouseAdapter {
 
     public RightClickLogic() {
         undoAction = new AbstractAction("Undo") {
-
-            @Override
             public void actionPerformed(ActionEvent ae) {
                     textComponent.setText("");
                     textComponent.replaceSelection(savedString);
@@ -34,11 +36,6 @@ public class RightClickLogic extends MouseAdapter {
                     lastActionSelected = Actions.UNDO;
             }
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
         };
 
         popup.add(undoAction);
@@ -92,7 +89,6 @@ public class RightClickLogic extends MouseAdapter {
         popup.add(selectAllAction);
     }
 
-    @Override
     public void mouseClicked(MouseEvent e) {
         if (e.getModifiers() == InputEvent.BUTTON3_MASK) {
             if (!(e.getSource() instanceof JTextComponent)) {
